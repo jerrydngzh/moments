@@ -2,41 +2,35 @@ import mongoose from 'mongoose'
 const { Schema, model } = mongoose
 
 const memoSchema = new Schema({
-    title: {
+    name: {
         type: String,
         required: true
     },
-    content: {
+    date: {
+        type: Date,
+        required: true
+    },
+    location: {
+        type: String, // NOTE: location object 
+        required: true
+    },
+    description: {
         type: String,
         required: true
     }, 
-    created_at: {
-        type: Date,
-        default: Date.now
+    user_id: {
+        type: String,
+        required: true
     },
-    updated_at: {
-        type: Date,
-        default: Date.now
+
+    // NOTE: Iteration 2
+    media: {
+        type: [String],
+        default: []
     },
     tags: {
         type: [String],
         default: []
-    },
-    location: {
-        type: String,
-        default: ""
-    },
-    latitude: {
-        type: Number,
-        default: 0
-    },
-    longitude: {
-        type: Number,
-        default: 0
-    },
-    user_id: {
-        type: String,
-        required: true
     }
 })
 
