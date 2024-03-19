@@ -10,7 +10,7 @@ const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, hand
 
   const handleAddTag = () => {
     if (newTag.trim() !== '') {
-      handleUpdateTags([...selectedMemo.selectedTags, newTag]);
+      handleUpdateTags([...selectedMemo.selectedTags, newTag], selectedMemo._id);
       setNewTag('');
     }
   };

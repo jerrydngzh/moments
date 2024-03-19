@@ -83,18 +83,12 @@ const Dashboard = () => {
   const handleAddTag = async () => {
     if (newTag.trim() !== '' && !tags.includes(newTag)) {
       try {
-        await fetch('http://localhost:3000/api/memos/updateTags', {
+        await fetch(`http://localhost:3000/api/users/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            action: 'updateUsernameTags',
-            id: id,
-            locationName: "",
-            memoIndex: "",
-            tags: [...tags, newTag]
-          }),
+          body: JSON.stringify({tags: [...tags, newTag]}),
         });
         setTags([...tags, newTag]);
         setNewTag('');
@@ -105,58 +99,51 @@ const Dashboard = () => {
   };
 
   const handleDeleteTag = async (tagToDelete: never) => {
-    const remainingTags = tags.filter((tag) => tag !== tagToDelete);
-    try {
-      // Update memo tags
-      const updatedLocations = { ...locations };
-      await Promise.all(Object.keys(updatedLocations).map(async (locationName) => {
-        const memos = updatedLocations[locationName].memo;
-        await Promise.all(memos.map(async (memo: { selectedTags: any[]; memo: any; }) => {
-          if (memo.selectedTags.includes(tagToDelete)) {
-            const memoIndex = updatedLocations[locationName].memo.findIndex((m: { memo: any; }) => m.memo === memo.memo);
-            const updatedTags = memo.selectedTags.filter((cat: any) => cat !== tagToDelete);
-            // Remove tag from memo first
-            memo.selectedTags = updatedTags;
-            // Update memo tags on the server
-            await fetch('http://localhost:3000/api/memos/updateTags', {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                action: 'updateMemoTags',
-                id: id,
-                locationName: locationName,
-                memoIndex: memoIndex,
-                tags: updatedTags
-              }),
-            });
-          }
+      // Filter out the deleted tag from the user's tags list
+      const remainingTags = tags.filter((tag) => tag !== tagToDelete);
+      try {
+        // Update memo tags
+        const updatedLocations = { ...locations };
+        // Iterate over each location
+        await Promise.all(Object.keys(updatedLocations).map(async (locationName) => {
+          const memos = updatedLocations[locationName].memo;
+          // Iterate over each memo in the location
+          await Promise.all(memos.map(async (memo: { tags: any[]; description: any; }) => {
+            if (memo.tags.includes(tagToDelete)) {
+              // If the memo contains the deleted tag, update its selected tags
+              const updatedTags = memo.tags.filter((cat: any) => cat !== tagToDelete);
+              // Remove tag from memo first
+              memo.tags = updatedTags;
+              // Update memo tags on the server
+              await fetch(`http://localhost:3000/api/memos/${memo._id}`, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({tags: updatedTags}),
+              });
+            }
+          }));
         }));
-      }));
-
-      // Update user tags
-      await fetch('http://localhost:3000/api/memos/updateTags', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'updateUsernameTags',
-          id: id,
-          locationName: '',
-          memoIndex: '',
-          tags: remainingTags
-        }),
-      });
-      setTags(remainingTags);
-    } catch (error) {
-      console.error('Error deleting tag:', error);
-    }
-  };
+    
+        // Update user tags on the server
+        await fetch(`http://localhost:3000/api/users/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({tags: remainingTags}),
+        });
+        // Update the user's tags list in the component state
+        setTags(remainingTags);
+      } catch (error) {
+        console.error('Error deleting tag:', error);
+      }
+    };
+  
 
   // Function to update tags of the selected memo
-  const handleUpdateMemoTags = async (updatedTags: any[]) => {
+  const handleUpdateMemoTags = async (updatedTags: any[], memoid: any) => {
     try {
       setSelectedMemo({
         ...selectedMemo,
@@ -164,34 +151,22 @@ const Dashboard = () => {
       });
   
       // Update memo tags on the server
-      await fetch('http://localhost:3000/api/memos/updateTags', {
+      await fetch(`http://localhost:3000/api/memos/${memoid}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          action: 'updateMemoTags',
-          id: id,
-          locationName: selectedLocationPop,
-          memoIndex: locations[selectedLocationPop].memo.findIndex((m: { memo: any; }) => m.memo === selectedMemo.memo),
-          tags: updatedTags
-        }),
+        body: JSON.stringify({tags: updatedTags}),
       });
   
       // Update user tags
       const updatedUserTags = [...tags, ...updatedTags.filter((cat: any) => !tags.includes(cat))];
-      await fetch('http://localhost:3000/api/memos/updateTags', {
+      await fetch(`http://localhost:3000/api/users/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          action: 'updateUsernameTags',
-          id: id,
-          locationName: '',
-          memoIndex: '',
-          tags: updatedUserTags
-        }),
+        body: JSON.stringify({tags: updatedUserTags}),
       });
       setTags(updatedUserTags);
     } catch (error) {
