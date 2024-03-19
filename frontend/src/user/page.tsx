@@ -4,14 +4,15 @@ import {useNavigate} from 'react-router-dom'
 
 const User = () => {
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
+    const [route, setRoute] = useState('');
+    const [id, setId] = useState('');
     const [existingUserData, setExistingUserData] = useState([]);
     const [loggedIn, setLoggedIn] = useState(false); // New state for login status
 
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await fetch('http://localhost:3000/api/users/getAccounts');
+          const response = await fetch('http://localhost:3000/api/users/');
           const data = await response.json();
           console.log('Fetched Accounts:', data);
           setExistingUserData(data || []); // Set the data in state
@@ -35,7 +36,7 @@ const User = () => {
       existingUserData.forEach((user)=>{
           if(user.username === enteredUsername){
             if(user.password == enteredPassword && user.email === enteredEmail){
-              setUsername(user.username);
+              setId(user._id);
               setLoggedIn(true);
             }else {
               // Handle incorrect credentials (show an error message, for example)
@@ -49,7 +50,7 @@ const User = () => {
     // Redirect logic
     if (loggedIn) {
       // Redirect to profile page or any other page
-      navigate(`/profile?username=${username}`);
+      navigate(`/profile?id=${id}`);
     }
     return (
       <main className='Create-Profile'>

@@ -1,12 +1,16 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-
+import L from 'leaflet';
+import markerIcon from '/images/marker-icon.png';
 const MapForm = ({ selectedLocation, onMapClick }) => {
   const [initialPosition, setInitialPosition] = useState([49.27326489299744, -123.10365200042726]);
 
   const [positions, setPositions] = useState([initialPosition]);
-
+  const customMarkerIcon = new L.Icon({
+    iconUrl: markerIcon,
+    iconSize: [32, 32], // Adjust the size of your marker icon as needed
+  });
   useEffect(() => {
     if (selectedLocation) {
       console.log(selectedLocation);
@@ -14,9 +18,8 @@ const MapForm = ({ selectedLocation, onMapClick }) => {
       // Add a new position for the selected location
       setPositions([...positions, selectedLocation]);
       setInitialPosition(selectedLocation);
-      
-      // Optionally, you can perform any navigation logic here
-      // Example: onMapClick(selectedLocation);
+      addMarkerAndNavigate(selectedLocation);
+
     }
   }, [selectedLocation]);
 
@@ -44,7 +47,7 @@ const MapForm = ({ selectedLocation, onMapClick }) => {
     };
 
     return positions.map((position, index) => (
-      <Marker key={index} position={position} draggable={true} eventHandlers={{
+      <Marker key={index} position={position} icon={customMarkerIcon} draggable={true} eventHandlers={{
         dragend: (e) => {
           const updatedPositions = [...positions];
           updatedPositions[index] = [e.target.getLatLng().lat, e.target.getLatLng().lng]; // Update the position at the specified index

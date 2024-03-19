@@ -9,16 +9,18 @@ const CreateMemo = ({}) => {
   const navigate = useNavigate();
   const [locationName, setLocationName] = useState('');
   const [location, setLocation] = useState<[number, number]>([49.27326489299744, -123.10365200042726]);
-  const [memo, setMemo] = useState('');
+  const [description, setMemo] = useState('');
+  const [name, setName] = useState('');
   const [savedLocations, setSavedLocations] = useState({});
-  const [username, setUsername] = useState('');
+  const [id, setID] = useState('');
   const [reloadDropdown, setReloadDropdown] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [newCategory, setNewCategory] = useState('');
+  const [tags, setTags] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [newTag, setNewTag] = useState('');
   const [submitted, setSubmitted] = useState(false);
-
+  const [userData, setUserData] = useState({});
+  
   const handleLocationSelected = (location) => {
     console.log(location)
     // Set the selected location in state
@@ -28,21 +30,16 @@ const CreateMemo = ({}) => {
   const fetchCategories = async () => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
-      const username = searchParams.get('username') || '';
-      setUsername(username);
-
+      const idFromQuery = searchParams.get('id') || '';
+      setID(idFromQuery);
+      console.log(id);
       // Fetch memo data from the server
-      const response = await fetch('http://localhost:3000/api/users/getAccounts');
+      const response = await fetch(`http://localhost:3000/api/users/${idFromQuery}`);
       const data = await response.json();
-      var u;
-      data.forEach((user)=>{
-        if(user.username === username){
-          u = user
-        }
-      });
-      console.log('Fetched Accounts:', u);
-      const categories = u.tags;
-      setCategories(categories);
+      console.log('Fetched Account:', data);
+      const tags = data.tags;
+      setUserData(data);
+      setTags(tags);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -50,11 +47,8 @@ const CreateMemo = ({}) => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const usernameFromQuery = searchParams.get('username') || '';
-
-    // Update the state with the username
-    setUsername(usernameFromQuery);
-
+    const idFromQuery = searchParams.get('is') || '';
+    setID(idFromQuery);
     const fetchLocationName = async () => {
       const [lat, lon] = location;
 
@@ -83,11 +77,11 @@ const CreateMemo = ({}) => {
     setReloadDropdown(true);
     fetchLocationName();
     fetchCategories();
-  }, [location, savedLocations, username]);
+  }, [location, savedLocations, id]);
 
-  const handleCategoryChange = (event) => {
+  const handleTagChange = (event) => {
     const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
-    setSelectedCategories(selectedOptions);
+    setSelectedTags(selectedOptions);
   };
 
   const handleMapClick = (clickedLocation: [number, number]) => {
@@ -96,17 +90,17 @@ const CreateMemo = ({}) => {
   };
 
   const createSaveLoc = async () => {
-    const newLocation = { locationName, location };
-    try {
-      // Make a POST request to the createMemo API route
-      const response = await fetch("http://localhost:3000/api/memos/createSaveLoc", {
-        method: 'POST',
+    const newLocation = { name: locationName, coordinates: location };
+      try {
+      const updatedSaveLoc = [...userData.saveLoc, newLocation];
+      const updateUserResponse  = await fetch(`http://localhost:3000/api/users/${id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({username,locationName,location }),
+        body: JSON.stringify({saveLoc: updatedSaveLoc}),
       });
-      const data = await response.json();
+      const data = await updateUserResponse .json();
       if (data.success) {
         setReloadDropdown(true);
       } else {
@@ -126,21 +120,31 @@ const CreateMemo = ({}) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const target = event.target;
-
-    const enteredlocation = target.elements.locationName.value;
-    const enteredmemo = target.elements.memo.value;
-
+    const date = new Date();
+    const newLocation = { name: locationName, coordinates: location };
     try {
       // Make a POST request to the createMemo API route
-      const response = await fetch("http://localhost:3000/api/memos/createMemo", {
+      const response = await fetch(`http://localhost:3000/api/memos/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({username,location,locationName, memo, selectedCategories }),
+        body: JSON.stringify({name, date, location:newLocation, description, user_id:id, selectedTags }),
       });
       const data = await response.json();
-      if (data.success) {
+      const newMemoId = data.memo._id;
+
+      // Update the memos array in userData with the new memo ID
+      const updatedMemos = [...userData.memos, newMemoId];
+      const response2 = await fetch(`http://localhost:3000/api/users/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({tags: tags, memos: updatedMemos}),
+      });
+      const data2 = await response2.json();
+      if (data.success && data2.success) {
         // Memo created successfully, redirect to the profile page
         setSubmitted(true);
       } else {
@@ -157,16 +161,16 @@ const CreateMemo = ({}) => {
     setMemo('');
   };
 
-  const handleNewCategory = () => {
-    if (newCategory.trim() !== '') {
-      setCategories([...categories, newCategory]);
-      setSelectedCategories([...selectedCategories, newCategory]); // Add the new category to selected categories too
-      setNewCategory('');
+  const handleNewTag = () => {
+    if (newTag.trim() !== '') {
+      setTags([...tags, newTag]);
+      setSelectedTags([...selectedTags, newTag]); // Add the new category to selected categories too
+      setNewTag('');
     }
   };
 
   if (submitted) {
-    navigate(`/dashboard?username=${username}`);    
+    navigate(`/dashboard?id=${id}`);    
   }
 
   return (
@@ -191,40 +195,52 @@ const CreateMemo = ({}) => {
           />
           <button type="button" onClick={createSaveLoc}>Save Location</button>
         </div>
-        <GetSavedLocations reloadDropdown={reloadDropdown} username={username} onDropdownReloaded={handleDropdownReloaded} onLocationSelected={handleLocationSelected}/>
+        <GetSavedLocations reloadDropdown={reloadDropdown} id={id} onDropdownReloaded={handleDropdownReloaded} onLocationSelected={handleLocationSelected}/>
         <div className="input-container">
-          <label htmlFor='categories'>Categories</label>
-          {categories.map((category) => (
-            <div key={category} className="checkbox-container">
+          <label htmlFor='tags'>Tags</label>
+          {tags && tags.map((tag) => (
+            <div key={tag} className="checkbox-container">
               <input
                 type="checkbox"
-                id={category}
-                name={category}
-                value={category}
-                checked={selectedCategories.includes(category)}
+                id={tag}
+                name={tag}
+                value={tag}
+                checked={selectedTags.includes(tag)}
                 onChange={(e) => {
                   const isChecked = e.target.checked;
-                  setSelectedCategories((prevCategories) => {
+                  setSelectedTags((prevTags) => {
                     if (isChecked) {
-                      return [...prevCategories, category];
+                      return [...prevTags, tag];
                     } else {
-                      return prevCategories.filter((prevCategory) => prevCategory !== category);
+                      return prevTags.filter((prevTag) => prevTag!== tag);
                     }
                   });
                 }}
               />
-              <label htmlFor={category}>{category}</label>
+              <label htmlFor={tag}>{tag}</label>
             </div>
           ))}
           <div>
             <input
               type="text"
-              value={newCategory}
-              onChange={(e) => setNewCategory(e.target.value)}
-              placeholder="Enter a new category"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              placeholder="Enter a new tag"
             />
-            <button type="button" onClick={handleNewCategory}>Add</button>
+            <button type="button" onClick={handleNewTag}>Add</button>
           </div>
+        </div>
+        <div className="input-container">
+          <label htmlFor='name'>Title</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            className='name'
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
         <div className="input-container">
           <label htmlFor='memo'> Memo</label>
@@ -233,7 +249,7 @@ const CreateMemo = ({}) => {
             name="memo"
             className='memo'
             required
-            value={memo}
+            value={description}
             onChange={(e) => setMemo(e.target.value)}
           />
         </div>
@@ -242,9 +258,9 @@ const CreateMemo = ({}) => {
           <input type="submit" value="Submit" />
         </div>
       </form>
-      <div className='button-link'><Link to={'/profile?username='+username+''}>Profile</Link></div>
-      <div className='button-link'><Link to={'/dashboard?username='+username+''}>Dashboard</Link></div>
-      <div className='button-link'><Link to={'/lens?username='+username+''} className='buttonLink'>Lens</Link></div>
+      <div className='button-link'><Link to={'/profile?id='+id+''}>Profile</Link></div>
+      <div className='button-link'><Link to={'/dashboard?id='+id+''}>Dashboard</Link></div>
+      <div className='button-link'><Link to={'/lens?id='+id+''} className='buttonLink'>Lens</Link></div>
 
     </main>
   );

@@ -8,8 +8,8 @@ const CreateAccountPage = () => {
   const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
   const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
+    firstname: '',
+    lastname: '',
     username: '',
     email: '',
     password: '',
@@ -19,7 +19,7 @@ const CreateAccountPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/users/getAccounts');
+        const response = await fetch('http://localhost:3000/api/users/');
         const data = await response.json();
         console.log('Fetched Accounts:', data);
         setExistingUserData(data || {}); // Set the data in state
@@ -43,7 +43,7 @@ const CreateAccountPage = () => {
 
     try {
       // Make a POST request to the createAccount API route
-      const response = await fetch('http://localhost:3000/api/users/createAccount', {
+      const response = await fetch('http://localhost:3000/api/users/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,23 +72,23 @@ const CreateAccountPage = () => {
     <main className='Create-Account'>
       <form onSubmit={handleSubmit}>
         <h2>Create Account</h2>
-        <label htmlFor='firstName'>First Name</label>
+        <label htmlFor='firstname'>First Name</label>
         <input
         type='text'
-        id='firstName'
-        name='firstName'
-        value={userData.firstName}
+        id='firstname'
+        name='firstname'
+        value={userData.firstname}
         required
-        onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, firstName: e.target.value }))}
+        onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, firstname: e.target.value }))}
         />
-        <label htmlFor='lastName'>Last Name</label>
+        <label htmlFor='lastname'>Last Name</label>
         <input
         type='text'
-        id='lastName'
-        name='lastName'
-        value={userData.lastName}
+        id='lastname'
+        name='lastname'
+        value={userData.lastname}
         required
-        onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, lastName: e.target.value }))}
+        onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, lastname: e.target.value }))}
         />
         <label htmlFor='username'>Username</label>
         <input
