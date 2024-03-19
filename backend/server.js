@@ -8,7 +8,7 @@ const db = require('./utils/db-init')
 const dotenv = require('dotenv');
 dotenv.config();
 
-var indexRouter = require('./routes/index');
+// var indexRouter = require('./routes/index');
 var MemoServiceRouter = require('./routes/MemoService');
 var UserServiceRouter = require('./routes/UserService');
 
@@ -43,7 +43,7 @@ app.use(function (err, req, res, next) {
 });
 
 // ============== Setup Routes ==============
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 app.use('/api/memos', MemoServiceRouter);
 app.use('/api/users', UserServiceRouter);
 

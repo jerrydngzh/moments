@@ -1,7 +1,9 @@
 var express = require('express');
 var router = express.Router();
+import memoHelpers from '../models/db'
 
 router.get('/', (req, res) => {
+    
     res.send('Test: GET all memos');
 });
 
