@@ -1,8 +1,17 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose }) => {
   const [newTag, setNewTag] = useState('');
+  const [reloadKey, setReloadKey] = useState(true);
+
+  useEffect(() => {
+    // Reset newTag state when the component is reloaded
+    if(reloadKey){
+      setNewTag('');
+      setReloadKey(false);
+    }
+  }, [reloadKey]);
 
   const handleNewTagChange = (event) => {
     setNewTag(event.target.value);
@@ -10,14 +19,16 @@ const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, hand
 
   const handleAddTag = () => {
     if (newTag.trim() !== '') {
-      handleUpdateTags([...selectedMemo.selectedTags, newTag], selectedMemo._id);
-      setNewTag('');
+      handleUpdateTags([...selectedMemo.tags, newTag], selectedMemo._id);
+
+      setReloadKey(true);
     }
   };
 
   const handleRemoveTag = (tagToRemove) => {
-    const updatedTags = selectedMemo.selectedTags.filter(tag => tag !== tagToRemove);
-    handleUpdateTags(updatedTags);
+    const updatedTags = selectedMemo.tags.filter(tag => tag !== tagToRemove);
+    handleUpdateTags(updatedTags, selectedMemo._id);
+    setReloadKey(true);
   };
 
   return (

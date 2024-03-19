@@ -17,34 +17,41 @@ const Dashboard = () => {
   const [showPopup, setShowPopup] = useState(false); // State to manage the popup visibility
   const [userData, setUserData] = useState({});
   const [memos, setMemos] = useState({});
+  const [reloadDashboard, setReloadDashboard] = useState(true); // State to control dashboard reload
+
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (reloadDashboard) {
+      fetchData();
+      setReloadDashboard(false); // Reset reload flag
+    }
+  }, [reloadDashboard]);
 
   const fetchData = async () => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
-      const idFromQuery = searchParams.get('is') || '';
+      const idFromQuery = searchParams.get('id') || '';
       setID(idFromQuery);
       // Fetch memo data from the server
       const response = await fetch(`http://localhost:3000/api/users/${idFromQuery}`);
       const data = await response.json();
-      setUserData(data[0]);
-      setTags(data[0].tags || []);
-      fetchMemos(data[0].memos);
+      console.log(data);
+      setUserData(data);
+      setTags(data.tags || []);
+      fetchMemos(data.memos);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
 
-  const fetchMemos = async (memoID) => {
+  const fetchMemos = async (memoID: any) => {
     console.log(memoID);
     for (const id of memoID) {
       try {
         const response = await fetch(`http://localhost:3000/api/memos/${id}`);
         const data = await response.json(); 
-        setMemos((prevMemos) => ({...prevMemos, [id]: data}));
-        setLocations((prevLoc) => ({...prevLoc, [data.location.name]: data.location.coordinates}));
+        setMemos({...memos, [id]:data});
+        console.log(memos);
+        setLocations({...locations, [data.location.name]: data.location.coordinates});
       } catch (error) {
         console.error('Error fetching memo data:', error);
       }
@@ -74,72 +81,90 @@ const Dashboard = () => {
     } else {
       setSelectedTags([...selectedTags, tag]);
     }
+    setReloadDashboard(true);
   };
 
   const handleNewTagChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
     setNewTag(event.target.value);
+    setReloadDashboard(true);
   };
 
   const handleAddTag = async () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const idFromQuery = searchParams.get('id') || '';
+    setID(idFromQuery);
+    console.log(idFromQuery);
     if (newTag.trim() !== '' && !tags.includes(newTag)) {
       try {
-        await fetch(`http://localhost:3000/api/users/${id}`, {
+        const updateUserResponse  =  await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({tags: [...tags, newTag]}),
         });
-        setTags([...tags, newTag]);
-        setNewTag('');
+        const data = await updateUserResponse .json();
+        if (data.success) {
+          setTags([...tags, newTag]);
+          setNewTag('');
+        }
       } catch (error) {
         console.error('Error updating tags:', error);
       }
     }
+    setReloadDashboard(true);
   };
 
   const handleDeleteTag = async (tagToDelete: never) => {
-      // Filter out the deleted tag from the user's tags list
-      const remainingTags = tags.filter((tag) => tag !== tagToDelete);
-      try {
-        // Update memo tags
-        const updatedLocations = { ...locations };
-        // Iterate over each location
-        await Promise.all(Object.keys(updatedLocations).map(async (locationName) => {
-          const memos = updatedLocations[locationName].memo;
-          // Iterate over each memo in the location
-          await Promise.all(memos.map(async (memo: { tags: any[]; description: any; }) => {
-            if (memo.tags.includes(tagToDelete)) {
+    console.log(memos);
+    // Filter out the deleted tag from the user's tags list
+    const remainingTags = tags.filter((tag) => tag !== tagToDelete);
+    try {
+      // Update memo tags
+      const updatedLocations = { ...locations };
+      // Iterate over each location
+      for (const location in updatedLocations) {
+        console.log(location);
+        for (const memo in memos) {
+          console.log(memos[memo]);
+          if (memos[memo].location.name === location) {
+            if (memos[memo].tags.includes(tagToDelete)) {
               // If the memo contains the deleted tag, update its selected tags
-              const updatedTags = memo.tags.filter((cat: any) => cat !== tagToDelete);
+              const updatedTags = memos[memo].tags.filter((cat: any) => cat !== tagToDelete);
               // Remove tag from memo first
-              memo.tags = updatedTags;
+              memos[memo].tags = updatedTags;
               // Update memo tags on the server
-              await fetch(`http://localhost:3000/api/memos/${memo._id}`, {
+              await fetch(`http://localhost:3000/api/memos/${memos[memo]._id}`, {
                 method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({tags: updatedTags}),
+                body: JSON.stringify({ tags: updatedTags }),
               });
             }
-          }));
-        }));
-    
-        // Update user tags on the server
-        await fetch(`http://localhost:3000/api/users/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({tags: remainingTags}),
-        });
-        // Update the user's tags list in the component state
-        setTags(remainingTags);
-      } catch (error) {
-        console.error('Error deleting tag:', error);
+          }
+        }
       }
-    };
+  
+      const searchParams = new URLSearchParams(window.location.search);
+      const idFromQuery = searchParams.get('id') || '';
+      // Update user tags on the server
+      console.log(remainingTags);
+      await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tags: remainingTags }),
+      });
+      // Update the user's tags list in the component state
+      setTags(remainingTags);
+    } catch (error) {
+      console.error('Error deleting tag:', error);
+    }
+    setReloadDashboard(true);
+  };
+  
   
 
   // Function to update tags of the selected memo
@@ -158,10 +183,11 @@ const Dashboard = () => {
         },
         body: JSON.stringify({tags: updatedTags}),
       });
-  
+      const searchParams = new URLSearchParams(window.location.search);
+      const idFromQuery = searchParams.get('id') || '';
       // Update user tags
       const updatedUserTags = [...tags, ...updatedTags.filter((cat: any) => !tags.includes(cat))];
-      await fetch(`http://localhost:3000/api/users/${id}`, {
+      await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -172,6 +198,7 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Error updating memo tags:', error);
     }
+    setReloadDashboard(true);
   };
   
 
@@ -179,7 +206,7 @@ const Dashboard = () => {
   const filteredLocations = Object.keys(locations).reduce((filtered, locationName) => {
     // Filter memos based on selected tags and location
     const filteredMemos = Object.values(memos).filter(memo =>
-      memo.location.name === locationName && selectedTags.every(tag => memo.selectedTags.includes(tag))
+      memo.location.name === locationName && selectedTags.every(tag => memo.tags.includes(tag))
     );
   
     // Check if there are any memos for the current location after filtering
