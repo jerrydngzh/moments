@@ -11,7 +11,7 @@ const User = () => {
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await fetch('https://localhost:8080/api/getAccount');
+          const response = await fetch('http://localhost:3000/api/users/getAccounts');
           const data = await response.json();
           console.log('Fetched Accounts:', data);
           setExistingUserData(data || {}); // Set the data in state

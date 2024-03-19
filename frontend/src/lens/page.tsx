@@ -19,7 +19,7 @@ const Lens: React.FC = () => {
         const username = searchParams.get('username') || '';
         setUsername(username);
 
-        const response = await fetch(`https://localhost:8080/api/getMemos`);
+        const response = await fetch(`http://localhost:3000/api/memos/getMemos`);
         const data = await response.json();
         const { locations } = data[username] || {};
         const userLocations: Location[] = Object.entries(locations || {}).map(([address, location]: [string, any]) => ({

@@ -26,7 +26,7 @@ const Dashboard = () => {
       const username = searchParams.get('username') || '';
       setUsername(username);
       // Fetch memo data from the server
-      const response = await fetch(`https://localhost:8080/api/getMemos`);
+      const response = await fetch(`http://localhost:3000/api/memos/getMemos`);
       const data = await response.json();
       const { categories, locations } = data[username];
       setCategories(categories || []);
@@ -66,7 +66,7 @@ const Dashboard = () => {
   const handleAddCategory = async () => {
     if (newCategory.trim() !== '' && !categories.includes(newCategory)) {
       try {
-        await fetch('https://localhost:8080/api/updateCategories', {
+        await fetch('http://localhost:3000/api/memos/updateCategories', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -101,7 +101,7 @@ const Dashboard = () => {
             // Remove category from memo first
             memo.selectedCategories = updatedCategories;
             // Update memo categories on the server
-            await fetch('https://localhost:8080/api/updateCategories', {
+            await fetch('http://localhost:3000/api/memos/updateCategories', {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
@@ -119,7 +119,7 @@ const Dashboard = () => {
       }));
 
       // Update user categories
-      await fetch('https://localhost:8080/api/updateCategories', {
+      await fetch('http://localhost:3000/api/memos/updateCategories', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -147,7 +147,7 @@ const Dashboard = () => {
       });
   
       // Update memo categories on the server
-      await fetch('https://localhost:8080/api/updateCategories', {
+      await fetch('http://localhost:3000/api/memos/updateCategories', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -163,7 +163,7 @@ const Dashboard = () => {
   
       // Update user categories
       const updatedUserCategories = [...categories, ...updatedCategories.filter(cat => !categories.includes(cat))];
-      await fetch('https://localhost:8080/api/updateCategories', {
+      await fetch('http://localhost:3000/api/memos/updateCategories', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

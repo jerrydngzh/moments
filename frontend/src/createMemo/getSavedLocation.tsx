@@ -7,7 +7,7 @@ const GetSavedLocations = ({ username, reloadDropdown, onDropdownReloaded, onLoc
   useEffect(() => {
     const fetchSavedLocations = async () => {
       try {
-        const response = await fetch('/api/getSaveLoc');
+        const response = await fetch('http://localhost:3000/api/memos/getSaveLoc');
         const data = await response.json();
         setSavedLocations(data[username] || []);
         onDropdownReloaded(); // Call the onDropdownReloaded function after the dropdown has been reloaded
