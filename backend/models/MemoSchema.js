@@ -1,8 +1,6 @@
-import mongoose from 'mongoose'
-import Location from './location'
-const { Schema, model } = mongoose
+const mongoose = require('mongoose')
 
-const locationSchema = new Schema({
+const locationSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -13,7 +11,7 @@ const locationSchema = new Schema({
     },
 })
 
-const memoSchema = new Schema({
+const memoSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -31,7 +29,7 @@ const memoSchema = new Schema({
         required: true
     }, 
     user_id: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: true
     },
 
@@ -45,6 +43,5 @@ const memoSchema = new Schema({
         default: []
     }
 })
-
-const Memo = model('Memo', memoSchema)
-export default Memo
+const Memo = mongoose.model('Memo', memoSchema)
+module.exports = Memo

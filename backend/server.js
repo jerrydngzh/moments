@@ -3,20 +3,17 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const db = require('./utils/db-init')
-
+const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
+const PORT = process.env.PORT || 3000;
+const DB_NAME = process.env.DB_NAME || 'db';
 
-// var indexRouter = require('./routes/index');
+var indexRouter = require('./routes/index');
 var MemoServiceRouter = require('./routes/MemoService');
 var UserServiceRouter = require('./routes/UserService');
-
-const PORT = process.env.PORT || 3000;
-
 var app = express();
 
-// NOTE: IGNORE -- default template setup via `npx express-generator`
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -26,7 +23,14 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// ============== Setup Routes ==============
+app.use('/', indexRouter);
+app.use('/api/memos', MemoServiceRouter);
+app.use('/api/users', UserServiceRouter);
+
+// ========= Error Handling =========
+// app.use(express.static(path.join(__dirname, 'public')));
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -42,15 +46,13 @@ app.use(function (err, req, res, next) {
   res.render('error');
 });
 
-// ============== Setup Routes ==============
-// app.use('/', indexRouter);
-app.use('/api/memos', MemoServiceRouter);
-app.use('/api/users', UserServiceRouter);
-
 // Connect to DB 
-db.InitDB()
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
+mongoose.set('strictQuery', false);
+mongoose.connect(`mongodb://localhost:27017/${DB_NAME}`)
+    .then(() => {
+      console.log('Connected to MongoDB...');
+      app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+      })
     })
-  })
+    .catch(err => console.error('Could not connect to MongoDB...', err));
