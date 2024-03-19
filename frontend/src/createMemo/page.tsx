@@ -32,7 +32,7 @@ const CreateMemo = ({}) => {
       setUsername(username);
 
       // Fetch memo data from the server
-      const response = await fetch('http://localhost:3000/api/memos/getMemos');
+      const response = await fetch('https://localhost:8080/api/getMemos');
       const data = await response.json();
       const categories = data[username].categories || [];
 
@@ -93,7 +93,7 @@ const CreateMemo = ({}) => {
     const newLocation = { locationName, location };
     try {
       // Make a POST request to the createMemo API route
-      const response = await fetch("http://localhost:3000/api/memos/createSaveLoc", {
+      const response = await fetch("https://localhost:8080/api/createSaveLoc", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ const CreateMemo = ({}) => {
 
     try {
       // Make a POST request to the createMemo API route
-      const response = await fetch("http://localhost:3000/api/memos/createMemo", {
+      const response = await fetch("https://localhost:8080/api/createMemo", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

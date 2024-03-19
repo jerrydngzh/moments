@@ -16,7 +16,7 @@ const Profile = () => {
     // Fetch user data from the JSON file
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/users/getAccounts');
+        const response = await fetch('https://localhost:8080/api/getAccount');
         const data = await response.json();
         console.log('Fetched Accounts:', data);
         if(data[usernameFromQuery]){
