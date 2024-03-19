@@ -1,5 +1,17 @@
 import mongoose from 'mongoose'
+import Location from './location'
 const { Schema, model } = mongoose
+
+const locationSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    coordinates: {
+        type: [Number],
+        required: true
+    },
+})
 
 const memoSchema = new Schema({
     name: {
@@ -7,11 +19,11 @@ const memoSchema = new Schema({
         required: true
     },
     date: {
-        type: Date,
+        type: String,
         required: true
     },
     location: {
-        type: String, // NOTE: location object 
+        type: locationSchema,
         required: true
     },
     description: {
@@ -19,7 +31,7 @@ const memoSchema = new Schema({
         required: true
     }, 
     user_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
 

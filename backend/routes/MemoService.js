@@ -1,20 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-/*
-Memo:
-- memo_id: string
-- title: string
-- content: string
-- created_at: string
-- updated_at: string
-- tags/categories: string[]
-- location: string
-- latitude: number
-- longitude: number
-- user_id: string
-*/
-
 router.get('/', (req, res) => {
     res.send('Test: GET all memos');
 });
