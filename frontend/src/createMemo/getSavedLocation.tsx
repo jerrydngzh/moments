@@ -7,9 +7,16 @@ const GetSavedLocations = ({ username, reloadDropdown, onDropdownReloaded, onLoc
   useEffect(() => {
     const fetchSavedLocations = async () => {
       try {
-        const response = await fetch('/api/getSaveLoc');
+        const response = await fetch('http://localhost:3000/api/users/getAccounts');
         const data = await response.json();
-        setSavedLocations(data[username] || []);
+        var u;
+        data.forEach((user)=>{
+          if(user.username === username){
+            u = user
+          }
+        });
+        console.log('Fetched Accounts:', u);
+        setSavedLocations(data.saveLoc || []);
         onDropdownReloaded(); // Call the onDropdownReloaded function after the dropdown has been reloaded
       } catch (error) {
         console.error('Error fetching saved locations:', error);

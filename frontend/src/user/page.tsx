@@ -4,17 +4,17 @@ import {useNavigate} from 'react-router-dom'
 
 const User = () => {
     const navigate = useNavigate();
-    const [route, setRoute] = useState('');
-    const [existingUserData, setExistingUserData] = useState({});
+    const [username, setUsername] = useState('');
+    const [existingUserData, setExistingUserData] = useState([]);
     const [loggedIn, setLoggedIn] = useState(false); // New state for login status
 
     useEffect(() => {
       const fetchData = async () => {
         try {
-          const response = await fetch('https://localhost:8080/api/getAccount');
+          const response = await fetch('http://localhost:3000/api/users/getAccounts');
           const data = await response.json();
           console.log('Fetched Accounts:', data);
-          setExistingUserData(data || {}); // Set the data in state
+          setExistingUserData(data || []); // Set the data in state
         } catch (error) {
           console.error('Error fetching accounts:', error);
         }
@@ -32,22 +32,18 @@ const User = () => {
       const enteredUsername = target.elements.username.value;
       const enteredPassword = target.elements.password.value;
       const enteredEmail = target.elements.email.value;
-
-      if(existingUserData[enteredUsername]){
-        const userData = existingUserData[enteredUsername];
-        if (enteredPassword === userData.password && enteredEmail === userData.email) {
-          // Navigate to another page if the credentials match
-          setLoggedIn(true);
-          
-        } else {
-          // Handle incorrect credentials (show an error message, for example)
-          console.log('Incorrect username or password');
-        }
-      }
-      else{
-        console.log('Incorrect username or password');
-      }
-
+      existingUserData.forEach((user)=>{
+          if(user.username === enteredUsername){
+            if(user.password == enteredPassword && user.email === enteredEmail){
+              setUsername(user.username);
+              setLoggedIn(true);
+            }else {
+              // Handle incorrect credentials (show an error message, for example)
+              console.log('Incorrect username or password');
+            }
+          }
+      });
+      
       
     };
     // Redirect logic

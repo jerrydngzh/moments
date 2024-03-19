@@ -2,7 +2,7 @@
 import {useNavigate} from 'react-router-dom'
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Map from '../lens/map';
+import MapForm from './map';
 import GetSavedLocations from './getSavedLocation';
 
 const CreateMemo = ({}) => {
@@ -32,10 +32,16 @@ const CreateMemo = ({}) => {
       setUsername(username);
 
       // Fetch memo data from the server
-      const response = await fetch('https://localhost:8080/api/getMemos');
+      const response = await fetch('http://localhost:3000/api/users/getAccounts');
       const data = await response.json();
-      const categories = data[username].categories || [];
-
+      var u;
+      data.forEach((user)=>{
+        if(user.username === username){
+          u = user
+        }
+      });
+      console.log('Fetched Accounts:', u);
+      const categories = u.tags;
       setCategories(categories);
     } catch (error) {
       console.error('Error fetching categories:', error);
@@ -93,7 +99,7 @@ const CreateMemo = ({}) => {
     const newLocation = { locationName, location };
     try {
       // Make a POST request to the createMemo API route
-      const response = await fetch("https://localhost:8080/api/createSaveLoc", {
+      const response = await fetch("http://localhost:3000/api/memos/createSaveLoc", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +132,7 @@ const CreateMemo = ({}) => {
 
     try {
       // Make a POST request to the createMemo API route
-      const response = await fetch("https://localhost:8080/api/createMemo", {
+      const response = await fetch("http://localhost:3000/api/memos/createMemo", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -170,7 +176,7 @@ const CreateMemo = ({}) => {
         <div className="map-container">
           <label htmlFor='location'> Location</label>
           <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-          <Map selectedLocation={selectedLocation} onMapClick={handleMapClick} />
+          <MapForm selectedLocation={selectedLocation} onMapClick={handleMapClick} />
         </div>
         <div className="input-container">
           <label htmlFor='locationName'>Location Name</label>

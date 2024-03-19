@@ -4,9 +4,12 @@ import {useNavigate} from 'react-router-dom'
 import React, { useEffect, useState } from 'react';
 
 const CreateAccountPage = () => {
+  
   const navigate = useNavigate();
   const [submitted, setSubmitted] = useState(false);
   const [userData, setUserData] = useState({
+    firstName: '',
+    lastName: '',
     username: '',
     email: '',
     password: '',
@@ -16,7 +19,7 @@ const CreateAccountPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://localhost:8080/api/getAccount');
+        const response = await fetch('http://localhost:3000/api/users/getAccounts');
         const data = await response.json();
         console.log('Fetched Accounts:', data);
         setExistingUserData(data || {}); // Set the data in state
@@ -40,7 +43,7 @@ const CreateAccountPage = () => {
 
     try {
       // Make a POST request to the createAccount API route
-      const response = await fetch('https://localhost:8080/api/createAccount', {
+      const response = await fetch('http://localhost:3000/api/users/createAccount', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,6 +72,24 @@ const CreateAccountPage = () => {
     <main className='Create-Account'>
       <form onSubmit={handleSubmit}>
         <h2>Create Account</h2>
+        <label htmlFor='firstName'>First Name</label>
+        <input
+        type='text'
+        id='firstName'
+        name='firstName'
+        value={userData.firstName}
+        required
+        onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, firstName: e.target.value }))}
+        />
+        <label htmlFor='lastName'>Last Name</label>
+        <input
+        type='text'
+        id='lastName'
+        name='lastName'
+        value={userData.lastName}
+        required
+        onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, lastName: e.target.value }))}
+        />
         <label htmlFor='username'>Username</label>
         <input
         type='text'
