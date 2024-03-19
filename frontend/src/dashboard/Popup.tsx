@@ -1,46 +1,48 @@
 'use client'
 import React, { useState } from 'react';
 
-const Popup = ({ selectedMemo, selectedLocationPop, categories, handleUpdateCategories, handleClose }) => {
-  const [newCategory, setNewCategory] = useState('');
+const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose }) => {
+  const [newTag, setNewTag] = useState('');
 
-  const handleNewCategoryChange = (event) => {
-    setNewCategory(event.target.value);
+  const handleNewTagChange = (event) => {
+    setNewTag(event.target.value);
   };
 
-  const handleAddCategory = () => {
-    if (newCategory.trim() !== '') {
-      handleUpdateCategories([...selectedMemo.selectedCategories, newCategory]);
-      setNewCategory('');
+  const handleAddTag = () => {
+    if (newTag.trim() !== '') {
+      handleUpdateTags([...selectedMemo.selectedTags, newTag]);
+      setNewTag('');
     }
   };
 
-  const handleRemoveCategory = (categoryToRemove) => {
-    const updatedCategories = selectedMemo.selectedCategories.filter(category => category !== categoryToRemove);
-    handleUpdateCategories(updatedCategories);
+  const handleRemoveTag = (tagToRemove) => {
+    const updatedTags = selectedMemo.selectedTags.filter(tag => tag !== tagToRemove);
+    handleUpdateTags(updatedTags);
   };
 
   return (
     <div className="popup">
       <h2>Memo Details</h2>
-      <p><strong>Memo:</strong> {selectedMemo.memo}</p>
-      <p><strong>Location:</strong> {selectedLocationPop}</p>
-      <p><strong>Categories:</strong>
-        {selectedMemo.selectedCategories.map((category, index) => (
+      <p><strong>Title:</strong> {selectedMemo.name}</p>
+      <p><strong>Memo:</strong> {selectedMemo.description}</p>
+      <p><strong>Location:</strong> {selectedMemo.location.name}</p>
+      <p><strong>Coordinates:</strong> {selectedMemo.location.coordinates}</p>
+      <p><strong>Tags:</strong>
+        {selectedMemo.tags.map((tag, index) => (
           <span key={index}>
-            {category}
-            <button onClick={() => handleRemoveCategory(category)}>Remove</button>
+            {tag}
+            <button onClick={() => handleRemoveTag(tag)}>Remove</button>
           </span>
         ))}
       </p>
       <div>
         <input
           type="text"
-          value={newCategory}
-          onChange={handleNewCategoryChange}
-          placeholder="Enter new category"
+          value={newTag}
+          onChange={handleNewTagChange}
+          placeholder="Enter new tag"
         />
-        <button onClick={handleAddCategory}>Add</button>
+        <button onClick={handleAddTag}>Add</button>
       </div>
       <button onClick={handleClose}>Close</button>
     </div>

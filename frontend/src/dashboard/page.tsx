@@ -13,7 +13,7 @@ const Dashboard = () => {
   const [id, setID] = useState('');
   const [selectedLocationPop, setSelectedLocationPop] = useState(null);
   const [expandedLocations, setExpandedLocations] = useState({});
-  const [newCategory, setNewCategory] = useState('');
+  const [newTag, setNewTag] = useState('');
   const [showPopup, setShowPopup] = useState(false); // State to manage the popup visibility
   const [userData, setUserData] = useState({});
   const [memos, setMemos] = useState({});
@@ -29,15 +29,31 @@ const Dashboard = () => {
       // Fetch memo data from the server
       const response = await fetch(`http://localhost:3000/api/users/${idFromQuery}`);
       const data = await response.json();
-      setUserData(data);
-      setTags(data.tags || []);
-      
+      setUserData(data[0]);
+      setTags(data[0].tags || []);
+      fetchMemos(data[0].memos);
     } catch (error) {
-      console.error('Error fetching memo data:', error);
+      console.error('Error fetching user data:', error);
     }
   };
 
-  const handleLocationClick = (locationName) => {
+  const fetchMemos = async (memoID) => {
+    console.log(memoID);
+    for (const id of memoID) {
+      try {
+        const response = await fetch(`http://localhost:3000/api/memos/${id}`);
+        const data = await response.json(); 
+        setMemos((prevMemos) => ({...prevMemos, [id]: data}));
+        setLocations((prevLoc) => ({...prevLoc, [data.location.name]: data.location.coordinates}));
+      } catch (error) {
+        console.error('Error fetching memo data:', error);
+      }
+    }
+  };
+  
+
+  const handleLocationClick = (locationName: string | React.SetStateAction<null>) => {
+    console.log(locationName);
     setSelectedLocation(locationName);
     setExpandedLocations({
       ...expandedLocations,
@@ -45,27 +61,27 @@ const Dashboard = () => {
     });
   };
 
-  const handleMemoClick = (memo, locationName) => {
+  const handleMemoClick = (memo: React.SetStateAction<null>, locationName: string | React.SetStateAction<null>) => {
     setSelectedMemo(memo);
     setSelectedLocationPop(locationName);
     setShowPopup(true); // Show the popup when memo is clicked
   };
 
-  const handleCategoryChange = (category) => {
-    if (selectedTags.includes(category)) {
-      const remainingTags = selectedTags.filter((cat) => cat !== category);
+  const handleTagChange = (tag: never) => {
+    if (selectedTags.includes(tag)) {
+      const remainingTags = selectedTags.filter((cat) => cat !== tag);
       setSelectedTags(remainingTags);
     } else {
-      setSelectedTags([...selectedTags, category]);
+      setSelectedTags([...selectedTags, tag]);
     }
   };
 
-  const handleNewCategoryChange = (event) => {
-    setNewCategory(event.target.value);
+  const handleNewTagChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+    setNewTag(event.target.value);
   };
 
-  const handleAddCategory = async () => {
-    if (newCategory.trim() !== '' && !tags.includes(newCategory)) {
+  const handleAddTag = async () => {
+    if (newTag.trim() !== '' && !tags.includes(newTag)) {
       try {
         await fetch('http://localhost:3000/api/memos/updateTags', {
           method: 'PUT',
@@ -74,32 +90,32 @@ const Dashboard = () => {
           },
           body: JSON.stringify({
             action: 'updateUsernameTags',
-            username: username,
+            id: id,
             locationName: "",
             memoIndex: "",
-            tags: [...tags, newCategory]
+            tags: [...tags, newTag]
           }),
         });
-        setTags([...tags, newCategory]);
-        setNewCategory('');
+        setTags([...tags, newTag]);
+        setNewTag('');
       } catch (error) {
         console.error('Error updating tags:', error);
       }
     }
   };
 
-  const handleDeleteCategory = async (categoryToDelete) => {
-    const remainingTags = tags.filter((category) => category !== categoryToDelete);
+  const handleDeleteTag = async (tagToDelete: never) => {
+    const remainingTags = tags.filter((tag) => tag !== tagToDelete);
     try {
       // Update memo tags
       const updatedLocations = { ...locations };
       await Promise.all(Object.keys(updatedLocations).map(async (locationName) => {
         const memos = updatedLocations[locationName].memo;
-        await Promise.all(memos.map(async (memo) => {
-          if (memo.selectedTags.includes(categoryToDelete)) {
-            const memoIndex = updatedLocations[locationName].memo.findIndex((m) => m.memo === memo.memo);
-            const updatedTags = memo.selectedTags.filter((cat) => cat !== categoryToDelete);
-            // Remove category from memo first
+        await Promise.all(memos.map(async (memo: { selectedTags: any[]; memo: any; }) => {
+          if (memo.selectedTags.includes(tagToDelete)) {
+            const memoIndex = updatedLocations[locationName].memo.findIndex((m: { memo: any; }) => m.memo === memo.memo);
+            const updatedTags = memo.selectedTags.filter((cat: any) => cat !== tagToDelete);
+            // Remove tag from memo first
             memo.selectedTags = updatedTags;
             // Update memo tags on the server
             await fetch('http://localhost:3000/api/memos/updateTags', {
@@ -109,7 +125,7 @@ const Dashboard = () => {
               },
               body: JSON.stringify({
                 action: 'updateMemoTags',
-                username: username,
+                id: id,
                 locationName: locationName,
                 memoIndex: memoIndex,
                 tags: updatedTags
@@ -127,7 +143,7 @@ const Dashboard = () => {
         },
         body: JSON.stringify({
           action: 'updateUsernameTags',
-          username: username,
+          id: id,
           locationName: '',
           memoIndex: '',
           tags: remainingTags
@@ -135,12 +151,12 @@ const Dashboard = () => {
       });
       setTags(remainingTags);
     } catch (error) {
-      console.error('Error deleting category:', error);
+      console.error('Error deleting tag:', error);
     }
   };
 
   // Function to update tags of the selected memo
-  const handleUpdateMemoTags = async (updatedTags) => {
+  const handleUpdateMemoTags = async (updatedTags: any[]) => {
     try {
       setSelectedMemo({
         ...selectedMemo,
@@ -155,15 +171,15 @@ const Dashboard = () => {
         },
         body: JSON.stringify({
           action: 'updateMemoTags',
-          username: username,
+          id: id,
           locationName: selectedLocationPop,
-          memoIndex: locations[selectedLocationPop].memo.findIndex((m) => m.memo === selectedMemo.memo),
+          memoIndex: locations[selectedLocationPop].memo.findIndex((m: { memo: any; }) => m.memo === selectedMemo.memo),
           tags: updatedTags
         }),
       });
   
       // Update user tags
-      const updatedUserTags = [...tags, ...updatedTags.filter(cat => !tags.includes(cat))];
+      const updatedUserTags = [...tags, ...updatedTags.filter((cat: any) => !tags.includes(cat))];
       await fetch('http://localhost:3000/api/memos/updateTags', {
         method: 'PUT',
         headers: {
@@ -171,7 +187,7 @@ const Dashboard = () => {
         },
         body: JSON.stringify({
           action: 'updateUsernameTags',
-          username: username,
+          id: id,
           locationName: '',
           memoIndex: '',
           tags: updatedUserTags
@@ -186,15 +202,22 @@ const Dashboard = () => {
 
   // Filter locations based on selected tags
   const filteredLocations = Object.keys(locations).reduce((filtered, locationName) => {
-    const memos = locations[locationName].memo.filter((memo) =>
-      selectedTags.every((category) => memo.selectedTags.includes(category))
+    // Filter memos based on selected tags and location
+    const filteredMemos = Object.values(memos).filter(memo =>
+      memo.location.name === locationName && selectedTags.every(tag => memo.selectedTags.includes(tag))
     );
-    if (memos.length > 0) {
-      filtered[locationName] = { ...locations[locationName], memo: memos };
+  
+    // Check if there are any memos for the current location after filtering
+    if (filteredMemos.length > 0) {
+      filtered[locationName] = {
+        ...locations[locationName],
+        memo: filteredMemos
+      };
     }
+  
     return filtered;
   }, {});
-
+  
   return (
     <div className="dashboard-container">
       <h1>Memo Dashboard</h1>
@@ -203,27 +226,27 @@ const Dashboard = () => {
       <div className="tags-container">
         <h2>Tags</h2>
         <div className="tags-table">
-          <div className="category-row add-category-row">
+          <div className="tag-row add-tag-row">
             <input
               type="text"
-              value={newCategory}
-              onChange={handleNewCategoryChange}
-              placeholder="Enter new category"
-              className="category-input"
+              value={newTag}
+              onChange={handleNewTagChange}
+              placeholder="Enter new tag"
+              className="tag-input"
             />
-            <button onClick={handleAddCategory} className="add-category-button">Add</button>
+            <button onClick={handleAddTag} className="add-tag-button">Add</button>
           </div>
-          {tags.map((category, index) => (
-            <div key={index} className="category-row">
+          {tags.map((tag, index) => (
+            <div key={index} className="tag-row">
               <input
                 type="checkbox"
-                value={category}
-                checked={selectedTags.includes(category)}
-                onChange={() => handleCategoryChange(category)}
-                className="category-checkbox"
+                value={tag}
+                checked={selectedTags.includes(tag)}
+                onChange={() => handleTagChange(tag)}
+                className="tag-checkbox"
               />
-              <span>{category}</span>
-              <button onClick={() => handleDeleteCategory(category)} className="delete-category-button">Delete</button>
+              <span>{tag}</span>
+              <button onClick={() => handleDeleteTag(tag)} className="delete-tag-button">Delete</button>
             </div>
           ))}
         </div>
@@ -237,9 +260,10 @@ const Dashboard = () => {
             <h3>{locationName}</h3>
             {expandedLocations[locationName] && (
               <div className="memo-box">
-                {filteredLocations[locationName].memo.map((memo, index) => (
+                {/* Filter memos for the current location */}
+                {Object.values(memos).filter((memo) => memo.location.name === locationName).map((memo, index) => (
                   <div key={index} className="memo" onClick={() => handleMemoClick(memo, locationName)}>
-                    {memo.memo}
+                    {memo.description}
                   </div>
                 ))}
               </div>
@@ -253,15 +277,15 @@ const Dashboard = () => {
         <Popup
           selectedMemo={selectedMemo}
           selectedLocationPop={selectedLocationPop}
-          tags={tags}
+          tags={memos.tags}
           handleUpdateTags={handleUpdateMemoTags}
           handleClose={() => setShowPopup(false)} // Close the popup when close button is clicked
         />
       )}
 
-      <Link to={'/createMemo?username='+username+''} className='buttonLink'>Create Memo</Link>
-      <Link to={'/profile?username='+username+''} className='buttonLink'>Profile</Link>
-      <Link to={'/lens?username='+username+''} className='buttonLink'>Lens</Link>
+      <Link to={'/createMemo?id='+id+''} className='buttonLink'>Create Memo</Link>
+      <Link to={'/profile?id='+id+''} className='buttonLink'>Profile</Link>
+      <Link to={'/lens?id='+id+''} className='buttonLink'>Lens</Link>
     </div>
   );
 };
