@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const User = require("../models/UserSchema");
 
+// NOTE: for dev
 // Get all users
 router.get("/", async (req, res, next) => {
   try {
