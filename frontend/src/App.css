@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+Create-Profile{
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+ label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+ input,
+ textarea {
+  width: 95%;
+  height: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;;
+  display: inline-block;
+  cursor: pointer;
+
+}
+
+ textarea{
+  height: 300px;
+  padding: 10px 20px;
+}
+
+ .form-buttons {
+  text-align: right;
+}
+
+.buttonLink {
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #3498db;
+  color: #ffffff;
+  display: inline-block;
+  cursor: pointer;
+}

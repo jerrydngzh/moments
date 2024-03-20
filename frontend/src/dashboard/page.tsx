@@ -1,0 +1,326 @@
+import React, { useState, useEffect } from 'react';
+import Popup from './Popup';
+import './style.css';
+import { Link } from 'react-router-dom';
+
+const Dashboard = () => {
+  const [tags, setTags] = useState([]);
+  const [locations, setLocations] = useState({});
+  const [selectedMemo, setSelectedMemo] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [id, setID] = useState('');
+  const [selectedLocationPop, setSelectedLocationPop] = useState(null);
+  const [expandedLocations, setExpandedLocations] = useState({});
+  const [newTag, setNewTag] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [userData, setUserData] = useState({});
+  const [memos, setMemos] = useState({});
+  const [reloadDashboard, setReloadDashboard] = useState(true);
+  const [key, setReloadKey] = useState(true);
+  const [popReload, setPopReload] = useState(true);
+  const fetchData = async () => {
+    try {
+      const searchParams = new URLSearchParams(window.location.search);
+      const idFromQuery = searchParams.get('id') || '';
+      setID(idFromQuery);
+      
+      const response = await fetch(`http://localhost:3000/api/users/${idFromQuery}`);
+      const data = await response.json();
+      setUserData(data);
+      setTags(data.tags || []);
+      fetchMemos(data.memos);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  const fetchMemos = async (memoID) => {
+    const Loc = {};
+    const mem = {};
+    for (const id of memoID) {
+      try {
+        const response = await fetch(`http://localhost:3000/api/memos/${id}`);
+        const data = await response.json(); 
+        mem[id] = data;
+
+        Loc[data.location.name] = data.location.coordinates;
+      } catch (error) {
+        console.error('Error fetching memo data:', error);
+      }
+    }
+    setMemos({...memos, mem});
+    setLocations({...locations, ...Loc});
+  };
+  const handlePopupSubmit = () => {
+    // Update any state or perform actions needed after submitting the popup
+    // For example, you can reload data or refresh the popup by updating its key
+    setReloadKey(prevKey => !prevKey); // Toggle the key to force re-rendering of the popup
+    setPopReload(false);
+    setShowPopup(true);
+  };
+  
+  useEffect(() => {
+    if (reloadDashboard) {
+      fetchData();
+      setReloadDashboard(false);
+    }
+    //console.log(memos);
+    //console.log(locations);
+  }, [reloadDashboard]);
+
+  const handleLocationClick = (locationName) => {
+    setSelectedLocation(locationName);
+    setExpandedLocations({
+      ...expandedLocations,
+      [locationName]: !expandedLocations[locationName]
+    });
+  };
+
+  const handleMemoClick = (memo, locationName) => {
+    setSelectedMemo(memo);
+    setSelectedLocationPop(locationName);
+    setShowPopup(true);
+  };
+
+  const handleTagChange = (tag) => {
+    const updatedTags = selectedTags.includes(tag)
+      ? selectedTags.filter((cat) => cat !== tag)
+      : [...selectedTags, tag];
+    setSelectedTags(updatedTags);
+    setReloadDashboard(true);
+  };
+
+  const handleNewTagChange = (event) => {
+    setNewTag(event.target.value);
+    setReloadDashboard(true);
+  };
+
+  const handleAddTag = async () => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const idFromQuery = searchParams.get('id') || '';
+    if (newTag.trim() !== '' && !tags.includes(newTag)) {
+      try {
+        const updateUserResponse  =  await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({tags: [...tags, newTag]}),
+        });
+        const data = await updateUserResponse .json();
+        if (data.success) {
+          setTags([...tags, newTag]);
+          setNewTag('');
+        }
+      } catch (error) {
+        console.error('Error updating tags:', error);
+      }
+    }
+    setReloadDashboard(true);
+  };
+
+  const handleDeleteTag = async (tagToDelete) => {
+    const remainingTags = tags.filter((tag) => tag !== tagToDelete);
+    try {
+      const updatedLocations = { ...locations };
+      for (const location in updatedLocations) {
+        for (const memoId in memos.mem) {
+          const memo = memos.mem[memoId];
+          if (memo.location.name === location && memo.tags.includes(tagToDelete)) {
+            const updatedTags = memo.tags.filter((cat) => cat !== tagToDelete);
+            memo.tags = updatedTags;
+            await fetch(`http://localhost:3000/api/memos/${memo._id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ tags: updatedTags }),
+            });
+          }
+        }
+      }
+
+      const searchParams = new URLSearchParams(window.location.search);
+      const idFromQuery = searchParams.get('id') || '';
+      await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tags: remainingTags }),
+      });
+      setTags(remainingTags);
+    } catch (error) {
+      console.error('Error deleting tag:', error);
+    }
+    setReloadDashboard(true);
+  };
+
+  const handleUpdateMemoTags = async (updatedTags, memoid) => {
+    setSelectedMemo({
+      ...selectedMemo,
+      selectedTags: updatedTags
+    });
+
+    try {
+      await fetch(`http://localhost:3000/api/memos/${memoid}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({tags: updatedTags}),
+      });
+      const searchParams = new URLSearchParams(window.location.search);
+      const idFromQuery = searchParams.get('id') || '';
+      const updatedUserTags = [...tags, ...updatedTags.filter((cat) => !tags.includes(cat))];
+      await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({tags: updatedUserTags}),
+      });
+      setTags(updatedUserTags);
+    } catch (error) {
+      console.error('Error updating memo tags:', error);
+    }
+    setReloadDashboard(true);
+  };
+
+  const filteredLocations = Object.keys(locations).reduce((filtered, locationName) => {
+    const filteredMemos = [];
+      for (const memoId in memos.mem) {
+        //console.log(memos.mem[memoId]);
+        const memo = memos.mem[memoId];
+        
+        if (memo.location.name === locationName && selectedTags.every(tag => memo.tags.includes(tag))) {
+          filteredMemos.push(memo);
+        }
+      }
+  
+    if (filteredMemos.length > 0) {
+      filtered[locationName] = {
+        ...locations[locationName],
+        memo: filteredMemos
+      };
+    }
+  
+    return filtered;
+  }, {});
+
+  const handleDeleteMemo = async (memo: any, event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
+    event.stopPropagation();
+    console.log(memo);
+    try {
+      // Make a DELETE request to the delete memo API route
+      const response = await fetch(`http://localhost:3000/api/memos/${memo._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+        // Update userData.memos array by removing the deleted memo
+      const updatedMemos = userData.memos.filter(m => m !== memo._id);
+      setUserData(prevUserData => ({
+        ...prevUserData,
+        memos: updatedMemos
+      }));
+      const searchParams = new URLSearchParams(window.location.search);
+      const idFromQuery = searchParams.get('id') || '';
+      // Update user data by sending a PUT request
+      await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ memos: updatedMemos }),
+      });
+
+      setReloadDashboard(true);
+      // Optionally handle success response
+    } catch (error) {
+      console.error('Error deleting memo:', error);
+      // Provide user feedback or handle error state
+    }
+  };
+  
+
+  return (
+    <div className="dashboard-container">
+      <h1>Memo Dashboard</h1>
+
+      <div className="tags-container">
+        <h2>Tags</h2>
+        <div className="tags-table">
+          <div className="tag-row add-tag-row">
+            <input
+              type="text"
+              value={newTag}
+              onChange={handleNewTagChange}
+              placeholder="Enter new tag"
+              className="tag-input"
+            />
+            <button onClick={handleAddTag} className="add-tag-button">Add</button>
+          </div>
+          {tags.map((tag, index) => (
+            <div key={index} className="tag-row">
+              <input
+                type="checkbox"
+                value={tag}
+                checked={selectedTags.includes(tag)}
+                onChange={() => handleTagChange(tag)}
+                className="tag-checkbox"
+              />
+              <span>{tag}</span>
+              <button onClick={() => handleDeleteTag(tag)} className="delete-tag-button">Delete</button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h2>Locations</h2>
+        {Object.keys(filteredLocations).length === 0 ? (
+          <p>No locations to display.</p>
+        ) : (
+          Object.keys(filteredLocations).map((locationName) => (
+            <div key={locationName} className="location-box" onClick={() => handleLocationClick(locationName)}>
+              <h3>{locationName}</h3>
+              {expandedLocations[locationName] && (
+                <div className="memo-box">
+                  {filteredLocations[locationName].memo.map((memo, index) => (
+                    <div key={index} className="memo" onClick={() => handleMemoClick(memo, locationName)}>
+                      {memo.description}
+                      <button onClick={(event) => handleDeleteMemo(memo, event)} className="delete-tag-button">Delete</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+
+      {showPopup && selectedMemo && selectedLocationPop && (
+        <Popup
+          key={selectedMemo._id}
+          selectedMemo={selectedMemo}
+          selectedLocationPop={selectedLocationPop}
+          tags={memos.tags}
+          handleUpdateTags={handleUpdateMemoTags}
+          handleClose={() => setShowPopup(false)}
+          handlePopupSubmit={handlePopupSubmit} 
+          Key = {popReload}
+        />
+      )}
+
+      <Link to={'/createMemo?id='+id+''} className='buttonLink'>Create Memo</Link>
+      <Link to={'/profile?id='+id+''} className='buttonLink'>Profile</Link>
+      <Link to={'/lens?id='+id+''} className='buttonLink'>Lens</Link>
+    </div>
+  );
+};
+
+export default Dashboard;

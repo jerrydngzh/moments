@@ -1,0 +1,39 @@
+/* Styling for the Memo List */
+div {
+    text-align: center;
+  }
+  
+  h1 {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  li {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    margin: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  li:hover {
+    background-color: #e0e0e0;
+  }
+  
+  /* Styling for the Selected Memo */
+  h2 {
+    font-size: 20px;
+    margin-top: 16px;
+  }
+  
+  p {
+    margin: 8px 0;
+  }
+  
