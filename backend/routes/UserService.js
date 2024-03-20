@@ -8,19 +8,13 @@ router.get("/", async (req, res, next) => {
   try {
     const users = await User.find();
 
-    if (users.length === 0) {
-      const err = new Error("No users found");
-      err.status = 404;
-      throw err;
-    }
-
     res.status(200).json(users);
   } catch (e) {
     next(e);
   }
 });
 
-// Get by id
+// Get user by id
 router.get("/:id", async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
@@ -37,7 +31,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-// Post
+// Create new user
 router.post("/", async (req, res, next) => {
   try {
     const user = new User({
@@ -55,7 +49,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-// Put -> edit user properties
+// Edit user properties
 router.put("/:id", async (req, res, next) => {
   try {
     let user = await User.findById(req.params.id);
@@ -66,14 +60,14 @@ router.put("/:id", async (req, res, next) => {
       throw err;
     }
 
-    // update object properties to existing properties in body
+    // only update the existing properties found in body
+    user.email = req.body.email !== undefined ? req.body.email : user.email;
     user.username =
       req.body.username !== undefined ? req.body.username : user.username;
     user.first_name =
       req.body.first_name !== undefined ? req.body.first_name : user.first_name;
     user.last_name =
       req.body.last_name !== undefined ? req.body.last_name : user.last_name;
-    user.email = req.body.email !== undefined ? req.body.email : user.email;
     user.password =
       req.body.password !== undefined ? req.body.password : user.password;
 
@@ -85,7 +79,7 @@ router.put("/:id", async (req, res, next) => {
   }
 });
 
-// Delete
+// Delete user by id
 router.delete("/:id", async (req, res, next) => {
   try {
     const result = await User.findByIdAndDelete(req.params.id);
