@@ -46,9 +46,9 @@ router.get('/:user_id', async (req, res) => {
 });
 
 // TODO: add in authentication for create
-router.get('/:user_id/:memo_id', async (req, res) => {
+router.get('/:user_id/:id', async (req, res) => {
     // TODO: validate for user_id & memo_id pair
-    const memoID = req.params.memo_id;
+    const memoID = req.params.id;
     const userID = req.params.user_id;
 
     try {
@@ -96,8 +96,8 @@ router.post('/:user_id', async (req, res) => {
 });
 
 // TODO: add in authentication for update
-router.put('/:user_id/:memo_id', async (req, res) => {
-    const memo_id = req.params.memo_id;
+router.put('/:user_id/:id', async (req, res) => {
+    const memo_id = req.params.id;
     const userID = req.params.user_id;
 
     // TODO: check for fields to update instead of updating all fields
@@ -127,9 +127,9 @@ router.put('/:user_id/:memo_id', async (req, res) => {
     }
 });
 
-router.delete('/:user_id/:memo_id', async (req, res) => {
+router.delete('/:user_id/:id', async (req, res) => {
     // TODO: validate user_id & memo_id pair
-    const memo_id = req.params.memo_id;
+    const memo_id = req.params.id;
     const user_id = req.params.user_id;
 
     try {
