@@ -1,12 +1,11 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 
-const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose }) => {
+const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose, handlePopupSubmit }) => {
   const [newTag, setNewTag] = useState('');
   const [reloadKey, setReloadKey] = useState(true);
 
   useEffect(() => {
-    // Reset newTag state when the component is reloaded
     if(reloadKey){
       setNewTag('');
       setReloadKey(false);
@@ -17,18 +16,33 @@ const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, hand
     setNewTag(event.target.value);
   };
 
-  const handleAddTag = () => {
+  const handleAddTag = async() => {
     if (newTag.trim() !== '') {
-      handleUpdateTags([...selectedMemo.tags, newTag], selectedMemo._id);
+      handleUpdateTags([...selectedMemo.tags, newTag], selectedMemo._id); 
 
-      setReloadKey(true);
+      try {
+        const response = await fetch(`http://localhost:3000/api/memos/${selectedMemo._id}`);
+        const data = await response.json(); 
+        selectedMemo = data;
+      }catch (error) {
+        console.error('Error fetching memo data:', error);
+      }
+
+      setNewTag('');
+      handlePopupSubmit();
     }
   };
 
-  const handleRemoveTag = (tagToRemove) => {
+  const handleRemoveTag = async(tagToRemove) => {
     const updatedTags = selectedMemo.tags.filter(tag => tag !== tagToRemove);
     handleUpdateTags(updatedTags, selectedMemo._id);
-    setReloadKey(true);
+    try {
+      const response = await fetch(`http://localhost:3000/api/memos/${selectedMemo._id}`);
+      const data = await response.json(); 
+      selectedMemo = data;
+    }catch (error) {
+      console.error('Error fetching memo data:', error);
+    }
   };
 
   return (

@@ -1,7 +1,6 @@
-'use client'
 import React, { useState, useEffect } from 'react';
-import Popup from './Popup'; // Import the modified Popup component
-import "./style.css"
+import Popup from './Popup';
+import './style.css';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
@@ -14,27 +13,19 @@ const Dashboard = () => {
   const [selectedLocationPop, setSelectedLocationPop] = useState(null);
   const [expandedLocations, setExpandedLocations] = useState({});
   const [newTag, setNewTag] = useState('');
-  const [showPopup, setShowPopup] = useState(false); // State to manage the popup visibility
+  const [showPopup, setShowPopup] = useState(false);
   const [userData, setUserData] = useState({});
   const [memos, setMemos] = useState({});
-  const [reloadDashboard, setReloadDashboard] = useState(true); // State to control dashboard reload
-
-  useEffect(() => {
-    if (reloadDashboard) {
-      fetchData();
-      setReloadDashboard(false); // Reset reload flag
-    }
-  }, [reloadDashboard]);
-
+  const [reloadDashboard, setReloadDashboard] = useState(true);
+  const [key, setReloadKey] = useState(true);
   const fetchData = async () => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
       const idFromQuery = searchParams.get('id') || '';
       setID(idFromQuery);
-      // Fetch memo data from the server
+      
       const response = await fetch(`http://localhost:3000/api/users/${idFromQuery}`);
       const data = await response.json();
-      console.log(data);
       setUserData(data);
       setTags(data.tags || []);
       fetchMemos(data.memos);
@@ -43,24 +34,39 @@ const Dashboard = () => {
     }
   };
 
-  const fetchMemos = async (memoID: any) => {
-    console.log(memoID);
+  const fetchMemos = async (memoID) => {
+    const Loc = {};
+    const mem = {};
     for (const id of memoID) {
       try {
         const response = await fetch(`http://localhost:3000/api/memos/${id}`);
         const data = await response.json(); 
-        setMemos({...memos, [id]:data});
-        console.log(memos);
-        setLocations({...locations, [data.location.name]: data.location.coordinates});
+        mem[id] = data;
+
+        Loc[data.location.name] = data.location.coordinates;
       } catch (error) {
         console.error('Error fetching memo data:', error);
       }
     }
+    setMemos({...memos, mem});
+    setLocations({...locations, ...Loc});
+  };
+  const handlePopupSubmit = () => {
+    // Update any state or perform actions needed after submitting the popup
+    // For example, you can reload data or refresh the popup by updating its key
+    setReloadKey(prevKey => !prevKey); // Toggle the key to force re-rendering of the popup
   };
   
+  useEffect(() => {
+    if (reloadDashboard) {
+      fetchData();
+      setReloadDashboard(false);
+    }
+    //console.log(memos);
+    //console.log(locations);
+  }, [reloadDashboard]);
 
-  const handleLocationClick = (locationName: string | React.SetStateAction<null>) => {
-    console.log(locationName);
+  const handleLocationClick = (locationName) => {
     setSelectedLocation(locationName);
     setExpandedLocations({
       ...expandedLocations,
@@ -68,23 +74,21 @@ const Dashboard = () => {
     });
   };
 
-  const handleMemoClick = (memo: React.SetStateAction<null>, locationName: string | React.SetStateAction<null>) => {
+  const handleMemoClick = (memo, locationName) => {
     setSelectedMemo(memo);
     setSelectedLocationPop(locationName);
-    setShowPopup(true); // Show the popup when memo is clicked
+    setShowPopup(true);
   };
 
-  const handleTagChange = (tag: never) => {
-    if (selectedTags.includes(tag)) {
-      const remainingTags = selectedTags.filter((cat) => cat !== tag);
-      setSelectedTags(remainingTags);
-    } else {
-      setSelectedTags([...selectedTags, tag]);
-    }
+  const handleTagChange = (tag) => {
+    const updatedTags = selectedTags.includes(tag)
+      ? selectedTags.filter((cat) => cat !== tag)
+      : [...selectedTags, tag];
+    setSelectedTags(updatedTags);
     setReloadDashboard(true);
   };
 
-  const handleNewTagChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+  const handleNewTagChange = (event) => {
     setNewTag(event.target.value);
     setReloadDashboard(true);
   };
@@ -92,8 +96,6 @@ const Dashboard = () => {
   const handleAddTag = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const idFromQuery = searchParams.get('id') || '';
-    setID(idFromQuery);
-    console.log(idFromQuery);
     if (newTag.trim() !== '' && !tags.includes(newTag)) {
       try {
         const updateUserResponse  =  await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
@@ -115,41 +117,29 @@ const Dashboard = () => {
     setReloadDashboard(true);
   };
 
-  const handleDeleteTag = async (tagToDelete: never) => {
-    console.log(memos);
-    // Filter out the deleted tag from the user's tags list
+  const handleDeleteTag = async (tagToDelete) => {
     const remainingTags = tags.filter((tag) => tag !== tagToDelete);
     try {
-      // Update memo tags
       const updatedLocations = { ...locations };
-      // Iterate over each location
       for (const location in updatedLocations) {
-        console.log(location);
-        for (const memo in memos) {
-          console.log(memos[memo]);
-          if (memos[memo].location.name === location) {
-            if (memos[memo].tags.includes(tagToDelete)) {
-              // If the memo contains the deleted tag, update its selected tags
-              const updatedTags = memos[memo].tags.filter((cat: any) => cat !== tagToDelete);
-              // Remove tag from memo first
-              memos[memo].tags = updatedTags;
-              // Update memo tags on the server
-              await fetch(`http://localhost:3000/api/memos/${memos[memo]._id}`, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ tags: updatedTags }),
-              });
-            }
+        for (const memoId in memos.mem) {
+          const memo = memos.mem[memoId];
+          if (memo.location.name === location && memo.tags.includes(tagToDelete)) {
+            const updatedTags = memo.tags.filter((cat) => cat !== tagToDelete);
+            memo.tags = updatedTags;
+            await fetch(`http://localhost:3000/api/memos/${memo._id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ tags: updatedTags }),
+            });
           }
         }
       }
-  
+
       const searchParams = new URLSearchParams(window.location.search);
       const idFromQuery = searchParams.get('id') || '';
-      // Update user tags on the server
-      console.log(remainingTags);
       await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
         method: 'PUT',
         headers: {
@@ -157,25 +147,20 @@ const Dashboard = () => {
         },
         body: JSON.stringify({ tags: remainingTags }),
       });
-      // Update the user's tags list in the component state
       setTags(remainingTags);
     } catch (error) {
       console.error('Error deleting tag:', error);
     }
     setReloadDashboard(true);
   };
-  
-  
 
-  // Function to update tags of the selected memo
-  const handleUpdateMemoTags = async (updatedTags: any[], memoid: any) => {
+  const handleUpdateMemoTags = async (updatedTags, memoid) => {
+    setSelectedMemo({
+      ...selectedMemo,
+      selectedTags: updatedTags
+    });
+
     try {
-      setSelectedMemo({
-        ...selectedMemo,
-        selectedTags: updatedTags
-      });
-  
-      // Update memo tags on the server
       await fetch(`http://localhost:3000/api/memos/${memoid}`, {
         method: 'PUT',
         headers: {
@@ -185,8 +170,7 @@ const Dashboard = () => {
       });
       const searchParams = new URLSearchParams(window.location.search);
       const idFromQuery = searchParams.get('id') || '';
-      // Update user tags
-      const updatedUserTags = [...tags, ...updatedTags.filter((cat: any) => !tags.includes(cat))];
+      const updatedUserTags = [...tags, ...updatedTags.filter((cat) => !tags.includes(cat))];
       await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
         method: 'PUT',
         headers: {
@@ -200,16 +184,18 @@ const Dashboard = () => {
     }
     setReloadDashboard(true);
   };
-  
 
-  // Filter locations based on selected tags
   const filteredLocations = Object.keys(locations).reduce((filtered, locationName) => {
-    // Filter memos based on selected tags and location
-    const filteredMemos = Object.values(memos).filter(memo =>
-      memo.location.name === locationName && selectedTags.every(tag => memo.tags.includes(tag))
-    );
+    const filteredMemos = [];
+      for (const memoId in memos.mem) {
+        //console.log(memos.mem[memoId]);
+        const memo = memos.mem[memoId];
+        
+        if (memo.location.name === locationName && selectedTags.every(tag => memo.tags.includes(tag))) {
+          filteredMemos.push(memo);
+        }
+      }
   
-    // Check if there are any memos for the current location after filtering
     if (filteredMemos.length > 0) {
       filtered[locationName] = {
         ...locations[locationName],
@@ -219,12 +205,11 @@ const Dashboard = () => {
   
     return filtered;
   }, {});
-  
+
   return (
     <div className="dashboard-container">
       <h1>Memo Dashboard</h1>
 
-      {/* Tags */}
       <div className="tags-container">
         <h2>Tags</h2>
         <div className="tags-table">
@@ -254,34 +239,37 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Locations */}
       <div>
         <h2>Locations</h2>
-        {Object.keys(filteredLocations).map((locationName) => (
-          <div key={locationName} className="location-box" onClick={() => handleLocationClick(locationName)}>
-            <h3>{locationName}</h3>
-            {expandedLocations[locationName] && (
-              <div className="memo-box">
-                {/* Filter memos for the current location */}
-                {Object.values(memos).filter((memo) => memo.location.name === locationName).map((memo, index) => (
-                  <div key={index} className="memo" onClick={() => handleMemoClick(memo, locationName)}>
-                    {memo.description}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+        {Object.keys(filteredLocations).length === 0 ? (
+          <p>No locations to display.</p>
+        ) : (
+          Object.keys(filteredLocations).map((locationName) => (
+            <div key={locationName} className="location-box" onClick={() => handleLocationClick(locationName)}>
+              <h3>{locationName}</h3>
+              {expandedLocations[locationName] && (
+                <div className="memo-box">
+                  {filteredLocations[locationName].memo.map((memo, index) => (
+                    <div key={index} className="memo" onClick={() => handleMemoClick(memo, locationName)}>
+                      {memo.description}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))
+        )}
       </div>
 
-      {/* Popup for selected memo */}
       {showPopup && selectedMemo && selectedLocationPop && (
         <Popup
+          key={selectedMemo._id}
           selectedMemo={selectedMemo}
           selectedLocationPop={selectedLocationPop}
           tags={memos.tags}
           handleUpdateTags={handleUpdateMemoTags}
-          handleClose={() => setShowPopup(false)} // Close the popup when close button is clicked
+          handleClose={() => setShowPopup(false)}
+          handlePopupSubmit={handlePopupSubmit} 
         />
       )}
 
