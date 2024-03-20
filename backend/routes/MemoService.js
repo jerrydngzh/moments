@@ -1,9 +1,17 @@
 var express = require('express');
 var router = express.Router();
 const Memo = require('../models/MemoSchema');
+const User = require('../models/UserSchema');
 
 // NOTE: dev only
-router.get('/all', async (req, res) => {
+// TODO: secure with Admin role
+router.get('/:pass/all', async (req, res) => {
+    const pass = req.params.pass;
+    if (pass !== 'password') {
+        res.status(401).send('Unauthorized');
+        return;
+    }
+
     try {
         const memos = await Memo.find({});
         console.log(memos);
@@ -18,16 +26,10 @@ router.get('/all', async (req, res) => {
 
 // TODO: update to use JWT for auth for user instead of passing a user_id
 // get for a user's memos
-router.get('/', async (req, res) => {
+router.get('/:user_id', async (req, res) => {
+    // const username = req.params.username;
+
     // TODO: validate user_id is a valid user
-    const user_id = req.body.user_id;
-
-    if (!user_id) {
-        res.status(400).send({ error: 'Bad request: user_id is required' });
-        return;
-    }
-
-    // TODO: check if user_id is valid
 
     try {
         // returns array of objects
@@ -41,9 +43,9 @@ router.get('/', async (req, res) => {
 });
 
 // TODO: add in authentication for create
-router.get('/:id', async (req, res) => {
+router.get('/:user_id/:id', async (req, res) => {
     const memo_id = req.params.id;
-    const userID = req.body.user_id;
+    const userID = req.params.user_id;
 
     // TODO: validate for user_id & memo_id pair
 
