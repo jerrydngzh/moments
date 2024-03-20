@@ -1,48 +1,50 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 
-const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose, handlePopupSubmit }) => {
+const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose, handlePopupSubmit, Key }) => {
   const [newTag, setNewTag] = useState('');
-  const [reloadKey, setReloadKey] = useState(true);
+  const [reloadKey, setReloadKey] = useState(Key);
 
   useEffect(() => {
-    if(reloadKey){
+    if (reloadKey) {
       setNewTag('');
       setReloadKey(false);
+      handlePopupSubmit();
     }
-  }, [reloadKey]);
+    console.log(selectedMemo);
+  }, [reloadKey, selectedMemo]);
 
   const handleNewTagChange = (event) => {
     setNewTag(event.target.value);
   };
 
-  const handleAddTag = async() => {
+  const handleAddTag = async () => {
     if (newTag.trim() !== '') {
-      handleUpdateTags([...selectedMemo.tags, newTag], selectedMemo._id); 
+      handleUpdateTags([...selectedMemo.tags, newTag], selectedMemo._id);
 
       try {
-        const response = await fetch(`http://localhost:3000/api/memos/${selectedMemo._id}`);
-        const data = await response.json(); 
-        selectedMemo = data;
-      }catch (error) {
+        await fetch(`http://localhost:3000/api/memos/${selectedMemo._id}`);
+        setReloadKey(Date.now()); // Reload by updating reloadKey
+      } catch (error) {
         console.error('Error fetching memo data:', error);
       }
-
       setNewTag('');
-      handlePopupSubmit();
+      setReloadKey(true);
+      
     }
   };
 
-  const handleRemoveTag = async(tagToRemove) => {
+  const handleRemoveTag = async (tagToRemove) => {
     const updatedTags = selectedMemo.tags.filter(tag => tag !== tagToRemove);
     handleUpdateTags(updatedTags, selectedMemo._id);
     try {
-      const response = await fetch(`http://localhost:3000/api/memos/${selectedMemo._id}`);
-      const data = await response.json(); 
-      selectedMemo = data;
-    }catch (error) {
+      await fetch(`http://localhost:3000/api/memos/${selectedMemo._id}`);
+      setReloadKey(Date.now()); // Reload by updating reloadKey
+    } catch (error) {
       console.error('Error fetching memo data:', error);
     }
+    handleClose();
+    setReloadKey(true);
   };
 
   return (

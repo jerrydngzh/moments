@@ -40,6 +40,7 @@ const Profile = () => {
       <Link to={'/createMemo?id='+id+''} className='buttonLink'>Create Memo</Link>
       <Link to={'/dashboard?id='+id+''} className='buttonLink'>Dashboard</Link>
       <Link to={'/lens?id='+id+''} className='buttonLink'>Lens</Link>
+      <Link to={'/user'} className='buttonLink'>Log out</Link>
 
     </main>
   );

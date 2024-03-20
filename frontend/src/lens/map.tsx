@@ -26,7 +26,9 @@ const Map: React.FC<MapProps> = ({ locations }) => {
           <Popup>
             {location.memo.map((memo, memoIndex) => (
               <div key={`${index}-${memoIndex}`}>
+                <p>{memo.title}</p>
                 <p>{memo.memo}</p>
+                <p>{memo.selectedCategories}</p>
               </div>
             ))}
           </Popup>

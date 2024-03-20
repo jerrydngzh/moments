@@ -18,6 +18,7 @@ const Dashboard = () => {
   const [memos, setMemos] = useState({});
   const [reloadDashboard, setReloadDashboard] = useState(true);
   const [key, setReloadKey] = useState(true);
+  const [popReload, setPopReload] = useState(true);
   const fetchData = async () => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
@@ -55,6 +56,8 @@ const Dashboard = () => {
     // Update any state or perform actions needed after submitting the popup
     // For example, you can reload data or refresh the popup by updating its key
     setReloadKey(prevKey => !prevKey); // Toggle the key to force re-rendering of the popup
+    setPopReload(false);
+    setShowPopup(true);
   };
   
   useEffect(() => {
@@ -206,6 +209,44 @@ const Dashboard = () => {
     return filtered;
   }, {});
 
+  const handleDeleteMemo = async (memo: any, event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
+    event.stopPropagation();
+    console.log(memo);
+    try {
+      // Make a DELETE request to the delete memo API route
+      const response = await fetch(`http://localhost:3000/api/memos/${memo._id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+        // Update userData.memos array by removing the deleted memo
+      const updatedMemos = userData.memos.filter(m => m !== memo._id);
+      setUserData(prevUserData => ({
+        ...prevUserData,
+        memos: updatedMemos
+      }));
+      const searchParams = new URLSearchParams(window.location.search);
+      const idFromQuery = searchParams.get('id') || '';
+      // Update user data by sending a PUT request
+      await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ memos: updatedMemos }),
+      });
+
+      setReloadDashboard(true);
+      // Optionally handle success response
+    } catch (error) {
+      console.error('Error deleting memo:', error);
+      // Provide user feedback or handle error state
+    }
+  };
+  
+
   return (
     <div className="dashboard-container">
       <h1>Memo Dashboard</h1>
@@ -252,6 +293,7 @@ const Dashboard = () => {
                   {filteredLocations[locationName].memo.map((memo, index) => (
                     <div key={index} className="memo" onClick={() => handleMemoClick(memo, locationName)}>
                       {memo.description}
+                      <button onClick={(event) => handleDeleteMemo(memo, event)} className="delete-tag-button">Delete</button>
                     </div>
                   ))}
                 </div>
@@ -270,6 +312,7 @@ const Dashboard = () => {
           handleUpdateTags={handleUpdateMemoTags}
           handleClose={() => setShowPopup(false)}
           handlePopupSubmit={handlePopupSubmit} 
+          Key = {popReload}
         />
       )}
 
