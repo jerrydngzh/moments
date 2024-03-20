@@ -8,7 +8,7 @@ const User = require("../models/UserSchema");
 router.get("/all", async (req, res) => {
   const pass = req.query.pass;
 
-  if (pass !== proess.env.DEV_PASS) {
+  if (pass !== process.env.DEV_PASS) {
     const err = new Error("Unauthorized");
     err.status = 401;
     throw err;

@@ -8,12 +8,6 @@ router.get("/", async (req, res, next) => {
   try {
     const users = await User.find();
 
-    if (users.length === 0) {
-      const err = new Error("No users found");
-      err.status = 404;
-      throw err;
-    }
-
     res.status(200).json(users);
   } catch (e) {
     next(e);
