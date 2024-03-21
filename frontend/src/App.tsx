@@ -4,7 +4,7 @@ import User from './user/page';
 import Profile from './profile/page'; 
 import Lens from './lens/page';
 import Dashboard from './dashboard/page'; 
-import CreateMemo from './createMemo/page'; 
+import CreateMemo from './CreateMemo/page'; 
 import "./App.css";
 import { useNavigate } from 'react-router-dom';
 export default function App() {

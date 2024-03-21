@@ -23,6 +23,7 @@ const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, hand
       handleUpdateTags([...selectedMemo.tags, newTag], selectedMemo._id);
 
       try {
+        // FIXME
         await fetch(`http://localhost:3000/api/memos/${selectedMemo._id}`);
         setReloadKey(Date.now()); // Reload by updating reloadKey
       } catch (error) {
@@ -38,6 +39,7 @@ const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, hand
     const updatedTags = selectedMemo.tags.filter(tag => tag !== tagToRemove);
     handleUpdateTags(updatedTags, selectedMemo._id);
     try {
+      // FIXME
       await fetch(`http://localhost:3000/api/memos/${selectedMemo._id}`);
       setReloadKey(Date.now()); // Reload by updating reloadKey
     } catch (error) {

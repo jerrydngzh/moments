@@ -1,4 +1,4 @@
-const backendAPI = `http://localhost:3000/api/memos`;
+const backendAPI = `http://localhost:3000/api/memos`; // NOTE
 import { MemoType } from '../models/memo';
 import axios from 'axios';
 

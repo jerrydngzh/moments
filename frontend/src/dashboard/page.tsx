@@ -40,6 +40,7 @@ const Dashboard = () => {
     const mem = {};
     for (const id of memoID) {
       try {
+        // FIXME
         const response = await fetch(`http://localhost:3000/api/memos/${id}`);
         const data = await response.json(); 
         mem[id] = data;
@@ -130,6 +131,8 @@ const Dashboard = () => {
           if (memo.location.name === location && memo.tags.includes(tagToDelete)) {
             const updatedTags = memo.tags.filter((cat) => cat !== tagToDelete);
             memo.tags = updatedTags;
+            
+            // FIXME
             await fetch(`http://localhost:3000/api/memos/${memo._id}`, {
               method: 'PUT',
               headers: {
@@ -164,6 +167,7 @@ const Dashboard = () => {
     });
 
     try {
+      // FIXME
       await fetch(`http://localhost:3000/api/memos/${memoid}`, {
         method: 'PUT',
         headers: {
@@ -214,6 +218,7 @@ const Dashboard = () => {
     console.log(memo);
     try {
       // Make a DELETE request to the delete memo API route
+      // FIXME
       const response = await fetch(`http://localhost:3000/api/memos/${memo._id}`, {
         method: 'DELETE',
         headers: {

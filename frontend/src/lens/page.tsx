@@ -34,6 +34,7 @@ const Lens: React.FC = () => {
     try {
       const fetchedLocations: Location[] = [];
       for (const mid of memoID) {
+        // FIXME
         const response = await fetch(`http://localhost:3000/api/memos/${mid}`);
         const memoData = await response.json();
         
