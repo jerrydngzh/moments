@@ -71,13 +71,15 @@ const Lens: React.FC = () => {
   }, []);
 
   return (
-    <div className="lens">
-      <h1>Lens</h1>
+    <div className="lens w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
+      <header className="flex flex-row justify-between mb-4">
+        <Link to={'/createMemo?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg'>Create Memo</Link>
+        <Link to={'/profile?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg'>Profile</Link>
+        <Link to={'/dashboard?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg'>Dashboard</Link>
+      </header>
+      <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
       <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
       <Map locations={locations} />
-      <Link to={'/createMemo?id='+id+''} className='buttonLink'>Create Memo</Link>
-      <Link to={'/profile?id='+id+''} className='buttonLink'>Profile</Link>
-      <Link to={'/dashboard?id='+id+''} className='buttonLink'>Dashboard</Link>
     </div>
   );
 };

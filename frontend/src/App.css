@@ -18,20 +18,19 @@ Create-Profile{
 
  input,
  textarea {
-  width: 95%;
+  width: 100%;
   height: 100%;
   padding: 8px;
   margin-bottom: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #f9f9f9;;
   display: inline-block;
   cursor: pointer;
 
 }
 
- textarea{
+textarea{
   height: 300px;
   padding: 10px 20px;
 }
@@ -44,8 +43,8 @@ Create-Profile{
   text-decoration: none;
   padding: 10px 20px;
   border-radius: 5px;
-  background-color: #3498db;
   color: #ffffff;
   display: inline-block;
   cursor: pointer;
 }
+

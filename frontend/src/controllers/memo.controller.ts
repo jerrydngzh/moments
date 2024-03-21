@@ -1,4 +1,4 @@
-const backendAPI = `http://localhost:3000/api/memos`; // NOTE
+const backendAPI = `https://moments-server-6qo6tf2l7q-uc.a.run.app/api/memos`; // NOTE
 import { MemoType } from '../models/memo';
 import axios from 'axios';
 
@@ -14,8 +14,19 @@ export class MemoController {
   }
 
   static async create_memo(user_id: String, memo: MemoType) {
-    const result = await axios.post(`${backendAPI}/${user_id}`, memo);
-    return result.data;
+    // const result = await axios.post(`${backendAPI}/${user_id}`, memo);
+    
+    console.log(memo);
+
+    const response = await axios({
+      method: "post",
+      url: `${backendAPI}/${user_id}}`,
+      data: memo,
+    });
+
+    console.log(response.data);
+
+    return response.data;
   }
 
   static async update_memo(user_id: String, memo: MemoType) {

@@ -249,11 +249,16 @@ const Dashboard = () => {
   
 
   return (
-    <div className="dashboard-container">
-      <h1>Memo Dashboard</h1>
+    <div className="dashboard-container w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">  
+      <header className="flex flex-row justify-between mb-4">
+        <Link to={'/createMemo?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-1 text-center rounded-lg'>Create Memo</Link>
+        <Link to={'/profile?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-1 text-center rounded-lg'>Profile</Link>
+        <Link to={'/lens?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-1 text-center rounded-lg'>Lens</Link>
+      </header>
 
+      <h1 className='text-blue-800 mb-6'>Memo Dashboard</h1>
       <div className="tags-container">
-        <h2>Tags</h2>
+        <h2 className="text-blue-800">Tags</h2>
         <div className="tags-table">
           <div className="tag-row add-tag-row">
             <input
@@ -263,7 +268,7 @@ const Dashboard = () => {
               placeholder="Enter new tag"
               className="tag-input"
             />
-            <button onClick={handleAddTag} className="add-tag-button">Add</button>
+            <button onClick={handleAddTag} className='bg-blue-100 text-blue-800 border-2 border-blue-800 w-1/6'>Add</button>
           </div>
           {tags.map((tag, index) => (
             <div key={index} className="tag-row">
@@ -281,10 +286,10 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div>
-        <h2>Locations</h2>
+      <div className="mt-8">
+        <h2 className="text-blue-800 text-lg">Locations</h2>
         {Object.keys(filteredLocations).length === 0 ? (
-          <p>No locations to display.</p>
+          <p className="italic text-blue-800 opacity-80">No locations to display.</p>
         ) : (
           Object.keys(filteredLocations).map((locationName) => (
             <div key={locationName} className="location-box" onClick={() => handleLocationClick(locationName)}>
@@ -316,10 +321,6 @@ const Dashboard = () => {
           Key = {popReload}
         />
       )}
-
-      <Link to={'/createMemo?id='+id+''} className='buttonLink'>Create Memo</Link>
-      <Link to={'/profile?id='+id+''} className='buttonLink'>Profile</Link>
-      <Link to={'/lens?id='+id+''} className='buttonLink'>Lens</Link>
     </div>
   );
 };

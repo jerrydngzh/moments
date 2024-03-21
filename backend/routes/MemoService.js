@@ -71,29 +71,23 @@ router.get("/:user_id/:id", async (req, res) => {
 // TODO: add in authentication for create
 router.post("/:user_id", async (req, res) => {
   const user_id = req.params.user_id;
-  const memo = {
-    name: req.body.name,
-    date: req.body.date,
-    location: {
-      name: req.body.location.name,
-      coordinates: [
-        req.body.location.coordinates[0],
-        req.body.location.coordinates[1],
-      ],
-    },
-    description: req.body.description,
-    user_id: user_id,
-  };
 
   try {
-    const result = await Memo.create(memo);
+    const memo = new Memo({
+      name: req.body.name,
+      date: req.body.date,
+      location: {
+        name: req.body.location.name,
+        coordinates: [
+          req.body.location.coordinates[0],
+          req.body.location.coordinates[1],
+        ],
+      },
+      description: req.body.description,
+      user_id: user_id,
+    });
 
-    if (!result) {
-      console.log(result);
-      const err = new Error("Document not created");
-      err.status = 400;
-      throw err;
-    }
+    const result = await memo.save();
 
     console.log({ message: "Created memo", result: result });
     res.status(201).send(memo);

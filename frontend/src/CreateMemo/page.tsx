@@ -134,8 +134,9 @@ const CreateMemo = ({ }) => {
       date: new Date().toString(),
       location: {
         name: locationName,
-        lat: coordinates[0],
-        lon: coordinates[1],
+        coordinates: [
+          coordinates[0], coordinates[1]
+        ]
       },
       description: description,
       tags: selectedTags,
@@ -143,7 +144,9 @@ const CreateMemo = ({ }) => {
     
     try {
       const res = await MemoController.create_memo(userID, memoToCreate);
-      const newMemoId = res.memo.id; // TODO
+      
+      console.log(res)
+      const newMemoId = res.memo._id; // TODO
 
       // Update the memos array in userData with the new memo ID
       setUserData((prevUserData: any) => ({
@@ -179,22 +182,21 @@ const CreateMemo = ({ }) => {
   }
 
   return (
-    <main className='create-memo'>
-
-
+    <main className='create-memo w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800'>
       <form onSubmit={handleSubmit} onReset={handleReset}>
-        <h2>New Memo</h2>
-
-        {/* Map */}
+        <span>
+          <button onClick={() => navigate('/dashboard?id='+userID+'')} className='bg-blue-100 text-blue-800 border-2 border-blue-800 w-1/5'>Back</button>
+          <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">New Memo</h2>
+        </span>
         <div className="map-container">
-          <label htmlFor='location'> Location</label>
+          <label htmlFor='location' className="text-xl text-blue-800"> Location</label>
           <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
           <MapForm selectedLocation={selectedLocation} onMapClick={handleMapClick} />
         </div>
 
         {/* Map-Location Name Label */}
         <div className="input-container">
-          <label htmlFor='locationName'>Location Name</label>
+          <label htmlFor='locationName' className="text-xl text-blue-800">Location Name</label>
           <input
             type="text"
             id="locationName"
@@ -204,16 +206,15 @@ const CreateMemo = ({ }) => {
             value={locationName}
             onChange={(e) => setLocationName(e.target.value)}
           />
-          <button type="button" onClick={createSaveLoc}>Save Location</button>
+          {/* <button type="button" onClick={createSaveLoc} className='border-2 border-blue-800 w-full text-blue-800 h-14 mb-8 hover:bg-blue-50'>Save Location</button> */}
         </div>
         
         {/* Displays Saved Locations */}
-        <SavedLocations reloadDropdown={reloadDropdown} id={userID} onDropdownReloaded={handleDropdownReloaded} onLocationSelected={handleLocationSelected} />
+        {/* <SavedLocations reloadDropdown={reloadDropdown} id={userID} onDropdownReloaded={handleDropdownReloaded} onLocationSelected={handleLocationSelected} /> */}
         
         {/* Create Tags */}
-        <div className="input-container">
-          <label htmlFor='tags'>Tags</label>
-
+        {/* <div className="input-container">
+          <label htmlFor='tags' className="text-xl text-blue-800">Tags</label>
           {tags && tags.map((tag) => (
             <div key={tag} className="checkbox-container">
               <input
@@ -244,13 +245,13 @@ const CreateMemo = ({ }) => {
               onChange={(e) => setNewTag(e.target.value)}
               placeholder="Enter a new tag"
             />
-            <button type="button" onClick={handleNewTag}>Add</button>
+            <button type="button" onClick={handleNewTag} className='border-2 border-blue-800 w-full text-blue-800 h-14 mb-8 hover:bg-blue-50'>Add</button>
           </div>
-        </div>
+        </div> */}
 
         {/* Title for Memo */}
         <div className="input-container">
-          <label htmlFor='name'>Title</label>
+          <label htmlFor='name' className="text-xl text-blue-800">Title</label>
           <input
             type="text"
             id="name"
@@ -264,7 +265,7 @@ const CreateMemo = ({ }) => {
 
         {/* Description for the Memo */}
         <div className="input-container">
-          <label htmlFor='memo'> Memo</label>
+          <label htmlFor='memo' className="text-xl text-blue-800"> Memo</label>
           <textarea
             id="memo"
             name="memo"
@@ -274,17 +275,19 @@ const CreateMemo = ({ }) => {
             onChange={(e) => setMemo(e.target.value)}
           />
         </div>
-        
-        <div className="button-container">
-          <input type="reset" value="Reset" />
-          <input type="submit" value="Submit" />
+        <div className="button-container ">
+          <input className='border-2 border-blue-800 w-full text-xl text-blue-800 h-14 mb-2 mt-8 bg-blue-100 hover:bg-white rounded-xl' type="reset" value="Reset" />
+          <input className='border-2 border-blue-800 w-full text-xl text-blue-800 h-14 mb-8 bg-blue-100 hover:bg-white rounded-xl' type="submit" value="Submit" />
         </div>
 
       </form>
-        
-      <div className='button-link'><Link to={'/profile?id=' + userID + ''}>Profile</Link></div>
-      <div className='button-link'><Link to={'/dashboard?id=' + userID + ''}>Dashboard</Link></div>
-      <div className='button-link'><Link to={'/lens?id=' + userID + ''} className='buttonLink'>Lens</Link></div>
+
+      {/* <div className="flex flex-row justify-around border-2 border-blue-800 rounded-xl pt-2 pb-2"> */}
+        {/* <div className='button-link'><Link className="text-blue-800" to={'/profile?id='+id+''}>Profile</Link></div>
+        <div className='button-link'><Link className="text-blue-800" to={'/dashboard?id='+id+''}>Dashboard</Link></div>
+        <div className='button-link'><Link className="text-blue-800" to={'/lens?id='+id+''}>Lens</Link></div> */}
+       
+      {/* </div> */}
 
     </main>
   );

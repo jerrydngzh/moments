@@ -30,11 +30,17 @@ const CreateAccountPage = () => {
     }
   };
 
+  function BackButton() {
+    return (
+      <button onClick={() => navigate('/')} className='bg-blue-100 text-blue-800 border-2 border-blue-800 w-1/3 mb-6'>Back</button>
+    );
+  }
   return (
-    <main className='Create-Account'>
+    <main className='Create-Account w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800'>
+      <BackButton></BackButton>
       <form onSubmit={handleSubmit}>
-        <h2>Create Account</h2>
-        <label htmlFor='first_name'>First Name</label>
+        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Create Account</h2>
+        <label htmlFor='firstname' className="text-lg text-blue-800">First Name</label>
         <input
         type='text'
         id='first_name'
@@ -43,7 +49,7 @@ const CreateAccountPage = () => {
         required
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, first_name: e.target.value }))}
         />
-        <label htmlFor='last_name'>Last Name</label>
+        <label htmlFor='lastname' className="text-lg text-blue-800">Last Name</label>
         <input
         type='text'
         id='last_name'
@@ -52,7 +58,7 @@ const CreateAccountPage = () => {
         required
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, last_name: e.target.value }))}
         />
-        <label htmlFor='username'>Username</label>
+        <label htmlFor='username' className="text-lg text-blue-800">Username</label>
         <input
         type='text'
         id='username'
@@ -62,7 +68,7 @@ const CreateAccountPage = () => {
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, username: e.target.value }))}
         />
 
-        <label htmlFor='email'>Email</label>
+        <label htmlFor='email' className="text-lg text-blue-800">Email</label>
         <input
         type='text'
         id='email'
@@ -72,7 +78,7 @@ const CreateAccountPage = () => {
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, email: e.target.value }))}
         />
 
-        <label htmlFor='password'>Password</label>
+        <label htmlFor='password' className="text-lg text-blue-800">Password</label>
         <input
         type='password'
         id='password'
@@ -82,9 +88,9 @@ const CreateAccountPage = () => {
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, password: e.target.value }))}
         />
 
-        <div>
-          <input type='reset' value='Reset' />
-          <input type='submit' value='Create Account' />
+        <div className="mt-8 text-blue-800">
+          <input type='reset' value='Reset' className="mb-2 border-blue-800 h-10 hover:bg-blue-50"/>
+          <input type='submit' value='Create Account' className="border-blue-800 h-10 hover:bg-blue-50"/>
         </div>
       </form>
     </main>
