@@ -20,7 +20,6 @@ const CreateMemo = ({ }) => {
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
   const [newTag, setNewTag] = useState('');
-  const [submitted, setSubmitted] = useState(false);
   const [userData, setUserData] = useState({});
 
   const handleLocationSelected = (location: any) => {
@@ -97,7 +96,7 @@ const CreateMemo = ({ }) => {
 
   const createSaveLoc = async () => {
     const newLocation = { name: locationName, coordinates: coordinates };
-    
+
     try {
       const updatedSaveLoc = [...userData.saveLoc, newLocation];
 
@@ -141,23 +140,35 @@ const CreateMemo = ({ }) => {
       description: description,
       tags: selectedTags,
     };
-    
+
     try {
       const res = await MemoController.create_memo(userID, memoToCreate);
-      
-      console.log(res)
-      const newMemoId = res.memo._id; // TODO
+
+      // console.log(res)
+      const newMemoId = res._id; // TODO
 
       // Update the memos array in userData with the new memo ID
-      setUserData((prevUserData: any) => ({
-        ...prevUserData,
-        memos: [...userData.memos, newMemoId]
-      }));
+      setUserData((prevUserData: any) => 
+        {
+          return {
+            ...prevUserData,
+            memos: [...userData.memos, newMemoId]
+          }
+        }
+      );
+
+
+
+      // 
+
+
+
+
 
       const user = await UserController.update_user(userID, userData)
       console.log('Updated user: ', user)
 
-      setSubmitted(true);
+      navigate(`/dashboard?id=${userID}`);
     } catch (error) {
       console.error('Error creating memo:', error);
     }
@@ -176,16 +187,11 @@ const CreateMemo = ({ }) => {
     }
   };
 
-  // NOTE
-  if (submitted) {
-    navigate(`/dashboard?id=${userID}`);
-  }
-
   return (
     <main className='create-memo w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800'>
       <form onSubmit={handleSubmit} onReset={handleReset}>
         <span>
-          <button onClick={() => navigate('/dashboard?id='+userID+'')} className='bg-blue-100 text-blue-800 border-2 border-blue-800 w-1/5'>Back</button>
+          <button onClick={() => navigate('/dashboard?id=' + userID + '')} className='bg-blue-100 text-blue-800 border-2 border-blue-800 w-1/5'>Back</button>
           <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">New Memo</h2>
         </span>
         <div className="map-container">
@@ -208,10 +214,10 @@ const CreateMemo = ({ }) => {
           />
           {/* <button type="button" onClick={createSaveLoc} className='border-2 border-blue-800 w-full text-blue-800 h-14 mb-8 hover:bg-blue-50'>Save Location</button> */}
         </div>
-        
+
         {/* Displays Saved Locations */}
         {/* <SavedLocations reloadDropdown={reloadDropdown} id={userID} onDropdownReloaded={handleDropdownReloaded} onLocationSelected={handleLocationSelected} /> */}
-        
+
         {/* Create Tags */}
         {/* <div className="input-container">
           <label htmlFor='tags' className="text-xl text-blue-800">Tags</label>
@@ -283,10 +289,10 @@ const CreateMemo = ({ }) => {
       </form>
 
       {/* <div className="flex flex-row justify-around border-2 border-blue-800 rounded-xl pt-2 pb-2"> */}
-        {/* <div className='button-link'><Link className="text-blue-800" to={'/profile?id='+id+''}>Profile</Link></div>
+      {/* <div className='button-link'><Link className="text-blue-800" to={'/profile?id='+id+''}>Profile</Link></div>
         <div className='button-link'><Link className="text-blue-800" to={'/dashboard?id='+id+''}>Dashboard</Link></div>
         <div className='button-link'><Link className="text-blue-800" to={'/lens?id='+id+''}>Lens</Link></div> */}
-       
+
       {/* </div> */}
 
     </main>

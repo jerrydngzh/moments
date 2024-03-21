@@ -20,7 +20,7 @@ const Dashboard = () => {
   const [reloadDashboard, setReloadDashboard] = useState(true);
   const [key, setReloadKey] = useState(true);
   const [popReload, setPopReload] = useState(true);
-  
+
   const fetchData = async () => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
@@ -56,6 +56,7 @@ const Dashboard = () => {
     setMemos({...memos, mem});
     setLocations({...locations, ...Loc});
   };
+
   const handlePopupSubmit = () => {
     // Update any state or perform actions needed after submitting the popup
     // For example, you can reload data or refresh the popup by updating its key
@@ -229,6 +230,7 @@ const Dashboard = () => {
         },
       });
       const data = await response.json();
+      
         // Update userData.memos array by removing the deleted memo
       const updatedMemos = userData.memos.filter(m => m !== memo._id);
       setUserData(prevUserData => ({
