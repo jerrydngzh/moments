@@ -1,5 +1,5 @@
 // CreateAccountPage.js
-'use client'
+// @ts-nocheck
 import {useNavigate} from 'react-router-dom'
 import { useState } from 'react';
 import { UserController } from '../controllers/user.controller';

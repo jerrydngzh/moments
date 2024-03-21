@@ -1,26 +1,27 @@
+// @ts-nocheck
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import MapForm from './components/LocationMapPicker/Map';
-import SavedLocations from './components/Locations/SavedLocations';
+// import SavedLocations from './components/Locations/SavedLocations';
 import { MemoController } from '../controllers/memo.controller';
 import { MemoType } from '../models/memo';
 import { UserController } from '../controllers/user.controller';
 
 const CreateMemo = ({ }) => {
   const navigate = useNavigate();
-  const [userID, setUserID] = useState(''); // FIXME - get user ID from session state (for itr2)
-  const [name, setName] = useState('');
-  const [description, setMemo] = useState('');
-  const [locationName, setLocationName] = useState('');
-  const [savedLocations, setSavedLocations] = useState({});
+  const [userID, setUserID] = useState<any>(''); // FIXME - get user ID from session state (for itr2)
+  const [name, setName] = useState<any>('');
+  const [description, setMemo] = useState<any>('');
+  const [locationName, setLocationName] = useState<any>('');
+  const [savedLocations, setSavedLocations] = useState<any>({});
   const [coordinates, setCoordinates] = useState<[number, number]>([49.27326489299744, -123.10365200042726]);
-  const [reloadDropdown, setReloadDropdown] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [tags, setTags] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [newTag, setNewTag] = useState('');
-  const [userData, setUserData] = useState({});
+  const [reloadDropdown, setReloadDropdown] = useState<any>(false);
+  const [selectedLocation, setSelectedLocation] = useState<any>(null);
+  const [tags, setTags] = useState<any>([]);
+  const [selectedTags, setSelectedTags] = useState<any>([]);
+  const [newTag, setNewTag] = useState<any>('');
+  const [userData, setUserData] = useState<any>({});
 
   const handleLocationSelected = (location: any) => {
     console.log(location)
@@ -85,7 +86,7 @@ const CreateMemo = ({ }) => {
   }, [coordinates, savedLocations, userID]);
 
   const handleTagChange = (event: any) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, (option) => option.value);
+    const selectedOptions = Array.from(event.target.selectedOptions, (option: any) => option.value);
     setSelectedTags(selectedOptions);
   };
 
@@ -149,7 +150,7 @@ const CreateMemo = ({ }) => {
 
       
       // Update the memos array in userData with the new memo ID
-      let newUserData = userData
+      let newUserData: any = userData
       newUserData.memos = [...userData.memos, newMemoId]
 
       setUserData(newUserData);

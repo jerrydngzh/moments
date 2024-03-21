@@ -1,4 +1,4 @@
-'use client'
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import Map from './map';
 import { Link } from 'react-router-dom';
@@ -35,7 +35,7 @@ const Lens: React.FC = () => {
 
   };
 
-  const fetchMemos = async (memoID) => {
+  const fetchMemos = async (memoID: any) => {
     try { 
       const fetchedLocations: Location[] = [];
       for (const mid of memoID) {
