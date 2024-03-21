@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import CreateAccountPage from './createAccount/page'; 
 import User from './user/page';
 import Profile from './profile/page'; 
@@ -7,6 +7,7 @@ import Dashboard from './dashboard/page';
 import CreateMemo from './createMemo/page'; 
 import "./App.css";
 import { useNavigate } from 'react-router-dom';
+
 export default function App() {
   return (
     <Router>
