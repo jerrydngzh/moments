@@ -7,6 +7,7 @@ import Dashboard from './dashboard/page';
 import CreateMemo from './createMemo/page'; 
 import "./App.css";
 import { useNavigate } from 'react-router-dom';
+
 export default function App() {
   return (
     <Router>
@@ -36,9 +37,12 @@ function Page() {
 
   return (
     <main className='Title'>
-      <h1> Welcome!</h1>
-      <button onClick={() => handleNavigation(1)} className='buttonLink'>Login</button>
-      <button onClick={() => handleNavigation(2)} className='buttonLink'>Create Account</button>
+      <div className="text-center mt-20 m-auto w-1/3 pt-10 pb-10 bg-blue-200 border-2 border-blue-800 rounded-3xl">
+        <h1 className="font-bold mb-1 text-blue-800">Moments</h1>
+        <p className="text-blue-800 font-sm italic mb-4">A Spatial Journalling App</p>
+        <button onClick={() => handleNavigation(1)} className='bg-blue-100 text-blue-800 border-2 border-blue-800 mr-2'>Login</button>
+        <button onClick={() => handleNavigation(2)} className='bg-blue-100 text-blue-800 border-2 border-blue-800'>Create Account</button>
+      </div>
     </main>
   );
 }
