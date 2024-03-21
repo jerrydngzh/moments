@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import MapForm from './map';
 import GetSavedLocations from './getSavedLocation';
+import { UserController } from '../controllers/user.controller';
 
 const CreateMemo = ({}) => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ const CreateMemo = ({}) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [newTag, setNewTag] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState<any>({});
   
   const handleLocationSelected = (location) => {
     console.log(location)
@@ -34,12 +35,14 @@ const CreateMemo = ({}) => {
       setID(idFromQuery);
       console.log(id);
       // Fetch memo data from the server
-      const response = await fetch(`http://localhost:3000/api/users/${idFromQuery}`);
-      const data = await response.json();
+      const data = await UserController.get_user_profile(idFromQuery)
+
       console.log('Fetched Account:', data);
+      // tags will be undefined because backend design does not support yet
       const tags = data.tags;
+
       setUserData(data);
-      setTags(tags);
+      setTags(tags || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -135,22 +138,15 @@ const CreateMemo = ({}) => {
       const newMemoId = data.memo._id;
 
       // Update the memos array in userData with the new memo ID
-      const updatedMemos = [...userData.memos, newMemoId];
-      const response2 = await fetch(`http://localhost:3000/api/users/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({tags: tags, memos: updatedMemos}),
-      });
-      const data2 = await response2.json();
-      if (data.success && data2.success) {
-        // Memo created successfully, redirect to the profile page
-        setSubmitted(true);
-      } else {
-        // Handle the error, log to console for now
-        console.error('Error creating memo:', data.message);
-      }
+      setUserData((prevUserData: any) => ({
+        ...prevUserData,
+        memos: [...userData.memos, newMemoId]
+      }));
+
+      const user = await UserController.update_user(id, userData)
+      console.log('Updated user: ', user)
+
+      setSubmitted(true);
     } catch (error) {
       console.error('Error creating memo:', error);
     }
