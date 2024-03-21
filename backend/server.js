@@ -1,23 +1,24 @@
-var express = require("express");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+const cors = require("cors");
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 
 const PORT = process.env.PORT || 8080;
-const DB_NAME = process.env.DB_NAME || "test";
 
-var indexRouter = require("./routes/index");
-var MemoServiceRouter = require("./routes/MemoService");
-var UserServiceRouter = require("./routes/UserService");
-var app = express();
+const indexRouter = require("./routes/index");
+const MemoServiceRouter = require("./routes/MemoService");
+const UserServiceRouter = require("./routes/UserService");
+const app = express();
 
 // ============== Setup Middleware ==============
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(cors());
 
 // ============== Setup Routes ==============
 app.use("/", indexRouter);
