@@ -68,8 +68,15 @@ const CreateAccountPage = () => {
     // Redirect to profile page or any other page
     navigate('/user');
   }
+
+  function BackButton() {
+    return (
+      <button onClick={() => navigate('/')} className='bg-blue-100 text-blue-800 border-2 border-blue-800 w-1/3 mb-6'>Back</button>
+    );
+  }
   return (
     <main className='Create-Account w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800'>
+      <BackButton></BackButton>
       <form onSubmit={handleSubmit}>
         <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Create Account</h2>
         <label htmlFor='firstname' className="text-lg text-blue-800">First Name</label>
@@ -121,8 +128,8 @@ const CreateAccountPage = () => {
         />
 
         <div className="mt-8 text-blue-800">
-          <input type='reset' value='Reset' className="mb-2 border-blue-800 h-10"/>
-          <input type='submit' value='Create Account' className="border-blue-800 h-10"/>
+          <input type='reset' value='Reset' className="mb-2 border-blue-800 h-10 hover:bg-blue-50"/>
+          <input type='submit' value='Create Account' className="border-blue-800 h-10 hover:bg-blue-50"/>
         </div>
       </form>
     </main>
