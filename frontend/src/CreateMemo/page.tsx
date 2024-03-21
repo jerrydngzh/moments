@@ -151,7 +151,7 @@ const CreateMemo = ({ }) => {
         memos: [...userData.memos, newMemoId]
       }));
 
-      const user = await UserController.update_user(id, userData)
+      const user = await UserController.update_user(userID, userData)
       console.log('Updated user: ', user)
 
       setSubmitted(true);
