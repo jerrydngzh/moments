@@ -1,4 +1,4 @@
-export interface Memo {
+export interface MemoType {
     id?: String,
     name: String,
     description: String,
