@@ -69,10 +69,10 @@ const CreateAccountPage = () => {
     navigate('/user');
   }
   return (
-    <main className='Create-Account'>
+    <main className='Create-Account w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800'>
       <form onSubmit={handleSubmit}>
-        <h2>Create Account</h2>
-        <label htmlFor='firstname'>First Name</label>
+        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Create Account</h2>
+        <label htmlFor='firstname' className="text-lg text-blue-800">First Name</label>
         <input
         type='text'
         id='firstname'
@@ -81,7 +81,7 @@ const CreateAccountPage = () => {
         required
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, firstname: e.target.value }))}
         />
-        <label htmlFor='lastname'>Last Name</label>
+        <label htmlFor='lastname' className="text-lg text-blue-800">Last Name</label>
         <input
         type='text'
         id='lastname'
@@ -90,7 +90,7 @@ const CreateAccountPage = () => {
         required
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, lastname: e.target.value }))}
         />
-        <label htmlFor='username'>Username</label>
+        <label htmlFor='username' className="text-lg text-blue-800">Username</label>
         <input
         type='text'
         id='username'
@@ -100,7 +100,7 @@ const CreateAccountPage = () => {
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, username: e.target.value }))}
         />
 
-        <label htmlFor='email'>Email</label>
+        <label htmlFor='email' className="text-lg text-blue-800">Email</label>
         <input
         type='text'
         id='email'
@@ -110,7 +110,7 @@ const CreateAccountPage = () => {
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, email: e.target.value }))}
         />
 
-        <label htmlFor='password'>Password</label>
+        <label htmlFor='password' className="text-lg text-blue-800">Password</label>
         <input
         type='password'
         id='password'
@@ -120,9 +120,9 @@ const CreateAccountPage = () => {
         onChange={(e) => setUserData((prevUserData) => ({ ...prevUserData, password: e.target.value }))}
         />
 
-        <div>
-          <input type='reset' value='Reset' />
-          <input type='submit' value='Create Account' />
+        <div className="mt-8 text-blue-800">
+          <input type='reset' value='Reset' className="mb-2 border-blue-800 h-10"/>
+          <input type='submit' value='Create Account' className="border-blue-800 h-10"/>
         </div>
       </form>
     </main>

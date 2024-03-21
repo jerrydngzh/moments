@@ -176,7 +176,7 @@ const CreateMemo = ({}) => {
   return (
     <main className='create-memo'>
       <form onSubmit={handleSubmit} onReset={handleReset}>
-        <h2>New Memo</h2>
+        <h2 className="text-3xl text-center">New Memo</h2>
         <div className="map-container">
           <label htmlFor='location'> Location</label>
           <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
