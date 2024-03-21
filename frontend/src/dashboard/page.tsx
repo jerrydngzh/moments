@@ -230,16 +230,17 @@ const Dashboard = () => {
       });
       const data = await response.json();
         // Update userData.memos array by removing the deleted memo
-      const updatedMemos = userData.memos.filter(m => m !== memo._id);
-      setUserData(prevUserData => ({
-        ...prevUserData,
-        memos: updatedMemos
-      }));
+      const updatedMemos = userData.memos.filter(m => m !== memo._ixdx);
+
+      let newUserData = userData
+      newUserData.memos = updatedMemos
+      setUserData(newUserData);
+
       const searchParams = new URLSearchParams(window.location.search);
       const idFromQuery = searchParams.get('id') || '';
 
       // Update user data by sending a PUT request
-      const editResponse = await UserController.update_user(idFromQuery, userData)
+      const editResponse = await UserController.update_user(idFromQuery, newUserData)
       console.log('Edited user: ', editResponse)
 
       setReloadDashboard(true);
