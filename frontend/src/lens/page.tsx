@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Map from './map';
 import { Link } from 'react-router-dom';
+import { UserController } from '../controllers/user.controller';
 
 interface Location {
   coordinates: [number, number];
@@ -20,8 +21,7 @@ const Lens: React.FC = () => {
       const idFromQuery = searchParams.get('id') || '';
       setID(idFromQuery);
       
-      const response = await fetch(`http://localhost:3000/api/users/${idFromQuery}`);
-      const data = await response.json();
+      const data = await UserController.get_user_profile(idFromQuery)
       setUserData(data);
       fetchMemos(data.memos);
     } catch (error) {
