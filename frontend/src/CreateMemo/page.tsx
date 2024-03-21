@@ -5,7 +5,7 @@ import MapForm from './components/LocationMapPicker/Map';
 import SavedLocations from './components/Locations/SavedLocations';
 import { MemoController } from '../controllers/memo.controller';
 import { MemoType } from '../models/memo';
-
+import { UserController } from '../controllers/user.controller';
 
 const CreateMemo = ({ }) => {
   const navigate = useNavigate();
@@ -37,12 +37,14 @@ const CreateMemo = ({ }) => {
       console.log(userID);
 
       // Fetch memo data from the server
-      const response = await fetch(`http://localhost:3000/api/users/${idFromQuery}`);
-      const data = await response.json();
+      const data = await UserController.get_user_profile(idFromQuery)
+
       console.log('Fetched Account:', data);
+      // tags will be undefined because backend design does not support yet
       const tags = data.tags;
+
       setUserData(data);
-      setTags(tags);
+      setTags(tags || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -144,27 +146,15 @@ const CreateMemo = ({ }) => {
       const newMemoId = res.memo.id; // TODO
 
       // Update the memos array in userData with the new memo ID
-      const updatedMemos = [...userData.memos, newMemoId];
-      
-      const response2 = await fetch(`http://localhost:3000/api/users/${userID}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ tags: tags, memos: updatedMemos }),
-      });
+      setUserData((prevUserData: any) => ({
+        ...prevUserData,
+        memos: [...userData.memos, newMemoId]
+      }));
 
-      const data2 = await response2.json();
+      const user = await UserController.update_user(id, userData)
+      console.log('Updated user: ', user)
 
-      // TODO: controller returns data, not response object
-      // modify controller to return response object, handle it in here
-      if (res.data && data2.success) {
-        // Memo created successfully, redirect to the profile page
-        setSubmitted(true);
-      } else {
-        // Handle the error, log to console for now
-        console.error('Error creating memo:');
-      }
+      setSubmitted(true);
     } catch (error) {
       console.error('Error creating memo:', error);
     }

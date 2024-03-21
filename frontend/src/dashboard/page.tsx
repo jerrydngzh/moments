@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Popup from './Popup';
 import './style.css';
 import { Link } from 'react-router-dom';
+import { UserController } from '../controllers/user.controller';
 
 const Dashboard = () => {
   const [tags, setTags] = useState([]);
@@ -25,8 +26,7 @@ const Dashboard = () => {
       const idFromQuery = searchParams.get('id') || '';
       setID(idFromQuery);
       
-      const response = await fetch(`http://localhost:3000/api/users/${idFromQuery}`);
-      const data = await response.json();
+      const data = await UserController.get_user_profile(idFromQuery)
       setUserData(data);
       setTags(data.tags || []);
       fetchMemos(data.memos);
@@ -234,14 +234,10 @@ const Dashboard = () => {
       }));
       const searchParams = new URLSearchParams(window.location.search);
       const idFromQuery = searchParams.get('id') || '';
+
       // Update user data by sending a PUT request
-      await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ memos: updatedMemos }),
-      });
+      const editResponse = await UserController.update_user(idFromQuery, userData)
+      console.log('Edited user: ', editResponse)
 
       setReloadDashboard(true);
       // Optionally handle success response
