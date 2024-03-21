@@ -147,26 +147,15 @@ const CreateMemo = ({ }) => {
       // console.log(res)
       const newMemoId = res._id; // TODO
 
+      
       // Update the memos array in userData with the new memo ID
-      setUserData((prevUserData: any) => 
-        {
-          return {
-            ...prevUserData,
-            memos: [...userData.memos, newMemoId]
-          }
-        }
-      );
+      let newUserData = userData
+      newUserData.memos = [...userData.memos, newMemoId]
 
+      setUserData(newUserData);
 
-
-      // 
-
-
-
-
-
-      const user = await UserController.update_user(userID, userData)
-      console.log('Updated user: ', user)
+      const user = await UserController.update_user(userID, newUserData)
+      console.log(user)
 
       navigate(`/dashboard?id=${userID}`);
     } catch (error) {

@@ -40,14 +40,14 @@ const Lens: React.FC = () => {
       const fetchedLocations: Location[] = [];
       for (const mid of memoID) {
         // FIXME
-        const response = await fetch(`http://localhost:3000/api/memos/${userID}/${mid}`);
-        const memoData = await response.json();
+        // const response = await fetch(`http://localhost:3000/api/memos/${userID}/${mid}`);
+        // const memoData = await response.json();
 
-
+        const result = await MemoController.get_memo(userID, mid);
         
-        const locationName = memoData.location.name;
-        const coordinates = memoData.location.coordinates;
-        const memo = { title: memoData.name, memo: memoData.description, selectedCategories: memoData.tags };
+        const locationName = result.location.name;
+        const coordinates = result.location.coordinates;
+        const memo = { title: result.name, memo: result.description, selectedCategories: result.tags };
         
         // Check if location already exists in fetchedLocations array
         const existingLocationIndex = fetchedLocations.findIndex(loc => loc.coordinates[0] === coordinates[0] && loc.coordinates[1] === coordinates[1]);
