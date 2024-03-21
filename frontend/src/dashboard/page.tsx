@@ -20,6 +20,7 @@ const Dashboard = () => {
   const [reloadDashboard, setReloadDashboard] = useState(true);
   const [key, setReloadKey] = useState(true);
   const [popReload, setPopReload] = useState(true);
+  
   const fetchData = async () => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
@@ -44,6 +45,8 @@ const Dashboard = () => {
         const response = await fetch(`http://localhost:3000/api/memos/${id}`);
         const data = await response.json(); 
         mem[id] = data;
+
+
 
         Loc[data.location.name] = data.location.coordinates;
       } catch (error) {

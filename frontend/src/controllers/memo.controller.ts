@@ -20,7 +20,7 @@ export class MemoController {
 
     const response = await axios({
       method: "post",
-      url: `${backendAPI}/${user_id}}`,
+      url: `${backendAPI}/${user_id}`,
       data: memo,
     });
 
