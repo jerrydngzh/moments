@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Popup from './Popup';
 import './style.css';
 import { Link } from 'react-router-dom';
-import { UserController } from '../controllers/user.controller';
+import { UserController } from '../../controllers/user.controller';
 
 const Dashboard = () => {
   const [tags, setTags] = useState([]);

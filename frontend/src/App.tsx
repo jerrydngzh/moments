@@ -1,18 +1,20 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import CreateAccountPage from './createAccount/page'; 
-import User from './user/page';
-import Profile from './profile/page'; 
-import Lens from './lens/page';
-import Dashboard from './dashboard/page'; 
-import CreateMemo from './CreateMemo/page'; 
-import "./App.css";
 import { useNavigate } from 'react-router-dom';
+
+import CreateAccountPage from './components/CreateAccount/page'; 
+import User from './components/User/page';
+import Profile from './components/Profile/page';
+import Lens from './components/Lens/page';
+import Dashboard from './components/Dashboard/page'; 
+import CreateMemo from './components/CreateMemo/page'; 
+import "./App.css";
 
 export default function App() {
   return (
+    // is there a better way to do this?
     <Router>
       <Routes>
-        <Route path="/" element={<Page />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/user" element={<User />} />
         <Route path="/createAccount" element={<CreateAccountPage />} />
         <Route path="/profile" element={<Profile />} />
@@ -24,9 +26,13 @@ export default function App() {
   );
 }
 
-function Page() {
+// NOTE -- is there a better way to do this?
+//         this and the above way that routes are handled is a bit scuffed
+//         someone reason <Page/> is the referenced component instead of App as the entry point
+function LandingPage() {
   const navigate = useNavigate();
 
+  // NOTE -- this function is redundant
   const handleNavigation = (destination: number) => {
     if (destination === 1) {
       navigate('/user');

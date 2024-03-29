@@ -1,12 +1,11 @@
-// @ts-nocheck
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 // import { Link } from 'react-router-dom';
 import MapForm from './components/LocationMapPicker/Map';
 // import SavedLocations from './components/Locations/SavedLocations';
-import { MemoController } from '../controllers/memo.controller';
-import { MemoType } from '../models/memo';
-import { UserController } from '../controllers/user.controller';
+import { MemoController } from '../../controllers/memo.controller';
+import { MemoType } from '../../models/memo';
+import { UserController } from '../../controllers/user.controller';
 
 const CreateMemo = ({ }) => {
   const navigate = useNavigate();

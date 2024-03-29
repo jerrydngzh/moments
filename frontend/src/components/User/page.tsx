@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserController } from '../controllers/user.controller';
 
-const User = () => {
+export default function User() {
     const navigate = useNavigate();
     const [route, setRoute] = useState('');
     const [id, setId] = useState('');
@@ -103,5 +103,3 @@ const User = () => {
       </main>
     )
 }
-
-export default User

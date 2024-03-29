@@ -1,7 +1,6 @@
-'use client'
 import {Link} from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { UserController } from '../controllers/user.controller';
+import { UserController } from '../../controllers/user.controller';
 
 const Profile = () => {
   const [userData, setUserData] = useState<any>({});
