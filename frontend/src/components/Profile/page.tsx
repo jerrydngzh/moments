@@ -40,7 +40,7 @@ const Profile = () => {
       </header>
 
       <h2 className="text-blue-800 text-3xl mb-4">User Profile</h2>
-          <p className="italic text-blue-800">Name: {userData.firstname} {userData.lastname}</p>
+          <p className="italic text-blue-800">Name: {userData.first_name} {userData.last_name}</p>
           <p className="italic text-blue-800">Username: {userData.username}</p>
           <p className="italic text-blue-800">Email: {userData.email}</p>
 
