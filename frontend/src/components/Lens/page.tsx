@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import Map from './map';
 import { Link } from 'react-router-dom';
-import { UserController } from '../controllers/user.controller';
+import { UserController } from '../../controllers/user.controller';
 
-import { MemoController } from '../controllers/memo.controller'
+import { MemoController } from '../../controllers/memo.controller'
 
 interface Location {
   coordinates: [number, number];
@@ -42,7 +42,9 @@ const Lens: React.FC = () => {
         // FIXME
         // const response = await fetch(`http://localhost:3000/api/memos/${userID}/${mid}`);
         // const memoData = await response.json();
-
+        const searchParams = new URLSearchParams(window.location.search);
+        const idFromQuery = searchParams.get('id') || '';
+        setUserID(idFromQuery);
         const result = await MemoController.get_memo(userID, mid);
         
         const locationName = result.location.name;
