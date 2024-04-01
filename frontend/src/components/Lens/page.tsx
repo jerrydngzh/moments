@@ -29,6 +29,8 @@ const Lens: React.FC = () => {
 
       // memos is an array of memo IDs :: string
       fetchMemos(data.memos);
+      console.log(memos);
+      console.log(locations);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -87,6 +89,19 @@ const Lens: React.FC = () => {
       <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
       <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
       <Map locations={locations} />
+      <div id="memos-list">
+        {locations.map((location, index) => (
+          <div key={index}>
+            {location.memo.map((memo, memoIndex) => (
+              <div key={memoIndex}>
+                <h2>{memo.title}</h2>
+                <p>{memo.memo}</p>
+                <p>Categories: {memo.selectedCategories.join(', ')}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

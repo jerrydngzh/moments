@@ -13,11 +13,7 @@ export default function CreateAccountPage() {
   });
 
   const validate = () => { // account details validation
-    const { first_name, last_name, username, email, password } = userData;
-
-    if (!first_name || !last_name || !username || !email || !password) {
-      return 'All fields are required.';
-    }
+    const { email, password } = userData;
 
     if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) {
       return 'Please enter a valid email address.';

@@ -1,4 +1,6 @@
-const backendAPI = `https://moments-server-6qo6tf2l7q-uc.a.run.app/api/memos`; // NOTE
+//const backendAPI = `https://moments-server-6qo6tf2l7q-uc.a.run.app/api/memos`; // NOTE atlas
+const backendAPI = `http://localhost:8080/api/memos`; // NOTE local
+
 import { MemoType } from '../models/memo';
 import axios from 'axios';
 

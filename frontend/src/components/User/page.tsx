@@ -28,7 +28,6 @@ export default function User() {
       event.preventDefault();
 
       const target = event.target;
-      let userExists = false;
 
       // Your form processing logic goes here
       const enteredUsername = target.elements.user_name.value;
@@ -40,10 +39,8 @@ export default function User() {
           if(user.username === enteredUsername && user.password == enteredPassword && user.email === enteredEmail){
             setId(user._id);
             navigate(`/profile?id=${user._id}`);
-            userExists = true;
           }
           else {
-            // Handle incorrect credentials
             alert('Incorrect username or password');
             console.log('Incorrect username or password');
           }

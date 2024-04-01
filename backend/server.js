@@ -44,7 +44,7 @@ app.use(function (err, req, res, next) {
 mongoose.set("strictQuery", false);
 
 // NOTE: for local MongoDB
-mongoose.connect(`mongodb://localhost:27017/`)
+mongoose.connect(`mongodb://localhost:27017/test`) // my mongodbcompass has a test db - vince
     .then(() => {
       console.log('Connected to MongoDB...');
       app.listen(PORT, () => {
