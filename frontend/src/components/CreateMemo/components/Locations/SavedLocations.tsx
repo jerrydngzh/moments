@@ -1,26 +1,41 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-
+import { UserController } from '../../../../controllers/user.controller';
+import { MemoController } from '../../../../controllers/memo.controller';
 const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSelected }) => {
   const [savedLocations, setSavedLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
+  const [memos, setMemos] = useState({});
+
+  const fetchData = async () => {
+    try {
+      const data = await UserController.get_user_profile(id);
+      fetchMemos(data.memos);
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+
+  const fetchMemos = async (memoID) => {
+    try {
+      const fetchedMemos: { [key: string]: MemoType } = {};
+      const fetchedLocations: { [key: string]: [number, number] } = {};
+      var locations:any[]=[{name:"past locations"}];
+      for (const mid of memoID) {
+        const data = await MemoController.get_memo(id, mid);
+        fetchedMemos[mid] = data;
+        fetchedLocations[data.location.name] = data.location.coordinates;
+        locations.push({name:data.location.name, coordinates:data.location.coordinates});
+      }
+      setMemos(prevMemos => ({ ...prevMemos, ...fetchedMemos }));
+      setSavedLocations(locations);
+    } catch (error) {
+      console.error('Error fetching memos:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchSavedLocations = async () => {
-      try {
-        const response = await fetch(`http://localhost:3000/api/users/${id}`);
-        const data = await response.json();
-        console.log('Fetched saveLoc:', data.saveLoc);
-        setSavedLocations(data.saveLoc || []);
-        onDropdownReloaded(); // Call the onDropdownReloaded function after the dropdown has been reloaded
-      } catch (error) {
-        console.error('Error fetching saved locations:', error);
-      }
-    };
-
-    if (reloadDropdown) {
-      fetchSavedLocations();
-    }
+    fetchData();
   }, [id, reloadDropdown, onDropdownReloaded]);
 
   
