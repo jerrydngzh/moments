@@ -44,23 +44,23 @@ app.use(function (err, req, res, next) {
 mongoose.set("strictQuery", false);
 
 // NOTE: for local MongoDB
-// mongoose.connect(`mongodb://localhost:27017/${DB_NAME}`)
-//     .then(() => {
-//       console.log('Connected to MongoDB...');
-//       app.listen(PORT, () => {
-//         console.log(`Server is running on port ${PORT}`);
-//       })
-//     })
-//     .catch(err => console.error('Could not connect to MongoDB...', err));
+mongoose.connect(`mongodb://localhost:27017/test`) // my mongodbcompass has a test db - vince
+    .then(() => {
+      console.log('Connected to MongoDB...');
+      app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+      })
+    })
+    .catch(err => console.error('Could not connect to MongoDB...', err));
 
 // NOTE: for MongoDB Atlas
-mongoose
-  .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@372-proj.3a6gakd.mongodb.net/?retryWrites=true&w=majority&appName=372-proj`
-  )
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch((e) => console.error("Failed to connect to Mongo: ", e));
+// mongoose
+//   .connect(
+//     `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@372-proj.3a6gakd.mongodb.net/?retryWrites=true&w=majority&appName=372-proj`
+//   )
+//   .then(() => {
+//     app.listen(PORT, () => {
+//       console.log(`Server is running on port ${PORT}`);
+//     });
+//   })
+//   .catch((e) => console.error("Failed to connect to Mongo: ", e));

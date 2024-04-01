@@ -1,4 +1,6 @@
-const url = `https://moments-server-6qo6tf2l7q-uc.a.run.app/api/users`;
+//const backendAPI = `https://moments-server-6qo6tf2l7q-uc.a.run.app/api/users`; // NOTE atlas
+const backendAPI = `http://localhost:8080/api/users`; // NOTE local
+
 import axios from "axios";
 
 export class UserController {
@@ -7,7 +9,7 @@ export class UserController {
   static async get_all() {
     const response = await axios({
       method: "get",
-      url: `${url}/`,
+      url: `${backendAPI}/`,
     });
 
     console.log(response.data);
@@ -17,7 +19,7 @@ export class UserController {
   static async get_user_profile(user_id: String) {
     const response = await axios({
       method: "get",
-      url: `${url}/${user_id}`,
+      url: `${backendAPI}/${user_id}`,
     });
 
     console.log(response.data);
@@ -27,7 +29,7 @@ export class UserController {
   static async create_user(user: any) {
     const response = await axios({
       method: "post",
-      url: `${url}/`,
+      url: `${backendAPI}/`,
       data: user,
     });
 
@@ -38,7 +40,7 @@ export class UserController {
   static async update_user(user_id: String, user: any) {
     const response = await axios({
       method: "put",
-      url: `${url}/${user_id}`,
+      url: `${backendAPI}/${user_id}`,
       data: user,
     });
 
@@ -49,7 +51,7 @@ export class UserController {
   static async delete_user(user_id: String) {
     const response = await axios({
       method: "delete",
-      url: `${url}/${user_id}`,
+      url: `${backendAPI}/${user_id}`,
     });
 
     console.log(response);

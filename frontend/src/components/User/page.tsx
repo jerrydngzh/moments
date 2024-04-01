@@ -2,9 +2,9 @@
 "use client"
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserController } from '../controllers/user.controller';
+import { UserController } from '../../controllers/user.controller';
 
-const User = () => {
+export default function User() {
     const navigate = useNavigate();
     const [route, setRoute] = useState('');
     const [id, setId] = useState('');
@@ -36,14 +36,13 @@ const User = () => {
 
       // Ignore the fact that this isnt really safe or secure i pinky promise to fix it later
       existingUserData.forEach((user: any)=>{
-          if(user.username === enteredUsername){
-            if(user.password == enteredPassword && user.email === enteredEmail){
-              setId(user._id);
-              navigate(`/profile?id=${user._id}`);
-            } else {
-              // Handle incorrect credentials (show an error message, for example)
-              console.log('Incorrect username or password');
-            }
+          if(user.username === enteredUsername && user.password == enteredPassword && user.email === enteredEmail){
+            setId(user._id);
+            navigate(`/profile?id=${user._id}`);
+          }
+          else {
+            alert('Incorrect username or password');
+            console.log('Incorrect username or password');
           }
       })
     };
@@ -103,5 +102,3 @@ const User = () => {
       </main>
     )
 }
-
-export default User

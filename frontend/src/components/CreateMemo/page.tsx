@@ -1,12 +1,11 @@
-// @ts-nocheck
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react';
 // import { Link } from 'react-router-dom';
 import MapForm from './components/LocationMapPicker/Map';
-// import SavedLocations from './components/Locations/SavedLocations';
-import { MemoController } from '../controllers/memo.controller';
-import { MemoType } from '../models/memo';
-import { UserController } from '../controllers/user.controller';
+import SavedLocations from './components/Locations/SavedLocations';
+import { MemoController } from '../../controllers/memo.controller';
+import { MemoType } from '../../models/memo';
+import { UserController } from '../../controllers/user.controller';
 
 const CreateMemo = ({ }) => {
   const navigate = useNavigate();
@@ -14,13 +13,13 @@ const CreateMemo = ({ }) => {
   const [name, setName] = useState<any>('');
   const [description, setMemo] = useState<any>('');
   const [locationName, setLocationName] = useState<any>('');
-  const [savedLocations, setSavedLocations] = useState<any>({});
+  //const [savedLocations, setSavedLocations] = useState<any>({});
   const [coordinates, setCoordinates] = useState<[number, number]>([49.27326489299744, -123.10365200042726]);
   const [reloadDropdown, setReloadDropdown] = useState<any>(false);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
-  const [tags, setTags] = useState<any>([]);
-  const [selectedTags, setSelectedTags] = useState<any>([]);
-  const [newTag, setNewTag] = useState<any>('');
+  //const [tags, setTags] = useState<any>([]);
+  //const [selectedTags, setSelectedTags] = useState<any>([]);
+  //const [newTag, setNewTag] = useState<any>('');
   const [userData, setUserData] = useState<any>({});
 
   const handleLocationSelected = (location: any) => {
@@ -44,7 +43,7 @@ const CreateMemo = ({ }) => {
       const tags = data.tags;
 
       setUserData(data);
-      setTags(tags || []);
+      //setTags(tags || []);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
@@ -83,42 +82,18 @@ const CreateMemo = ({ }) => {
     setReloadDropdown(true);
     fetchLocationName();
     fetchCategories();
-  }, [coordinates, savedLocations, userID]);
+  }, [coordinates, userID]);
 
-  const handleTagChange = (event: any) => {
+  /*const handleTagChange = (event: any) => {
     const selectedOptions = Array.from(event.target.selectedOptions, (option: any) => option.value);
     setSelectedTags(selectedOptions);
-  };
+  };*/
 
   const handleMapClick = (clickedLocation: [number, number]) => {
     console.log(clickedLocation);
     setCoordinates(clickedLocation);
   };
 
-  const createSaveLoc = async () => {
-    const newLocation = { name: locationName, coordinates: coordinates };
-
-    try {
-      const updatedSaveLoc = [...userData.saveLoc, newLocation];
-
-      const updateUserResponse = await fetch(`http://localhost:3000/api/users/${userID}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ saveLoc: updatedSaveLoc }),
-      });
-      const data = await updateUserResponse.json();
-      if (data.success) {
-        setReloadDropdown(true);
-      } else {
-        // Handle the error, log to console for now
-        console.error('Error creating memo:', data.message);
-      }
-    } catch (error) {
-      console.error('Error creating memo:', error);
-    }
-  };
 
   const handleDropdownReloaded = () => {
     // Reset reloadDropdown to false after the dropdown has been reloaded
@@ -139,7 +114,7 @@ const CreateMemo = ({ }) => {
         ]
       },
       description: description,
-      tags: selectedTags,
+      //tags: selectedTags,
     };
 
     try {
@@ -166,16 +141,16 @@ const CreateMemo = ({ }) => {
 
   const handleReset = () => {
     setLocationName('');
-    setMemo('');
+    setMemo(''); 
   };
 
-  const handleNewTag = () => {
+  /*const handleNewTag = () => {
     if (newTag.trim() !== '') {
       setTags([...tags, newTag]);
       setSelectedTags([...selectedTags, newTag]); // Add the new category to selected categories too
       setNewTag('');
     }
-  };
+  };*/
 
   return (
     <main className='create-memo w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800'>
@@ -206,7 +181,7 @@ const CreateMemo = ({ }) => {
         </div>
 
         {/* Displays Saved Locations */}
-        {/* <SavedLocations reloadDropdown={reloadDropdown} id={userID} onDropdownReloaded={handleDropdownReloaded} onLocationSelected={handleLocationSelected} /> */}
+        <SavedLocations reloadDropdown={reloadDropdown} id={userID} onDropdownReloaded={handleDropdownReloaded} onLocationSelected={handleLocationSelected} /> 
 
         {/* Create Tags */}
         {/* <div className="input-container">
