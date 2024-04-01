@@ -165,7 +165,7 @@ const CreateMemo = ({ }) => {
 
   const handleReset = () => {
     setLocationName('');
-    setMemo('');
+    setMemo(''); 
   };
 
   const handleNewTag = () => {

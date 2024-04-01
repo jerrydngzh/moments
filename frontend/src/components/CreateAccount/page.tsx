@@ -12,10 +12,35 @@ export default function CreateAccountPage() {
     password: '',
   });
 
+  const validate = () => { // account details validation
+    const { first_name, last_name, username, email, password } = userData;
+
+    if (!first_name || !last_name || !username || !email || !password) {
+      return 'All fields are required.';
+    }
+
+    if (!/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) {
+      return 'Please enter a valid email address.';
+    }
+
+    if (password.length < 8) {
+      return 'Password must be at least 8 characters long.';
+    }
+
+    return null;
+  };
+
   const handleSubmit = async (event: any) => {
     event.preventDefault();
 
     // NOTE: allowing duplicate username as each user will have unique id
+
+    const error = validate();
+    if (error) {
+      console.error(error);
+      alert(error);
+      return;
+    }
 
     try {
       // Create new User

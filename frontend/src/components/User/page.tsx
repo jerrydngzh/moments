@@ -2,7 +2,7 @@
 "use client"
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserController } from '../controllers/user.controller';
+import { UserController } from '../../controllers/user.controller';
 
 export default function User() {
     const navigate = useNavigate();
@@ -28,6 +28,7 @@ export default function User() {
       event.preventDefault();
 
       const target = event.target;
+      let userExists = false;
 
       // Your form processing logic goes here
       const enteredUsername = target.elements.user_name.value;
@@ -36,14 +37,15 @@ export default function User() {
 
       // Ignore the fact that this isnt really safe or secure i pinky promise to fix it later
       existingUserData.forEach((user: any)=>{
-          if(user.username === enteredUsername){
-            if(user.password == enteredPassword && user.email === enteredEmail){
-              setId(user._id);
-              navigate(`/profile?id=${user._id}`);
-            } else {
-              // Handle incorrect credentials (show an error message, for example)
-              console.log('Incorrect username or password');
-            }
+          if(user.username === enteredUsername && user.password == enteredPassword && user.email === enteredEmail){
+            setId(user._id);
+            navigate(`/profile?id=${user._id}`);
+            userExists = true;
+          }
+          else {
+            // Handle incorrect credentials
+            alert('Incorrect username or password');
+            console.log('Incorrect username or password');
           }
       })
     };
