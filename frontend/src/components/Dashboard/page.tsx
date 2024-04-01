@@ -334,6 +334,7 @@ const Dashboard = () => {
       {showPopup && selectedMemo && selectedLocationPop && (
         <Popup
           key={selectedMemo._id}
+          userID={id}
           selectedMemo={selectedMemo}
           selectedLocationPop={selectedLocationPop}
           tags={memos.tags}

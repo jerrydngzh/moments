@@ -1,21 +1,58 @@
 // @ts-nocheck
 'use client'
 import React, { useState, useEffect } from 'react';
+import { MemoController } from '../../controllers/memo.controller';
+import { MemoType } from '../../models/memo';
 
-const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose, handlePopupSubmit, Key }) => {
-  const [newTag, setNewTag] = useState('');
+const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose, handlePopupSubmit, Key }) => {
+  //const [newTag, setNewTag] = useState('');
   const [reloadKey, setReloadKey] = useState(Key);
+  const [editing, setEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(selectedMemo.name);
+  const [editedMemo, setEditedMemo] = useState(selectedMemo.description);
 
   useEffect(() => {
+    console.log(selectedMemo);
     if (reloadKey) {
-      setNewTag('');
+      //setNewTag('');
       setReloadKey(false);
       handlePopupSubmit();
     }
     console.log(selectedMemo);
   }, [reloadKey, selectedMemo]);
 
-  const handleNewTagChange = (event) => {
+  const handleEditClick = () => {
+    setEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    // Call a function to submit the edited title and memo
+    handleEditSubmit(editedTitle, editedMemo);
+    setEditing(false);
+  };
+
+  const handleEditSubmit = async(newTitle, newMemo) => {
+    // Here, you can define the submission logic
+    // For now, let's just log the new title and memo
+    selectedMemo.name = newTitle;
+    selectedMemo.description = newMemo;
+    const updatedMemo = {
+      id: selectedMemo._id,
+      description: selectedMemo.description,
+      date: selectedMemo.date,
+      name: selectedMemo.name,
+      location: selectedMemo.location
+    };
+
+    try{
+      await MemoController.update_memo(userID, updatedMemo);
+    } catch (error) {
+      console.error('Error updating memo:', error);
+    }
+    // Call any necessary functions to update state or perform other actions
+  };
+
+  /*const handleNewTagChange = (event) => {
     setNewTag(event.target.value);
   };
 
@@ -48,16 +85,33 @@ const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, hand
     }
     handleClose();
     setReloadKey(true);
-  };
+  };*/
 
   return (
     <div className="popup">
       <h2>Memo Details</h2>
-      <p><strong>Title:</strong> {selectedMemo.name}</p>
-      <p><strong>Memo:</strong> {selectedMemo.description}</p>
-      <p><strong>Location:</strong> {selectedMemo.location.name}</p>
-      <p><strong>Coordinates:</strong> {selectedMemo.location.coordinates}</p>
-      <p><strong>Tags:</strong>
+      {editing ? (
+        <>
+          <input
+            type="text"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+          />
+          <textarea
+            type="text"
+            value={editedMemo}
+            onChange={(e) => setEditedMemo(e.target.value)}
+          />
+          <button onClick={handleSaveClick}>Save</button>
+        </>
+      ) : (
+      <>
+        <p><strong>Title:</strong> {selectedMemo.name}</p>
+        <p><strong>Memo:</strong> {selectedMemo.description}</p>
+        <p><strong>Location:</strong> {selectedMemo.location.name}</p>
+        <p><strong>Coordinates:</strong> {selectedMemo.location.coordinates}</p>
+        <button onClick={handleEditClick}>Edit</button>
+      {/*<p><strong>Tags:</strong>
         {selectedMemo.tags.map((tag, index) => (
           <span key={index}>
             {tag}
@@ -73,7 +127,9 @@ const Popup = ({ selectedMemo, selectedLocationPop, tags, handleUpdateTags, hand
           placeholder="Enter new tag"
         />
         <button onClick={handleAddTag}>Add</button>
-      </div>
+        </div>*/}
+        </>
+      )}
       <button onClick={handleClose}>Close</button>
     </div>
   );
