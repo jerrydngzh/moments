@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Map from './map';
 import { Link } from 'react-router-dom';
 import { UserController } from '../../controllers/user.controller';
-
 import { MemoController } from '../../controllers/memo.controller'
 
 interface Location {
@@ -24,13 +23,11 @@ const Lens: React.FC = () => {
       const idFromQuery = searchParams.get('id') || '';
       setUserID(idFromQuery);
       
-      const data = await UserController.get_user_profile(idFromQuery)
-      setUserData(data);
+      const userData = await UserController.get_user_profile(idFromQuery)
+      setUserData(userData);
 
       // memos is an array of memo IDs :: string
-      fetchMemos(data.memos);
-      console.log(memos);
-      console.log(locations);
+      fetchMemos(userData.memos);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -40,15 +37,17 @@ const Lens: React.FC = () => {
   const fetchMemos = async (memoID: any) => {
     try { 
       const fetchedLocations: Location[] = [];
+      const searchParams = new URLSearchParams(window.location.search);
+      const idFromQuery = searchParams.get('id') || '';
+      setUserID(idFromQuery);
+      console.log("user: ", userID); // right now userid shows up as empty, need to fix this
+
       for (const mid of memoID) {
         // FIXME
         // const response = await fetch(`http://localhost:3000/api/memos/${userID}/${mid}`);
         // const memoData = await response.json();
-        const searchParams = new URLSearchParams(window.location.search);
-        const idFromQuery = searchParams.get('id') || '';
-        setUserID(idFromQuery);
         const result = await MemoController.get_memo(userID, mid);
-        
+
         const locationName = result.location.name;
         const coordinates = result.location.coordinates;
         const memo = { title: result.name, memo: result.description, selectedCategories: result.tags };
@@ -66,6 +65,9 @@ const Lens: React.FC = () => {
       }
       
       setLocations(fetchedLocations);
+
+      console.log("locations: ", locations);
+      console.log("memos: ", memos);
     } catch (error) {
       console.error('Error fetching memo data:', error);
     }
@@ -89,7 +91,7 @@ const Lens: React.FC = () => {
       <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
       <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
       <Map locations={locations} />
-      <div id="memos-list">
+      <div>
         {locations.map((location, index) => (
           <div key={index}>
             {location.memo.map((memo, memoIndex) => (

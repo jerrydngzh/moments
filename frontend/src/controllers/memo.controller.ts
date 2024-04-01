@@ -6,6 +6,7 @@ import axios from 'axios';
 
 export class MemoController {
   static async get_all_memos(user_id: String) {
+    console.log("get_all_memos user:", user_id)
     const result = await axios.get(`${backendAPI}/${user_id}`);
     return result.data;
   }
