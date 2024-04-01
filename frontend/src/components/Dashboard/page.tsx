@@ -103,7 +103,7 @@ const Dashboard = () => {
     setReloadDashboard(true);
   };
 
-  const handleAddTag = async () => {
+  /*const handleAddTag = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const idFromQuery = searchParams.get('id') || '';
     if (newTag.trim() !== '' && !tags.includes(newTag)) {
@@ -113,13 +113,6 @@ const Dashboard = () => {
         updatedUser.tags = updatedTags;
         const searchParams = new URLSearchParams(window.location.search);
         const idFromQuery = searchParams.get('id') || '';
-        /*const updateUserResponse = await fetch(`http://localhost:3000/api/users/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ tags: updatedTags }),
-        });*/
         const data = await UserController.update_user(idFromQuery,updatedUser);//await updateUserResponse.json();
         if (data.success) {
           setTags(updatedTags);
@@ -146,26 +139,11 @@ const Dashboard = () => {
             updatedMemo.tags = updatedTags;
             
             await MemoController.update_memo(idFromQuery, updatedMemo);
-            /*memo.tags = updatedTags;
-            await fetch(`http://localhost:3000/api/memos/${memo.id}`, {
-              method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ tags: updatedTags }),
-            });*/
           }
         }
       }
         var updatedUser = userData;
         updatedUser.tags = remainingTags;
-        /*await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ tags: remainingTags }),
-        });*/
         await UserController.update_user(idFromQuery, updatedUser);
         setTags(remainingTags);
       } catch (error) {
@@ -182,13 +160,6 @@ const Dashboard = () => {
 
     try {
       // FIXME
-      /*await fetch(`http://localhost:3000/api/memos/${memoid}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({tags: updatedTags}),
-      });*/
       const memoToUpdate = memos[memoid];
 
       // Modify the memo's tags with the updated tags
@@ -200,20 +171,13 @@ const Dashboard = () => {
       const updatedUserTags = [...tags, ...updatedTags.filter((cat: any) => !tags.includes(cat))];
       var updatedUser = userData;
       updatedUser.tags = updatedUserTags;
-      /*await fetch(`http://localhost:3000/api/users/${idFromQuery}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({tags: updatedUserTags}),
-      });*/
       UserController.update_user(idFromQuery, updatedUser);
       setTags(updatedUserTags);
     } catch (error) {
       console.error('Error updating memo tags:', error);
     }
     setReloadDashboard(true);
-  };
+  };*/
 
   const filteredLocations: { [key: string]: { [key: string]: any } } = Object.keys(locations).reduce((filtered: { [key: string]: { [key: string]: any } }, locationName) => {
     const filteredMemos: MemoType[] = [];
@@ -240,15 +204,6 @@ const Dashboard = () => {
     event.stopPropagation();
     console.log(memo);
     try {
-      // Make a DELETE request to the delete memo API route
-      // FIXME
-      /*const response = await fetch(`http://localhost:3000/api/memos/${memo._id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });*/
-      //const data = await response.json();
       await MemoController.delete_memo(id, memo._id);
         // Update userData.memos array by removing the deleted memo
       const updatedMemos = userData.memos.filter((m: any) => m !== memo._id);
@@ -280,7 +235,7 @@ const Dashboard = () => {
 
       <h1 className='text-blue-800 mb-6'>Memo Dashboard</h1>
       <div className="tags-container">
-        <h2 className="text-blue-800">Tags</h2>
+        {/*<h2 className="text-blue-800">Tags</h2>
         <div className="tags-table">
           <div className="tag-row add-tag-row">
             <input
@@ -305,8 +260,8 @@ const Dashboard = () => {
               <button onClick={() => handleDeleteTag(tag)} className="delete-tag-button">Delete</button>
             </div>
           ))}
-        </div>
-      </div>
+        </div>*/}
+          </div>
 
       <div className="mt-8">
         <h2 className="text-blue-800 text-lg">Locations</h2>
@@ -320,7 +275,7 @@ const Dashboard = () => {
                 <div className="memo-box">
                   {filteredLocations[locationName].memo.map((memo, index) => (
                     <div key={index} className="memo" onClick={() => handleMemoClick(memo, locationName)}>
-                      {memo.description}
+                      {memo.name}
                       <button onClick={(event) => handleDeleteMemo(memo, event)} className="delete-tag-button">Delete</button>
                     </div>
                   ))}
@@ -338,7 +293,7 @@ const Dashboard = () => {
           selectedMemo={selectedMemo}
           selectedLocationPop={selectedLocationPop}
           tags={memos.tags}
-          handleUpdateTags={handleUpdateMemoTags}
+          handleUpdateTags={null}
           handleClose={() => setShowPopup(false)}
           handlePopupSubmit={handlePopupSubmit} 
           Key = {popReload}
