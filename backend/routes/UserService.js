@@ -70,8 +70,6 @@ router.put("/:id", async (req, res, next) => {
       req.body.last_name !== undefined ? req.body.last_name : user.last_name;
     user.password =
       req.body.password !== undefined ? req.body.password : user.password;
-    user.memos =
-      req.body.memos !== undefined ? req.body.memos : user.memos;
 
     const updatedUser = await user.save();
 
