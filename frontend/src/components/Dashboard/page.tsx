@@ -23,6 +23,8 @@ const Dashboard = () => {
   const [key, setReloadKey] = useState(true);
   const [popReload, setPopReload] = useState(true);
   const [filteredLocations, setFilteredLocations] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
+
   const fetchData = async () => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
@@ -72,6 +74,7 @@ const Dashboard = () => {
     //console.log(memos);
     //console.log(locations);
   }, [reloadDashboard]);
+
   useEffect(() => {
     
     const updatedFilteredLocations = Object.keys(locations).reduce((filtered, locationName) => {
@@ -79,7 +82,11 @@ const Dashboard = () => {
       for (const memoId in memos) {
         const memo = memos[memoId];
         if (memo.location && memo.tags && memo.location.name === locationName && selectedTags.every(tag => memo.tags?.includes(tag))) {
-          filteredMemos.push(memo);
+          if(memo.location.name.toLowerCase().includes(searchInput.toLowerCase())||
+            memo.name.toLowerCase().includes(searchInput.toLowerCase())||
+            memo.description.toLowerCase().includes(searchInput.toLowerCase())){
+            filteredMemos.push(memo);
+        }
         }
       }
       if (filteredMemos.length > 0) {
@@ -91,7 +98,8 @@ const Dashboard = () => {
       return filtered;
     }, {});
     setFilteredLocations(updatedFilteredLocations);
-  }, [memos, selectedTags, locations]);
+  }, [memos, selectedTags, locations, searchInput]);
+
 
   const handleLocationClick = (locationName) => {
     setSelectedLocation(locationName);
@@ -107,7 +115,7 @@ const Dashboard = () => {
     setShowPopup(true);
   };
 
-  const handleTagChange = (tag) => {
+  /*const handleTagChange = (tag) => {
     const updatedTags = selectedTags.includes(tag)
       ? selectedTags.filter((cat) => cat !== tag)
       : [...selectedTags, tag];
@@ -120,7 +128,7 @@ const Dashboard = () => {
     setReloadDashboard(true);
   };
 
-  /*const handleAddTag = async () => {
+  const handleAddTag = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const idFromQuery = searchParams.get('id') || '';
     if (newTag.trim() !== '' && !tags.includes(newTag)) {
@@ -218,6 +226,10 @@ const Dashboard = () => {
     return filtered;
 }, {});*/
 
+  const handleSearchInputChange = (event) => {
+    setSearchInput(event.target.value);
+  };
+
   const handleDeleteMemo = async (memo: any, event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
     event.stopPropagation();
     console.log(memo);
@@ -265,7 +277,15 @@ const Dashboard = () => {
         <Link to={'/profile?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-1 text-center rounded-lg'>Profile</Link>
         <Link to={'/lens?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-1 text-center rounded-lg'>Lens</Link>
       </header>
-
+      <div className="search-container mb-4">
+        <input
+          type="text"
+          value={searchInput}
+          onChange={handleSearchInputChange}
+          placeholder="Search locations or memos"
+          className="search-input"
+        />
+      </div>
       <h1 className='text-blue-800 mb-6'>Memo Dashboard</h1>
       <div className="tags-container">
         {/*<h2 className="text-blue-800">Tags</h2>
