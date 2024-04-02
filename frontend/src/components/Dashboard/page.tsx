@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [reloadDashboard, setReloadDashboard] = useState(true);
   const [key, setReloadKey] = useState(true);
   const [popReload, setPopReload] = useState(true);
-
+  const [filteredLocations, setFilteredLocations] = useState([]);
   const fetchData = async () => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
@@ -68,13 +68,30 @@ const Dashboard = () => {
   };
   
   useEffect(() => {
-    if (reloadDashboard) {
-      fetchData();
-      setReloadDashboard(false);
-    }
+      fetchData();    
     //console.log(memos);
     //console.log(locations);
   }, [reloadDashboard]);
+  useEffect(() => {
+    
+    const updatedFilteredLocations = Object.keys(locations).reduce((filtered, locationName) => {
+      const filteredMemos = [];
+      for (const memoId in memos) {
+        const memo = memos[memoId];
+        if (memo.location && memo.tags && memo.location.name === locationName && selectedTags.every(tag => memo.tags?.includes(tag))) {
+          filteredMemos.push(memo);
+        }
+      }
+      if (filteredMemos.length > 0) {
+        filtered[locationName] = {
+          ...locations[locationName],
+          memo: filteredMemos
+        };
+      }
+      return filtered;
+    }, {});
+    setFilteredLocations(updatedFilteredLocations);
+  }, [memos, selectedTags, locations]);
 
   const handleLocationClick = (locationName) => {
     setSelectedLocation(locationName);
@@ -179,7 +196,8 @@ const Dashboard = () => {
     setReloadDashboard(true);
   };*/
 
-  const filteredLocations: { [key: string]: { [key: string]: any } } = Object.keys(locations).reduce((filtered: { [key: string]: { [key: string]: any } }, locationName) => {
+  /*const filteredLocations: { [key: string]: { [key: string]: any } } = Object.keys(locations).reduce((filtered: { [key: string]: { [key: string]: any } }, locationName) => {
+    
     const filteredMemos: MemoType[] = [];
     for (const memoId in memos) {
         if (Object.prototype.hasOwnProperty.call(memos, memoId)) {
@@ -198,7 +216,7 @@ const Dashboard = () => {
     }
 
     return filtered;
-}, {});
+}, {});*/
 
   const handleDeleteMemo = async (memo: any, event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
     event.stopPropagation();
@@ -214,9 +232,24 @@ const Dashboard = () => {
       // Update user data by sending a PUT request
       const editResponse = await UserController.update_user(idFromQuery, userData)
       console.log('Edited user: ', editResponse)
-
       setReloadDashboard(true);
-      fetchData();
+      const fetchedMemos: { [key: string]: MemoType } = {};
+      for (const mid of updatedMemos) {
+        const data = await MemoController.get_memo(idFromQuery, mid);
+        fetchedMemos[mid] = data;
+      }
+      setMemos(fetchedMemos);
+      const updatedFilteredLocations = Object.values(locations).reduce((filtered, { name }) => {
+        const filteredMemos = Object.values(fetchedMemos).filter((memo) => memo.location.name === name && selectedTags.every(tag => memo.tags?.includes(tag)));
+        if (filteredMemos.length > 0) {
+          filtered[name] = {
+            ...locations[name],
+            memo: filteredMemos
+          };
+        }
+        return filtered;
+      }, {});
+      setFilteredLocations(updatedFilteredLocations);
       // Optionally handle success response
     } catch (error) {
       console.error('Error deleting memo:', error);
@@ -264,7 +297,7 @@ const Dashboard = () => {
           </div>
 
       <div className="mt-8">
-        <h2 className="text-blue-800 text-lg">Locations</h2>
+        <h2 key={filteredLocations.toString()} className="text-blue-800 text-lg">Locations</h2>
         {Object.keys(filteredLocations).length === 0 ? (
           <p className="italic text-blue-800 opacity-80">No locations to display.</p>
         ) : (
@@ -272,14 +305,20 @@ const Dashboard = () => {
             <div key={locationName} className="location-box" onClick={() => handleLocationClick(locationName)}>
               <h3>{locationName}</h3>
               {expandedLocations[locationName] && (
-                <div className="memo-box">
-                  {filteredLocations[locationName].memo.map((memo, index) => (
-                    <div key={index} className="memo" onClick={() => handleMemoClick(memo, locationName)}>
-                      {memo.name}
-                      <button onClick={(event) => handleDeleteMemo(memo, event)} className="delete-tag-button">Delete</button>
-                    </div>
-                  ))}
-                </div>
+                <table className="memo-box w-full table-auto">
+                {filteredLocations[locationName].memo.map((memo, index) => (
+                  <tbody key={index} className="memo" onClick={() => handleMemoClick(memo, locationName)}>
+                    <tr className="bg-blue-100">
+                      <th className="px-16 py-2">
+                        <span>{memo.name}</span>
+                      </th>
+                      <th className="px-16 py-2">
+                        <span><button onClick={(event) => handleDeleteMemo(memo, event)} className="delete-memo-button">Delete</button></span>
+                      </th>
+                    </tr>
+                  </tbody>
+                ))}
+              </table>
               )}
             </div>
           ))
