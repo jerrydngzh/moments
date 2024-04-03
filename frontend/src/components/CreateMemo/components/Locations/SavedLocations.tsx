@@ -10,22 +10,29 @@ const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSele
   const fetchData = async () => {
     try {
       const data = await UserController.get_user_profile(id);
-      fetchMemos(data.memos);
+      console.log(data);
+      fetchMemos(data);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
   };
 
-  const fetchMemos = async (memoID) => {
+  const fetchMemos = async (userData) => {
     try {
       const fetchedMemos: { [key: string]: MemoType } = {};
       const fetchedLocations: { [key: string]: [number, number] } = {};
       var locations:any[]=[{name:"past locations"}];
-      for (const mid of memoID) {
-        const data = await MemoController.get_memo(id, mid);
-        fetchedMemos[mid] = data;
-        fetchedLocations[data.location.name] = data.location.coordinates;
-        locations.push({name:data.location.name, coordinates:data.location.coordinates});
+      if(userData.memos){
+        for (const mid of userData.memos) {
+          const data = await MemoController.get_memo(userData._id, mid);
+          fetchedMemos[mid] = data;
+          fetchedLocations[data.location.name] = data.location.coordinates;
+          const locationExists = locations.some(location => location.name === data.location.name);
+          
+          if (!locationExists) {
+            locations.push({name:data.location.name, coordinates:data.location.coordinates});
+          }
+        }
       }
       setMemos(prevMemos => ({ ...prevMemos, ...fetchedMemos }));
       setSavedLocations(locations);

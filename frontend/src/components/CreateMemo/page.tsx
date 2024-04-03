@@ -20,7 +20,18 @@ const CreateMemo = ({ }) => {
   //const [tags, setTags] = useState<any>([]);
   //const [selectedTags, setSelectedTags] = useState<any>([]);
   //const [newTag, setNewTag] = useState<any>('');
-  const [userData, setUserData] = useState<any>({});
+  const [userData, setUserData] = useState<any>({
+    first_name: '',
+    last_name: '',
+    username: '',
+    email: '',
+    password: '',
+    memos: [],
+    saveLoc: [{}],
+    tags: [],
+  });  
+  const [media, setMedia] = useState<string[]>([]);
+  const [uploadedMedia, setUploadedMedia] = useState<Blob[]>([]);
 
   const handleLocationSelected = (location: any) => {
     console.log(location)
@@ -40,7 +51,7 @@ const CreateMemo = ({ }) => {
 
       console.log('Fetched Account:', data);
       // tags will be undefined because backend design does not support yet
-      const tags = data.tags;
+      //const tags = data.tags;
 
       setUserData(data);
       //setTags(tags || []);
@@ -51,7 +62,7 @@ const CreateMemo = ({ }) => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const idFromQuery = searchParams.get('is') || '';
+    const idFromQuery = searchParams.get('id') || '';
     setUserID(idFromQuery);
     const fetchLocationName = async () => {
       const [lat, lon] = coordinates;
@@ -100,44 +111,100 @@ const CreateMemo = ({ }) => {
     setReloadDropdown(false);
   };
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
 
-    // TODO: better naming convention for the memo object fields of location
-    const memoToCreate: MemoType = {
-      name: name,
-      date: new Date().toString(),
-      location: {
-        name: locationName,
-        coordinates: [
-          coordinates[0], coordinates[1]
-        ]
-      },
-      description: description,
-      //tags: selectedTags,
+  // Function to handle the upload of media files
+  const handleMediaUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      
+      if (files) {
+        const newMedia: Blob[] = Array.from(files);
+        setUploadedMedia(prevMedia => [...prevMedia, ...newMedia]);
+          for (const file of Array.from(files)) {
+              await processMediaFile(file);
+          }
+      }
     };
 
-    try {
-      const res = await MemoController.create_memo(userID, memoToCreate);
+    // Process each media file asynchronously
+    const processMediaFile = async (file: File) => {
+      try {
+          const base64String = await convertBlobToBase64(file);
+          setMedia(prevMedia => [...prevMedia, base64String]);
+      } catch (error) {
+          console.error('Error processing media file:', error);
+      }
+    };
 
-      // console.log(res)
-      const newMemoId = res._id; // TODO
+    // Convert Blob object to Base64-encoded string
+    const convertBlobToBase64 = (blob: Blob): Promise<string> => {
+      return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          
+          reader.onload = () => {
+              const base64String = reader.result as string;
+              resolve(base64String);
+          };
+          
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+      });
+    };
 
+    // Function to create a memo with media
+    const createMemoWithMedia = async (newMedia: Blob[]) => {
+      try {
+          const newMediaStrings: string[] = await Promise.all(newMedia.map(convertBlobToBase64));
+          
+          const memoToCreate: MemoType = {
+              name,
+              date: new Date().toString(),
+              location: { name: locationName, coordinates: coordinates },
+              description,
+              media: newMediaStrings,
+          };
+          
+          const idFromQuery = getUserIDFromQuery();
+          const createdMemo = await MemoController.create_memo(idFromQuery, memoToCreate);
+          
+          const updatedUserData = { ...userData, memos: [...userData.memos, createdMemo._id] };
+          setUserData(updatedUserData);
+          
+          await UserController.update_user(idFromQuery, updatedUserData);
+          
+          navigate(`/dashboard?id=${userID}`);
+      } catch (error) {
+          console.error('Error creating memo:', error);
+      }
+    };
+
+    // Function to handle form submission
+    const handleSubmit = async (event: any) => {
+      event.preventDefault();
+      // Retrieve the media input element
+      const mediaInput = document.getElementById('media') as HTMLInputElement;
       
-      // Update the memos array in userData with the new memo ID
-      let newUserData: any = userData
-      newUserData.memos = [...userData.memos, newMemoId]
+      // If the input has files, combine them with previously uploaded media
+      if (mediaInput && mediaInput.files && mediaInput.files.length > 0) {
+        const newMedia: Blob[] = Array.from(mediaInput.files);
+        const allMedia: Blob[] = [...uploadedMedia, ...newMedia];
+        await createMemoWithMedia(allMedia);
+      } else {
+        // If no new files were selected, create the memo with previously uploaded media only
+        await createMemoWithMedia(uploadedMedia);
+      }
+    };
 
-      setUserData(newUserData);
+    // Function to handle removal of media
+    const handleRemoveMedia = (indexToRemove: number) => {
+      setMedia(prevMedia => prevMedia.filter((_, index) => index !== indexToRemove));
+    };
 
-      const user = await UserController.update_user(userID, newUserData)
-      console.log(user)
+    // Function to retrieve user ID from query parameters
+    const getUserIDFromQuery = () => {
+      const searchParams = new URLSearchParams(window.location.search);
+      return searchParams.get('id') || '';
+    };
 
-      navigate(`/dashboard?id=${userID}`);
-    } catch (error) {
-      console.error('Error creating memo:', error);
-    }
-  };
 
   const handleReset = () => {
     setLocationName('');
@@ -182,6 +249,52 @@ const CreateMemo = ({ }) => {
 
         {/* Displays Saved Locations */}
         <SavedLocations reloadDropdown={reloadDropdown} id={userID} onDropdownReloaded={handleDropdownReloaded} onLocationSelected={handleLocationSelected} /> 
+        {/* Media upload field */}
+        <div className="input-container">
+          <label htmlFor='media' className="text-xl text-blue-800">Upload Media</label>
+          <input
+            type="file"
+            id="media"
+            name="media"
+            multiple
+            accept="image/*, video/*, audio/*"
+            onChange={handleMediaUpload}
+          />
+        </div>
+
+       {/* Display uploaded media */}
+        <div className="media-container">
+          {media.map((fileURL, index) => (
+            <div key={index} className="media-item">
+              {/* Determine the type of media based on the file URL */}
+              {fileURL.startsWith('data:image') ? (
+                // If it's an image file
+                <img src={fileURL} alt={`Media ${index}`} />
+              ) : fileURL.startsWith('data:video') ? (
+                // If it's a video file
+                <video controls>
+                  <source src={fileURL} />
+                  Your browser does not support the video tag.
+                </video>
+              ) : fileURL.startsWith('data:audio') ? (
+                // If it's an audio file
+                <audio controls>
+                  <source src={fileURL} />
+                  Your browser does not support the audio tag.
+                </audio>
+              ) : (
+                // If it's another type of file (unsupported), you can display a message
+                <div>This file type is not supported.</div>
+              )}
+              <div className="media-actions">
+                <button onClick={() => handleRemoveMedia(index)}>Remove</button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+
+
 
         {/* Create Tags */}
         {/* <div className="input-container">
