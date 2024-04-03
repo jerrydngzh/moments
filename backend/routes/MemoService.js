@@ -85,6 +85,7 @@ router.post("/:user_id", async (req, res, next) => {
       },
       description: req.body.description,
       user_id: user_id,
+      media:req.body.media
     });
 
     const result = await memo.save();
@@ -113,6 +114,7 @@ router.put("/:user_id/:id", async (req, res, next) => {
       ],
     },
     description: req.body.description,
+    media:req.body.media
   };
 
   try {
