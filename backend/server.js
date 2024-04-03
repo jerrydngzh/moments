@@ -1,12 +1,13 @@
 const cors = require("cors");
 const express = require("express");
 const cookieParser = require("cookie-parser");
+var bodyParser = require('body-parser');
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 const indexRouter = require("./routes/index");
 const MemoServiceRouter = require("./routes/MemoService");
@@ -15,8 +16,9 @@ const app = express();
 
 // ============== Setup Middleware ==============
 app.use(logger("dev"));
+app.use(express.urlencoded({ extended: true ,limit: '50mb'}));
+app.use(express.json({limit: '50mb'}));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 
