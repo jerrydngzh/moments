@@ -1,13 +1,12 @@
 const cors = require("cors");
 const express = require("express");
 const cookieParser = require("cookie-parser");
-var bodyParser = require('body-parser');
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 const indexRouter = require("./routes/index");
 const MemoServiceRouter = require("./routes/MemoService");
