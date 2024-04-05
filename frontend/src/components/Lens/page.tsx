@@ -53,7 +53,7 @@ const Lens: React.FC = () => {
 
         const locationName = result.location.name;
         const coordinates = result.location.coordinates;
-        const memo = { title: result.name, memo: result.description, date: result.date };
+        const memo = { title: result.name, memo: result.description, date: result.date, location: locationName};
         
         // Check if location already exists in fetchedLocations array
         const existingLocationIndex = fetchedLocations.findIndex(loc => loc.coordinates[0] === coordinates[0] && loc.coordinates[1] === coordinates[1]);

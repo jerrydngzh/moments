@@ -4,9 +4,9 @@ import React from 'react';
 interface Location {
     coordinates: [number, number];
     memo: { memo: string; selectedCategories: string[] }[];
-  }
+}
   
-  interface MapProps {
+interface MapProps {
     locations: Location[];
 }
 
