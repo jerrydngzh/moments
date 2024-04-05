@@ -50,6 +50,7 @@ const Dashboard = () => {
       for (const mid of memoID) {
         const data = await MemoController.get_memo(idFromQuery, mid);
         fetchedMemos[mid] = data;
+        console.log(data.location.name);
         fetchedLocations[data.location.name] = data.location.coordinates;
       }
 
@@ -350,6 +351,7 @@ const Dashboard = () => {
       {showPopup && selectedMemo && selectedLocationPop && (
         <Popup
           key={selectedMemo._id}
+          userName={userData.username}
           userID={id}
           selectedMemo={selectedMemo}
           selectedLocationPop={selectedLocationPop}

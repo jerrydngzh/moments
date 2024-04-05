@@ -6,7 +6,8 @@ import { MemoType } from '../../../../models/memo';
 import MapForm from '../../../CreateMemo/components/LocationMapPicker/Map';
 import SavedLocations from '../../../CreateMemo/components/Locations/SavedLocations';
 import "./Popup.css";
-const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose, handlePopupSubmit,reloadDashboard, Key }) => {
+
+const Popup = ({userName, userID, selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose, handlePopupSubmit,reloadDashboard, Key }) => {
   //const [newTag, setNewTag] = useState('');
   const [reloadKey, setReloadKey] = useState(Key);
   const [editing, setEditing] = useState(false);
@@ -19,6 +20,7 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
   const [media, setMedia] = useState<string[]>(selectedMemo.media);
   const [uploadedMedia, setUploadedMedia] = useState<Blob[]>([]);
   const [reloadDropdown, setReloadDropdown] = useState<any>(false);
+  const [userData, setUserData] = useState({});
 
   useEffect(() => {
     if (reloadKey) {
@@ -52,6 +54,7 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
         console.error('Error fetching location name:', error);
       }
     };
+
     setReloadDropdown(true);
     fetchLocationName();
     console.log(selectedMemo);
@@ -212,7 +215,7 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
 
   return (
     <div className="popup">
-      <h2>Memo Details</h2>
+      <h2 className ='title'>{selectedMemo.name}</h2>
       {editing ? (
         <>
         <div className="scrollable-container">
@@ -298,10 +301,9 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
         </>
       ) : (
       <>
-        <p><strong>Title:</strong> {selectedMemo.name}</p>
-        <p><strong>Memo:</strong> {selectedMemo.description}</p>
-        <p><strong>Location:</strong> {selectedMemo.location.name}</p>
-        <p><strong>Coordinates:</strong> {selectedMemo.location.coordinates}</p>
+        <p className='date'>{selectedMemo.date}</p>
+        <p className='loc'>{selectedMemo.location.name}</p>
+        {/*<p>{selectedMemo.location.coordinates}</p>*/}
         {/* Display media */}
         {selectedMemo.media.length > 0 && (
           <div className="media-container relative">
@@ -334,7 +336,7 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
         {selectedMemo.media && selectedMemo.media.length > 0 && (
           <>
             <button
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-1 rounded-md"
+              className=" left-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-1 rounded-md"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -344,7 +346,7 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
               Prev
             </button>
             <button
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-1 rounded-md"
+              className=" right-0 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-1 rounded-md"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -355,7 +357,7 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
             </button>
           </>
         )}
-        
+        <p className='username'>{userName}</p><p>{selectedMemo.description}</p>
         <button onClick={handleEditClick}>Edit</button>
       {/*<p><strong>Tags:</strong>
         {selectedMemo.tags.map((tag, index) => (

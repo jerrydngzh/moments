@@ -3,3 +3,21 @@
     overflow-y: auto;
   }
   
+.username{
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.title{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.loc{
+    font-size: 12px;
+}
+
+.date{
+    font-size: 12px;
+}
