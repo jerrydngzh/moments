@@ -1,10 +1,18 @@
- // @ts-nocheck
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import markerIcon from '/images/marker-icon.png';
+// @ts-nocheck
+import React, { useState, useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMapEvents,
+} from "react-leaflet";
+import L from "leaflet";
+import markerIcon from "/images/marker-icon.png";
 const MapForm = ({ selectedLocation, onMapClick }: any) => {
-  const [initialPosition, setInitialPosition] = useState([49.27326489299744, -123.10365200042726]);
+  const [initialPosition, setInitialPosition] = useState([
+    49.27326489299744, -123.10365200042726,
+  ]);
 
   const [positions, setPositions] = useState([initialPosition]);
   const customMarkerIcon = new L.Icon({
@@ -19,7 +27,6 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
       setPositions([...positions, selectedLocation]);
       setInitialPosition(selectedLocation);
       addMarkerAndNavigate(selectedLocation);
-
     }
   }, [selectedLocation]);
 
@@ -47,17 +54,30 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
     };
 
     return positions.map((position, index) => (
-      <Marker key={index} position={position} icon={customMarkerIcon} draggable={true} eventHandlers={{
-        dragend: (e: any) => {
-          const updatedPositions = [...positions];
-          updatedPositions[index] = [e.target.getLatLng().lat, e.target.getLatLng().lng]; // Update the position at the specified index
-          setPositions(updatedPositions);
-          onMapClick([e.target.getLatLng().lat, e.target.getLatLng().lng]);
-          setInitialPosition([e.target.getLatLng().lat, e.target.getLatLng().lng]);
-        }
-      }}>
+      <Marker
+        key={index}
+        position={position}
+        icon={customMarkerIcon}
+        draggable={true}
+        eventHandlers={{
+          dragend: (e: any) => {
+            const updatedPositions = [...positions];
+            updatedPositions[index] = [
+              e.target.getLatLng().lat,
+              e.target.getLatLng().lng,
+            ]; // Update the position at the specified index
+            setPositions(updatedPositions);
+            onMapClick([e.target.getLatLng().lat, e.target.getLatLng().lng]);
+            setInitialPosition([
+              e.target.getLatLng().lat,
+              e.target.getLatLng().lng,
+            ]);
+          },
+        }}
+      >
         <Popup>
-          <button onClick={(e) => deleteMarker(index, e)}>Delete</button> {/* Button to delete the marker */}
+          <button onClick={(e) => deleteMarker(index, e)}>Delete</button>{" "}
+          {/* Button to delete the marker */}
         </Popup>
       </Marker>
     ));

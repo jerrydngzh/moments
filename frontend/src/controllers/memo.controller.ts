@@ -18,7 +18,7 @@ export class MemoController {
 
   static async create_memo(user_id: String, memo: MemoType) {
     // const result = await axios.post(`${backendAPI}/${user_id}`, memo);
-    
+
     console.log(memo);
 
     const response = await axios({

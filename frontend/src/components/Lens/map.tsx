@@ -1,6 +1,6 @@
 // @ts-nocheck
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 interface Location {
   coordinates: [number, number];
@@ -16,7 +16,7 @@ const Map: React.FC<MapProps> = ({ locations }) => {
     <MapContainer
       center={[49.27326489299744, -123.10365200042726]}
       zoom={13}
-      style={{ height: '400px', width: '100%' }}
+      style={{ height: "400px", width: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

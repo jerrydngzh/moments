@@ -1,10 +1,19 @@
 // @ts-nocheck
-'use client'
-import React, { useState, useEffect } from 'react';
-import { MemoController } from '../../controllers/memo.controller';
-import { MemoType } from '../../models/memo';
+"use client";
+import React, { useState, useEffect } from "react";
+import { MemoController } from "../../controllers/memo.controller";
+import { MemoType } from "../../models/memo";
 
-const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTags, handleClose, handlePopupSubmit, Key }) => {
+const Popup = ({
+  userID,
+  selectedMemo,
+  selectedLocationPop,
+  tags,
+  handleUpdateTags,
+  handleClose,
+  handlePopupSubmit,
+  Key,
+}) => {
   //const [newTag, setNewTag] = useState('');
   const [reloadKey, setReloadKey] = useState(Key);
   const [editing, setEditing] = useState(false);
@@ -31,7 +40,7 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
     setEditing(false);
   };
 
-  const handleEditSubmit = async(newTitle, newMemo) => {
+  const handleEditSubmit = async (newTitle, newMemo) => {
     // Here, you can define the submission logic
     // For now, let's just log the new title and memo
     selectedMemo.name = newTitle;
@@ -41,13 +50,13 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
       description: selectedMemo.description,
       date: selectedMemo.date,
       name: selectedMemo.name,
-      location: selectedMemo.location
+      location: selectedMemo.location,
     };
 
-    try{
+    try {
       await MemoController.update_memo(userID, updatedMemo);
     } catch (error) {
-      console.error('Error updating memo:', error);
+      console.error("Error updating memo:", error);
     }
     // Call any necessary functions to update state or perform other actions
   };
@@ -105,13 +114,21 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, tags, handleUpdateTag
           <button onClick={handleSaveClick}>Save</button>
         </>
       ) : (
-      <>
-        <p><strong>Title:</strong> {selectedMemo.name}</p>
-        <p><strong>Memo:</strong> {selectedMemo.description}</p>
-        <p><strong>Location:</strong> {selectedMemo.location.name}</p>
-        <p><strong>Coordinates:</strong> {selectedMemo.location.coordinates}</p>
-        <button onClick={handleEditClick}>Edit</button>
-      {/*<p><strong>Tags:</strong>
+        <>
+          <p>
+            <strong>Title:</strong> {selectedMemo.name}
+          </p>
+          <p>
+            <strong>Memo:</strong> {selectedMemo.description}
+          </p>
+          <p>
+            <strong>Location:</strong> {selectedMemo.location.name}
+          </p>
+          <p>
+            <strong>Coordinates:</strong> {selectedMemo.location.coordinates}
+          </p>
+          <button onClick={handleEditClick}>Edit</button>
+          {/*<p><strong>Tags:</strong>
         {selectedMemo.tags.map((tag, index) => (
           <span key={index}>
             {tag}
