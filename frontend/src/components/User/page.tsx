@@ -1,5 +1,4 @@
 // @ts-nocheck
-"use client"
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserController } from '../../controllers/user.controller';
