@@ -26,6 +26,7 @@ const Lens: React.FC = () => {
       const userData = await UserController.get_user_profile(idFromQuery)
       setUserData(userData);
 
+      console.log("Memos: ", userData.memos);
       // memos is an array of memo IDs :: string
       fetchMemos(userData.memos);
     } catch (error) {
@@ -40,17 +41,17 @@ const Lens: React.FC = () => {
       const searchParams = new URLSearchParams(window.location.search);
       const idFromQuery = searchParams.get('id') || '';
       setUserID(idFromQuery);
-      console.log("user: ", userID); // right now userid shows up as empty, need to fix this
+      console.log("user: ", idFromQuery); // right now userid shows up as empty, need to fix this
 
       for (const mid of memoID) {
         // FIXME
         // const response = await fetch(`http://localhost:3000/api/memos/${userID}/${mid}`);
         // const memoData = await response.json();
-        const result = await MemoController.get_memo(userID, mid);
+        const result = await MemoController.get_memo(idFromQuery, mid);
 
         const locationName = result.location.name;
         const coordinates = result.location.coordinates;
-        const memo = { title: result.name, memo: result.description, selectedCategories: result.tags };
+        const memo = { title: result.name, memo: result.description, date: result.date };
         
         // Check if location already exists in fetchedLocations array
         const existingLocationIndex = fetchedLocations.findIndex(loc => loc.coordinates[0] === coordinates[0] && loc.coordinates[1] === coordinates[1]);
@@ -92,16 +93,35 @@ const Lens: React.FC = () => {
       <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
       <Map locations={locations} />
       <div>
-        {locations.map((location, index) => (
-          <div key={index}>
-            {location.memo.map((memo, memoIndex) => (
-              <div key={memoIndex}>
-                <h2>{memo.title}</h2>
-                <p>{memo.memo}</p>
-                <p>Categories: {memo.selectedCategories.join(', ')}</p>
-              </div>
-            ))}
-          </div>
+        {locations.map((location, locIndex) => (
+          <div>
+          {locations.map((location, locIndex) => (
+            <table key={locIndex} className="w-full table-auto">
+              <thead className="justify-between">
+                <tr className="bg-blue-950">
+                  <th className="px-16 py-2">
+                    <span className="text-blue-100">Title</span>
+                  </th>
+                  <th className="px-16 py-2">
+                    <span className="text-blue-100">Memo</span>
+                  </th>
+                  <th className="px-16 py-2">
+                    <span className="text-blue-100">Date</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {location.memo.map((memo, memoIndex) => (
+                  <tr key={memoIndex} className="bg-blue-100">
+                    <td className="px-16 py-2 font-bold">{memo.title}</td>
+                    <td className="px-16 py-2">{memo.memo}</td>
+                    <td className="px-16 py-2">{memo.date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ))}
+        </div>
         ))}
       </div>
     </div>
