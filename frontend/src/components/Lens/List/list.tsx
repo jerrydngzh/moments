@@ -1,23 +1,19 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import Map from './Map/map';
-import Table from './Map/table';
-import List from './List/list';
 import { Link } from 'react-router-dom';
-import { UserController } from '../../controllers/user.controller';
-import { MemoController } from '../../controllers/memo.controller'
+import { UserController } from '../../../controllers/user.controller';
+import { MemoController } from '../../../controllers/memo.controller'
 
 interface Location {
   coordinates: [number, number];
   memo: { memo: string; selectedCategories: string[] }[];
 }
 
-const Lens: React.FC = () => {
+const listLens: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
   const [userID, setUserID] = useState('');
   const [userData, setUserData] = useState({});
   const [memos, setMemos] = useState({});
-  const [view, setView] = useState('map');
   
   const fetchData = async () => {
     try {
@@ -47,6 +43,7 @@ const Lens: React.FC = () => {
       console.log("user: ", idFromQuery); // right now userid shows up as empty, need to fix this
 
       for (const mid of memoID) {
+        // FIXME
         // const response = await fetch(`http://localhost:3000/api/memos/${userID}/${mid}`);
         // const memoData = await response.json();
         const result = await MemoController.get_memo(idFromQuery, mid);
@@ -75,14 +72,6 @@ const Lens: React.FC = () => {
       console.error('Error fetching memo data:', error);
     }
   };
-
-  const toggleView = () => {
-    if (view === 'map') {
-      setView('list');
-    } else {
-      setView('map');
-    }
-  }
   
 
   useEffect(() => {
@@ -93,31 +82,16 @@ const Lens: React.FC = () => {
   }, []);
 
   return (
-    <div className="lens w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
-      <header className="flex flex-row justify-between mb-4">
-        <Link to={'/createMemo?id='+userID+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg'>Create Memo</Link>
-        <Link to={'/profile?id='+userID+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg'>Profile</Link>
-        <Link to={'/dashboard?id='+userID+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg'>Dashboard</Link>
-      </header>
-      <div id="lens-header" className="flex flex-row justify-between">
-        <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
-        <button onClick={toggleView} className="button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 h-1/2 p-2 text-center rounded-lg">
-          {view === 'map' ? 'List View' : 'Map View'}
-        </button>
-      </div>
-      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-      {view === 'map' ? 
-        <>
-          <Map locations={locations} /> 
-          <Table locations={locations} />
-        </>
-        : 
-        <>
-          <List locations={locations} />
-        </>
-      }
-    </div>
+    <>
+      {locations.map((location, locIndex) => (
+        <ul key={locIndex}>
+          {location.memo.map((memo, memoIndex) => (
+            <li key={memoIndex}>{memo.title}</li>
+          ))}
+        </ul>
+      ))}
+    </>
   );
 };
 
-export default Lens;
+export default listLens;
