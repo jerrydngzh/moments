@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
-import Popup from './Popup';
+import Popup from './components/Popup/Popup';
 import './style.css';
 import { Link } from 'react-router-dom';
 import { UserController } from '../../controllers/user.controller';
@@ -269,7 +269,9 @@ const Dashboard = () => {
     }
   };
   
-
+  const handleDashboardReload = () => {
+    setReloadDashboard(prevValue => !prevValue); // Toggle the reloadDashboard state
+  };
   return (
     <div className="dashboard-container w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">  
       <header className="flex flex-row justify-between mb-4">
@@ -355,6 +357,7 @@ const Dashboard = () => {
           handleUpdateTags={null}
           handleClose={() => setShowPopup(false)}
           handlePopupSubmit={handlePopupSubmit} 
+          reloadDashboard={handleDashboardReload}
           Key = {popReload}
         />
       )}
