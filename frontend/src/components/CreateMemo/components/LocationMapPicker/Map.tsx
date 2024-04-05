@@ -1,4 +1,4 @@
- // @ts-nocheck
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
@@ -16,7 +16,7 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
       console.log(selectedLocation);
       console.log(positions);
       // Add a new position for the selected location
-      setPositions([...positions, selectedLocation]);
+      setPositions([selectedLocation]);
       setInitialPosition(selectedLocation);
       addMarkerAndNavigate(selectedLocation);
 
@@ -24,6 +24,7 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
   }, [selectedLocation]);
 
   const addMarkerAndNavigate = (location: any) => {
+    console.log(location);
     setPositions([location]); // Set the positions array with only the new location
     onMapClick(location); // Trigger the map click event
     setInitialPosition(location);
@@ -33,7 +34,7 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
     const map = useMapEvents({
       click(e) {
         const clickedLocation = [e.latlng.lat, e.latlng.lng];
-        setPositions([...positions, clickedLocation]); // Add new position to the array
+        setPositions([clickedLocation]); // Add new position to the array
         onMapClick(clickedLocation);
         setInitialPosition(clickedLocation);
       },

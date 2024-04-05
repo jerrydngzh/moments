@@ -34,7 +34,7 @@ const CreateMemo = ({ }) => {
   const [uploadedMedia, setUploadedMedia] = useState<Blob[]>([]);
 
   const handleLocationSelected = (location: any) => {
-    console.log(location)
+    //console.log(location)
     // Set the selected location in state
     setSelectedLocation(location);
   };
@@ -70,7 +70,7 @@ const CreateMemo = ({ }) => {
       try {
         // NOTE
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetail=1`
         );
 
         if (!response.ok) {
@@ -80,16 +80,31 @@ const CreateMemo = ({ }) => {
         }
 
         const data = await response.json();
+        console.log(data);
+        const fieldsToExclude = ['country', 'postcode', 'city', 'ISO3166-2-lvl4', 'country_code', 'state'];
 
-        if (data.display_name) {
-          setLocationName(data.display_name);
-        } else {
+        // Filter out fields to exclude
+        const includedFields = Object.entries(data.address)
+            .filter(([key, value]) => !fieldsToExclude.includes(key))
+            .map(([key, value]) => value);
+
+        // Constructing the address string
+        const addressString = includedFields.join(', ');
+        console.log(addressString);
+        if (data.name) {
+          setLocationName(data.name);
+        }
+        else if(addressString){
+          setLocationName(addressString);
+        } 
+        else {
           console.error('Error fetching location name: No display name in response');
         }
       } catch (error) {
         console.error('Error fetching location name:', error);
       }
     };
+    
     setReloadDropdown(true);
     fetchLocationName();
     fetchCategories();
@@ -101,7 +116,7 @@ const CreateMemo = ({ }) => {
   };*/
 
   const handleMapClick = (clickedLocation: [number, number]) => {
-    console.log(clickedLocation);
+    //console.log(clickedLocation);
     setCoordinates(clickedLocation);
   };
 
@@ -154,10 +169,10 @@ const CreateMemo = ({ }) => {
     const createMemoWithMedia = async (newMedia: Blob[]) => {
       try {
           const newMediaStrings: string[] = await Promise.all(newMedia.map(convertBlobToBase64));
-          
+          const date = new Date().toLocaleString();
           const memoToCreate: MemoType = {
               name,
-              date: new Date().toString(),
+              date,
               location: { name: locationName, coordinates: coordinates },
               description,
               media: newMediaStrings,
@@ -165,13 +180,13 @@ const CreateMemo = ({ }) => {
           
           const idFromQuery = getUserIDFromQuery();
           const createdMemo = await MemoController.create_memo(idFromQuery, memoToCreate);
-          
+          console.log(createdMemo);
           const updatedUserData = { ...userData, memos: [...userData.memos, createdMemo._id] };
           setUserData(updatedUserData);
           
           await UserController.update_user(idFromQuery, updatedUserData);
           
-          navigate(`/dashboard?id=${userID}`);
+          navigate(`/dashboard?id=${idFromQuery}`);
       } catch (error) {
           console.error('Error creating memo:', error);
       }
@@ -185,8 +200,8 @@ const CreateMemo = ({ }) => {
       
       // If the input has files, combine them with previously uploaded media
       if (mediaInput && mediaInput.files && mediaInput.files.length > 0) {
-        const newMedia: Blob[] = Array.from(mediaInput.files);
-        const allMedia: Blob[] = [...uploadedMedia, ...newMedia];
+        //const newMedia: Blob[] = Array.from(mediaInput.files);
+        const allMedia: Blob[] = [...uploadedMedia];
         await createMemoWithMedia(allMedia);
       } else {
         // If no new files were selected, create the memo with previously uploaded media only
