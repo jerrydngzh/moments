@@ -185,8 +185,8 @@ const CreateMemo = ({ }) => {
       
       // If the input has files, combine them with previously uploaded media
       if (mediaInput && mediaInput.files && mediaInput.files.length > 0) {
-        const newMedia: Blob[] = Array.from(mediaInput.files);
-        const allMedia: Blob[] = [...uploadedMedia, ...newMedia];
+        //const newMedia: Blob[] = Array.from(mediaInput.files);
+        const allMedia: Blob[] = [...uploadedMedia];
         await createMemoWithMedia(allMedia);
       } else {
         // If no new files were selected, create the memo with previously uploaded media only
