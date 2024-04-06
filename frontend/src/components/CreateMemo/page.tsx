@@ -166,7 +166,6 @@ const CreateMemo = ({}) => {
         </h2>
         <div className="map-container">
           <label htmlFor="location" className="text-xl text-blue-800">
-            {" "}
             Location
           </label>
           <link
