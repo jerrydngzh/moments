@@ -8,7 +8,7 @@ export default function LandingPage() {
       <div className="text-center mt-20 m-auto w-1/3 pt-10 pb-10 bg-blue-200 border-2 border-blue-800 rounded-3xl">
         <h1 className="font-bold mb-1 text-blue-800">Moments</h1>
         <p className="text-blue-800 font-sm italic mb-4">
-          A Spatial Journalling App
+          A Spatial Journaling App
         </p>
         <button
           onClick={() => navigate("/signin")}
