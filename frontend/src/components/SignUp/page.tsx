@@ -25,7 +25,7 @@ export default function SignUpPage() {
     try {
       userCredentials = await firebaseSignUp(email, password);
       const jwt = await userCredentials.user.getIdToken();
-      sessionStorage.setItem("372-jwt", jwt);
+      sessionStorage.setItem("token", jwt);
 
       // TODO: disable button while waiting for user creation
     } catch (error) {
@@ -39,7 +39,7 @@ export default function SignUpPage() {
       // NOTE: make use of returned user object later in dashboard?
       // const user = ...
       await UserController.create_user({
-        id: userCredentials.user.uid,
+        uid: userCredentials.user.uid,
         email: email,
         username: username,
         first_name: first_name,
@@ -69,9 +69,7 @@ export default function SignUpPage() {
   return (
     <main className="Create-Account w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
       <form onSubmit={handleSubmit} onReset={handleReset}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">
-          Sign Up
-        </h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Sign Up</h2>
         <label htmlFor="firstname" className="text-lg text-blue-800">
           First Name
           <input
@@ -128,11 +126,7 @@ export default function SignUpPage() {
           />
         </label>
         <div className="mt-8 text-blue-800 flex">
-          <input
-            type="reset"
-            value="Reset"
-            className="border-blue-800 h-10 hover:bg-blue-50"
-          />
+          <input type="reset" value="Reset" className="border-blue-800 h-10 hover:bg-blue-50" />
           <input
             type="submit"
             value="Submit"

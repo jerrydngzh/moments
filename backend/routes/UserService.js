@@ -35,7 +35,7 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const user = new User({
-      _id: req.body.id,
+      uid: req.body.uid,
       username: req.body.username,
       first_name: req.body.first_name,
       last_name: req.body.last_name,

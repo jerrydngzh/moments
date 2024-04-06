@@ -16,7 +16,7 @@ export default function SignInPage() {
       // TODO: set buttons to disabled while waiting for sign in
       const userCredentials = await firebaseSignIn(email, password);
       const jwt = await userCredentials.user.getIdToken();
-      sessionStorage.setItem("372-jwt", jwt);
+      sessionStorage.setItem("token", jwt);
 
       // TODO: enable buttons
       navigate("/dashboard");
@@ -46,9 +46,7 @@ export default function SignInPage() {
     <main className="Create-Profile w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
       <BackButton />
       <form onSubmit={handleSubmit}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">
-          Log in
-        </h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Log in</h2>
         <label htmlFor="email" className="text-lg text-blue-800">
           Email:
           <input
@@ -78,11 +76,7 @@ export default function SignInPage() {
             value="Reset"
             className="mb-2 border-blue-800 h-10 hover:bg-blue-50"
           />
-          <input
-            type="submit"
-            value="Submit"
-            className="border-blue-800 h-10 hover:bg-blue-50"
-          />
+          <input type="submit" value="Submit" className="border-blue-800 h-10 hover:bg-blue-50" />
         </div>
       </form>
     </main>
