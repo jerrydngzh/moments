@@ -11,13 +11,13 @@ export default function LandingPage() {
           A Spatial Journalling App
         </p>
         <button
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/signin")}
           className="bg-blue-100 text-blue-800 border-2 border-blue-800 mr-2"
         >
           Login
         </button>
         <button
-          onClick={() => navigate("/createAccount")}
+          onClick={() => navigate("/signup")}
           className="bg-blue-100 text-blue-800 border-2 border-blue-800"
         >
           Create Account
