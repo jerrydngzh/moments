@@ -259,7 +259,6 @@ const CreateMemo = ({}) => {
         {/* Description for the Memo */}
         <div className="input-container">
           <label htmlFor="memo" className="text-xl text-blue-800">
-            {" "}
             Memo
           </label>
           <textarea
