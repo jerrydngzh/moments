@@ -1,7 +1,8 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { FirebaseAuthProvider } from "./contexts/FirebaseAuth.context";
 
-import CreateAccountPage from "./components/CreateAccount/page";
-import LoginPage from "./components/Login/page";
+import SignUpPage from "./components/SignUp/page";
+import SignInPage from "./components/SignIn/page";
 import Profile from "./components/Profile/page";
 import Lens from "./components/Lens/page";
 import Dashboard from "./components/Dashboard/page";
@@ -11,16 +12,18 @@ import "./App.css";
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/createAccount" element={<CreateAccountPage />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/lens" element={<Lens />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/createMemo" element={<CreateMemo />} />
-      </Routes>
-    </Router>
+    <FirebaseAuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/lens" element={<Lens />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/createMemo" element={<CreateMemo />} />
+        </Routes>
+      </BrowserRouter>
+    </FirebaseAuthProvider>
   );
 }

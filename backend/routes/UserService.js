@@ -35,11 +35,11 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const user = new User({
+      uid: req.body.uid,
       username: req.body.username,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      email: req.body.email,
-      password: req.body.password,
+      email: req.body.email
     });
 
     const savedUser = await user.save();
@@ -68,8 +68,6 @@ router.put("/:id", async (req, res, next) => {
       req.body.first_name !== undefined ? req.body.first_name : user.first_name;
     user.last_name =
       req.body.last_name !== undefined ? req.body.last_name : user.last_name;
-    user.password =
-      req.body.password !== undefined ? req.body.password : user.password;
     user.memos =
       req.body.memos !== undefined ? req.body.memos : user.memos;
     const updatedUser = await user.save();
