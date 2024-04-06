@@ -5,7 +5,7 @@ export interface MemoType {
     date: String,
     location: {
         name: String,
-        coordinates: [Number, Number]
+        coordinates: [number, number]
     },
     media?: String[]
     tags?: String[]

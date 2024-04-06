@@ -67,9 +67,7 @@ export default function LoginPage() {
     <main className="Create-Profile w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
       <BackButton></BackButton>
       <form onSubmit={handleSubmit}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">
-          Log in
-        </h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Log in</h2>
         <label htmlFor="username" className="text-lg text-blue-800">
           {" "}
           User Name
@@ -118,11 +116,7 @@ export default function LoginPage() {
             value="Reset"
             className="mb-2 border-blue-800 h-10 hover:bg-blue-50"
           />
-          <input
-            type="submit"
-            value="Submit"
-            className="border-blue-800 h-10 hover:bg-blue-50"
-          />
+          <input type="submit" value="Submit" className="border-blue-800 h-10 hover:bg-blue-50" />
         </div>
       </form>
     </main>

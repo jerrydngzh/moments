@@ -11,7 +11,7 @@ export class MemoController {
     return result.data;
   }
 
-  static async get_memo(user_id: String, memo_id: String) {
+  static async get_memo(user_id: String, memo_id: String): Promise<MemoType> {
     const result = await axios.get(`${backendAPI}/${user_id}/${memo_id}`);
     return result.data;
   }

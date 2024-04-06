@@ -1,10 +1,11 @@
 // @ts-nocheck
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import React from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
+// NOTE: removed "selectedCategories" property, iirc we arnt gonna be using it
 interface Location {
   coordinates: [number, number];
-  memo: { memo: string; selectedCategories: string[] }[];
+  memo: { title: String; description: String; date: String }[];
 }
 
 interface MapProps {
@@ -16,7 +17,7 @@ const Map: React.FC<MapProps> = ({ locations }) => {
     <MapContainer
       center={[49.27326489299744, -123.10365200042726]}
       zoom={13}
-      style={{ height: '500px', width: '100%' }}
+      style={{ height: "500px", width: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -28,8 +29,8 @@ const Map: React.FC<MapProps> = ({ locations }) => {
             {location.memo.map((memo, memoIndex) => (
               <div key={`${index}-${memoIndex}`}>
                 <p>{memo.title}</p>
-                <p>{memo.memo}</p>
-                <p>{memo.selectedCategories}</p>
+                <p>{memo.description}</p>
+                <p>{memo.date}</p>
               </div>
             ))}
           </Popup>

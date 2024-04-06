@@ -2,6 +2,7 @@
 const backendAPI = `http://localhost:8080/api/users`; // NOTE local
 
 import axios from "axios";
+import { UserType } from "../models/user";
 
 export class UserController {
   // TODO: Change how errors are handled in frontend, currently just logs error
@@ -16,7 +17,7 @@ export class UserController {
     return response.data;
   }
 
-  static async get_user_profile(user_id: String) {
+  static async get_user_profile(user_id: String): Promise<UserType> {
     const response = await axios({
       method: "get",
       url: `${backendAPI}/${user_id}`,
