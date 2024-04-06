@@ -9,19 +9,20 @@ export default function SignInPage() {
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: {
-    preventDefault: () => void;
-    target: any;
-  }) => {
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
+
     try {
+      // TODO: set buttons to disabled while waiting for sign in
       const userCredentials = await firebaseSignIn(email, password);
       const jwt = await userCredentials.user.getIdToken();
       sessionStorage.setItem("372-jwt", jwt);
 
+      // TODO: enable buttons
       navigate("/dashboard");
     } catch (e) {
       alert(e.message);
+      // TODO: enable buttons
     }
   };
 
@@ -50,26 +51,26 @@ export default function SignInPage() {
         </h2>
         <label htmlFor="email" className="text-lg text-blue-800">
           Email:
+          <input
+            type="text"
+            id="email"
+            name="email"
+            className="email"
+            required
+            onChange={(event) => setEmail(event.target.value)}
+          />
         </label>
-        <input
-          type="text"
-          id="email"
-          name="email"
-          className="email"
-          required
-          onChange={(event) => setEmail(event.target.value)}
-        />
         <label htmlFor="password" className="text-lg text-blue-800">
           Password:
+          <input
+            type="text"
+            id="password"
+            name="password"
+            className="password"
+            required
+            onChange={(event) => setPassword(event.target.value)}
+          />
         </label>
-        <input
-          type="text"
-          id="password"
-          name="password"
-          className="password"
-          required
-          onChange={(event) => setPassword(event.target.value)}
-        />
 
         <div className="mt-8 text-blue-800">
           <input
