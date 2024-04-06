@@ -33,12 +33,6 @@
     margin-left: auto;
   }
   
-.dashboard-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
   
   /* Title styles */
   .dashboard-title {
@@ -114,10 +108,7 @@
   .buttonLink:hover {
     background-color: #0056b3;
   }
-  .dashboard-container {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-  }
+
   
   h1, h2, h3 {
     margin-bottom: 10px;
