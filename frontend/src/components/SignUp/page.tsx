@@ -69,7 +69,9 @@ export default function SignUpPage() {
   return (
     <main className="Create-Account w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
       <form onSubmit={handleSubmit} onReset={handleReset}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Sign Up</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">
+          Sign Up
+        </h2>
         <label htmlFor="firstname" className="text-lg text-blue-800">
           First Name
           <input
@@ -125,17 +127,22 @@ export default function SignUpPage() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
+
         <div className="mt-8 text-blue-800 flex">
-          <input type="reset" value="Reset" className="border-blue-800 h-10 hover:bg-blue-50" />
-          <input
-            type="submit"
-            value="Submit"
-            className="border-blue-800 h-10 hover:bg-blue-50 ml-2 mr-2"
-          />
           <input
             type="button"
             value="Back"
             onClick={() => navigate("/")}
+            className="border-blue-800 h-10 hover:bg-blue-50"
+          />
+          <input
+            type="reset"
+            value="Reset"
+            className="border-blue-800 h-10 hover:bg-blue-50 ml-2 mr-2"
+          />
+          <input
+            type="submit"
+            value="Submit"
             className="border-blue-800 h-10 hover:bg-blue-50"
           />
         </div>

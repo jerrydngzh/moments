@@ -1,10 +1,11 @@
 // @ts-nocheck
-import React, { useState, useEffect } from 'react';
-import Popup from './Popup';
-import './style.css';
-import { Link } from 'react-router-dom';
-import { UserController } from '../../controllers/user.controller';
-import { MemoController } from '../../controllers/memo.controller'
+import React, { useState, useEffect } from "react";
+import Popup from "./Popup";
+import "./style.css";
+import { Link } from "react-router-dom";
+import { UserController } from "../../controllers/user.controller";
+import { MemoController } from "../../controllers/memo.controller";
+import Header from "../Header/header";
 
 const Dashboard = () => {
   const [tags, setTags] = useState([]);
@@ -12,10 +13,10 @@ const Dashboard = () => {
   const [selectedMemo, setSelectedMemo] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [selectedTags, setSelectedTags] = useState([]);
-  const [id, setID] = useState('');
+  const [id, setID] = useState("");
   const [selectedLocationPop, setSelectedLocationPop] = useState(null);
   const [expandedLocations, setExpandedLocations] = useState({});
-  const [newTag, setNewTag] = useState('');
+  const [newTag, setNewTag] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [userData, setUserData] = useState({});
   const [memos, setMemos] = useState({});
@@ -26,15 +27,15 @@ const Dashboard = () => {
   const fetchData = async () => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
-      const idFromQuery = searchParams.get('id') || '';
+      const idFromQuery = searchParams.get("id") || "";
       setID(idFromQuery);
-      
-      const data = await UserController.get_user_profile(idFromQuery)
+
+      const data = await UserController.get_user_profile(idFromQuery);
       setUserData(data);
       setTags(data.tags || []);
       fetchMemos(data.memos);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error("Error fetching user data:", error);
     }
   };
 
@@ -43,7 +44,7 @@ const Dashboard = () => {
       const fetchedMemos: { [key: string]: MemoType } = {};
       const fetchedLocations: { [key: string]: [number, number] } = {};
       const searchParams = new URLSearchParams(window.location.search);
-      const idFromQuery = searchParams.get('id') || '';
+      const idFromQuery = searchParams.get("id") || "";
       setID(idFromQuery);
       for (const mid of memoID) {
         const data = await MemoController.get_memo(idFromQuery, mid);
@@ -51,22 +52,24 @@ const Dashboard = () => {
         fetchedLocations[data.location.name] = data.location.coordinates;
       }
 
-      setMemos(prevMemos => ({ ...prevMemos, ...fetchedMemos }));
-      setLocations(prevLocations => ({ ...prevLocations, ...fetchedLocations }));
-      
+      setMemos((prevMemos) => ({ ...prevMemos, ...fetchedMemos }));
+      setLocations((prevLocations) => ({
+        ...prevLocations,
+        ...fetchedLocations,
+      }));
     } catch (error) {
-      console.error('Error fetching memos:', error);
+      console.error("Error fetching memos:", error);
     }
   };
 
   const handlePopupSubmit = () => {
     // Update any state or perform actions needed after submitting the popup
     // For example, you can reload data or refresh the popup by updating its key
-    setReloadKey(prevKey => !prevKey); // Toggle the key to force re-rendering of the popup
+    setReloadKey((prevKey) => !prevKey); // Toggle the key to force re-rendering of the popup
     setPopReload(false);
     setShowPopup(true);
   };
-  
+
   useEffect(() => {
     if (reloadDashboard) {
       fetchData();
@@ -80,7 +83,7 @@ const Dashboard = () => {
     setSelectedLocation(locationName);
     setExpandedLocations({
       ...expandedLocations,
-      [locationName]: !expandedLocations[locationName]
+      [locationName]: !expandedLocations[locationName],
     });
   };
 
@@ -179,61 +182,71 @@ const Dashboard = () => {
     setReloadDashboard(true);
   };*/
 
-  const filteredLocations: { [key: string]: { [key: string]: any } } = Object.keys(locations).reduce((filtered: { [key: string]: { [key: string]: any } }, locationName) => {
-    const filteredMemos: MemoType[] = [];
-    for (const memoId in memos) {
-        if (Object.prototype.hasOwnProperty.call(memos, memoId)) {
+  const filteredLocations: { [key: string]: { [key: string]: any } } =
+    Object.keys(locations).reduce(
+      (filtered: { [key: string]: { [key: string]: any } }, locationName) => {
+        const filteredMemos: MemoType[] = [];
+        for (const memoId in memos) {
+          if (Object.prototype.hasOwnProperty.call(memos, memoId)) {
             const memo = memos[memoId];
-            if (memo.location && memo.tags && memo.location.name === locationName && selectedTags.every(tag => memo.tags?.includes(tag))) {
-                filteredMemos.push(memo);
+            if (
+              memo.location &&
+              memo.tags &&
+              memo.location.name === locationName &&
+              selectedTags.every((tag) => memo.tags?.includes(tag))
+            ) {
+              filteredMemos.push(memo);
             }
+          }
         }
-    }
 
-    if (filteredMemos.length > 0) {
-        filtered[locationName] = {
+        if (filteredMemos.length > 0) {
+          filtered[locationName] = {
             ...locations[locationName],
-            memo: filteredMemos
-        };
-    }
+            memo: filteredMemos,
+          };
+        }
 
-    return filtered;
-}, {});
+        return filtered;
+      },
+      {}
+    );
 
-  const handleDeleteMemo = async (memo: any, event: React.MouseEvent<HTMLButtonElement, MouseEvent>): Promise<void> => {
+  const handleDeleteMemo = async (
+    memo: any,
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): Promise<void> => {
     event.stopPropagation();
     console.log(memo);
     try {
       await MemoController.delete_memo(id, memo._id);
-        // Update userData.memos array by removing the deleted memo
+      // Update userData.memos array by removing the deleted memo
       const updatedMemos = userData.memos.filter((m: any) => m !== memo._id);
       userData.memos = updatedMemos;
       setUserData(userData);
       const searchParams = new URLSearchParams(window.location.search);
-      const idFromQuery = searchParams.get('id') || '';
+      const idFromQuery = searchParams.get("id") || "";
       // Update user data by sending a PUT request
-      const editResponse = await UserController.update_user(idFromQuery, userData)
-      console.log('Edited user: ', editResponse)
+      const editResponse = await UserController.update_user(
+        idFromQuery,
+        userData
+      );
+      console.log("Edited user: ", editResponse);
 
       setReloadDashboard(true);
       fetchData();
       // Optionally handle success response
     } catch (error) {
-      console.error('Error deleting memo:', error);
+      console.error("Error deleting memo:", error);
       // Provide user feedback or handle error state
     }
   };
-  
 
   return (
-    <div className="dashboard-container w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">  
-      <header className="flex flex-row justify-between mb-4">
-        <Link to={'/createMemo?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-1 text-center rounded-lg'>Create Memo</Link>
-        <Link to={'/profile?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-1 text-center rounded-lg'>Profile</Link>
-        <Link to={'/lens?id='+id+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-1 text-center rounded-lg'>Lens</Link>
-      </header>
+    <div className="w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
+      <Header id={id}></Header>
 
-      <h1 className='text-blue-800 mb-6'>Memo Dashboard</h1>
+      <h1 className="text-blue-800 mb-6">Memo Dashboard</h1>
       <div className="tags-container">
         {/*<h2 className="text-blue-800">Tags</h2>
         <div className="tags-table">
@@ -261,22 +274,37 @@ const Dashboard = () => {
             </div>
           ))}
         </div>*/}
-          </div>
+      </div>
 
       <div className="mt-8">
         <h2 className="text-blue-800 text-lg">Locations</h2>
         {Object.keys(filteredLocations).length === 0 ? (
-          <p className="italic text-blue-800 opacity-80">No locations to display.</p>
+          <p className="italic text-blue-800 opacity-80">
+            No locations to display.
+          </p>
         ) : (
           Object.keys(filteredLocations).map((locationName) => (
-            <div key={locationName} className="location-box" onClick={() => handleLocationClick(locationName)}>
+            <div
+              key={locationName}
+              className="location-box"
+              onClick={() => handleLocationClick(locationName)}
+            >
               <h3>{locationName}</h3>
               {expandedLocations[locationName] && (
                 <div className="memo-box">
                   {filteredLocations[locationName].memo.map((memo, index) => (
-                    <div key={index} className="memo" onClick={() => handleMemoClick(memo, locationName)}>
+                    <div
+                      key={index}
+                      className="memo"
+                      onClick={() => handleMemoClick(memo, locationName)}
+                    >
                       {memo.name}
-                      <button onClick={(event) => handleDeleteMemo(memo, event)} className="delete-tag-button">Delete</button>
+                      <button
+                        onClick={(event) => handleDeleteMemo(memo, event)}
+                        className="delete-tag-button"
+                      >
+                        Delete
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -295,8 +323,8 @@ const Dashboard = () => {
           tags={memos.tags}
           handleUpdateTags={null}
           handleClose={() => setShowPopup(false)}
-          handlePopupSubmit={handlePopupSubmit} 
-          Key = {popReload}
+          handlePopupSubmit={handlePopupSubmit}
+          Key={popReload}
         />
       )}
     </div>
