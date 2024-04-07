@@ -17,7 +17,7 @@ export class UserController {
     return response.data;
   }
 
-  static async get_user_profile(user_id: string) {
+  static async get_user_data(user_id: string) {
     const response = await axios({
       method: "get",
       url: `${backendAPI}/${user_id}`,

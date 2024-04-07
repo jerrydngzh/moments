@@ -39,7 +39,7 @@ const CreateMemo = ({}) => {
       console.log(userID);
 
       // Fetch memo data from the server
-      const data = await UserController.get_user_profile(idFromQuery);
+      const data = await UserController.get_user_data(idFromQuery);
 
       console.log("Fetched Account:", data);
       // tags will be undefined because backend design does not support yet

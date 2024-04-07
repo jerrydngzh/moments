@@ -24,7 +24,7 @@ const Lens: React.FC = () => {
       const idFromQuery = searchParams.get("id") || "";
       setUserID(idFromQuery);
 
-      const userData = await UserController.get_user_profile(idFromQuery);
+      const userData = await UserController.get_user_data(idFromQuery);
       setUserData(userData);
 
       console.log("Memos: ", userData.memos);
