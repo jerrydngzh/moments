@@ -1,13 +1,10 @@
-// @ts-nocheck
-import React, { useState, useEffect } from "react";
+//@ts-nocheck
+import { useState, useEffect } from "react";
 import { UserController } from "../../../../controllers/user.controller";
 import { MemoController } from "../../../../controllers/memo.controller";
-const SavedLocations = ({
-  id,
-  reloadDropdown,
-  onDropdownReloaded,
-  onLocationSelected,
-}) => {
+
+// FIXME -- the entire component function, remove `//@ts-nocheck` and fix issues
+const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSelected }) => {
   const [savedLocations, setSavedLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [memos, setMemos] = useState({});
@@ -48,9 +45,7 @@ const SavedLocations = ({
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value;
-    const selectedLocation = savedLocations.find(
-      (location) => location.name === selectedValue
-    );
+    const selectedLocation = savedLocations.find((location) => location.name === selectedValue);
 
     if (selectedLocation) {
       const coordinates = selectedLocation.coordinates;
@@ -63,11 +58,7 @@ const SavedLocations = ({
   return (
     <div>
       <label htmlFor="savedLocations">Saved Locations:</label>
-      <select
-        id="savedLocations"
-        value={selectedLocation}
-        onChange={handleSelectChange}
-      >
+      <select id="savedLocations" value={selectedLocation} onChange={handleSelectChange}>
         {savedLocations.map((location, index) => (
           <option key={index} value={location.name}>
             {location.name}

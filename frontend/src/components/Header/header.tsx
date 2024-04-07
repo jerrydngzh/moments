@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 
-export default function Header({ id }) {
+export default function Header() {
   const { firebaseSignOut } = useFirebaseAuth();
   const location = useLocation().pathname;
   const navigate = useNavigate();
@@ -9,7 +9,7 @@ export default function Header({ id }) {
   return (
     <header className="flex flex-row justify-between mb-4">
       <Link
-        to={"/dashboard?id=" + id}
+        to={"/dashboard"}
         className={` ${
           location === "/dashboard" ? "bg-white" : "hover:bg-white"
         } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}
@@ -18,7 +18,7 @@ export default function Header({ id }) {
       </Link>
 
       <Link
-        to={"/lens?id=" + id}
+        to={"/lens"}
         className={`${
           location === "/lens" ? "bg-white" : "hover:bg-white"
         } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}
@@ -27,7 +27,7 @@ export default function Header({ id }) {
       </Link>
 
       <Link
-        to={"/createMemo?id=" + id}
+        to={"/createMemo"}
         className={`${
           location === "/createMemo" ? "bg-white" : "hover:bg-white"
         } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}
@@ -36,7 +36,7 @@ export default function Header({ id }) {
       </Link>
 
       <Link
-        to={"/profile?id=" + id}
+        to={"/profile"}
         className={`${
           location === "/profile" ? "bg-white" : "hover:bg-white"
         } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}

@@ -1,12 +1,12 @@
- // @ts-nocheck
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
-import markerIcon from '/images/marker-icon.png';
+//@ts-nocheck
+import { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
+import L from "leaflet";
+import markerIcon from "/images/marker-icon.png";
 const MapForm = ({ selectedLocation, onMapClick }: any) => {
   const [initialPosition, setInitialPosition] = useState([49.27326489299744, -123.10365200042726]);
   const [position, setPosition] = useState(initialPosition);
-  
+
   const customMarkerIcon = new L.Icon({
     iconUrl: markerIcon,
     iconSize: [32, 32], // Adjust the size of your marker icon as needed
@@ -17,7 +17,6 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
       setPosition(selectedLocation);
       setInitialPosition(selectedLocation);
       addMarkerAndNavigate(selectedLocation);
-
     }
   }, [selectedLocation]);
 
@@ -38,15 +37,19 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
     });
 
     return (
-      <Marker position={position} icon={customMarkerIcon} draggable={true} eventHandlers={{
-        dragend: (e) => {
-          const newPosition = [e.target.getLatLng().lat, e.target.getLatLng().lng];
-          setPosition(newPosition);
-          setInitialPosition(newPosition);
-          onMapClick(newPosition);
-        }
-      }}>
-      </Marker>
+      <Marker
+        position={position}
+        icon={customMarkerIcon}
+        draggable={true}
+        eventHandlers={{
+          dragend: (e) => {
+            const newPosition = [e.target.getLatLng().lat, e.target.getLatLng().lng];
+            setPosition(newPosition);
+            setInitialPosition(newPosition);
+            onMapClick(newPosition);
+          },
+        }}
+      ></Marker>
     );
   };
 

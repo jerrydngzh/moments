@@ -14,9 +14,9 @@ export default function SignInPage() {
 
     try {
       setLoading(true);
-      const userCredentials = await firebaseSignIn(email, password);
+      await firebaseSignIn(email, password);
       setLoading(false);
-      navigate("/dashboard?id=" + userCredentials.user.uid);
+      navigate("/dashboard");
     } catch (e) {
       setLoading(false);
       alert(e.message);
