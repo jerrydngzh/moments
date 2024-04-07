@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-// import { Link } from 'react-router-dom';
 import MapForm from "./components/LocationMapPicker/Map";
 import SavedLocations from "./components/Locations/SavedLocations";
 import { MemoController } from "../../controllers/memo.controller";
@@ -14,15 +13,11 @@ const CreateMemo = ({}) => {
   const [name, setName] = useState<any>("");
   const [description, setMemo] = useState<any>("");
   const [locationName, setLocationName] = useState<any>("");
-  //const [savedLocations, setSavedLocations] = useState<any>({});
   const [coordinates, setCoordinates] = useState<[number, number]>([
     49.27326489299744, -123.10365200042726,
   ]);
   const [reloadDropdown, setReloadDropdown] = useState<any>(false);
   const [selectedLocation, setSelectedLocation] = useState<any>(null);
-  //const [tags, setTags] = useState<any>([]);
-  //const [selectedTags, setSelectedTags] = useState<any>([]);
-  //const [newTag, setNewTag] = useState<any>('');
   const [userData, setUserData] = useState<any>({});
 
   const handleLocationSelected = (location: any) => {
@@ -42,11 +37,8 @@ const CreateMemo = ({}) => {
       const data = await UserController.get_user_data(idFromQuery);
 
       console.log("Fetched Account:", data);
-      // tags will be undefined because backend design does not support yet
-      const tags = data.tags;
 
       setUserData(data);
-      //setTags(tags || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -92,11 +84,6 @@ const CreateMemo = ({}) => {
     fetchCategories();
   }, [coordinates, userID]);
 
-  /*const handleTagChange = (event: any) => {
-    const selectedOptions = Array.from(event.target.selectedOptions, (option: any) => option.value);
-    setSelectedTags(selectedOptions);
-  };*/
-
   const handleMapClick = (clickedLocation: [number, number]) => {
     console.log(clickedLocation);
     setCoordinates(clickedLocation);
@@ -119,12 +106,10 @@ const CreateMemo = ({}) => {
         coordinates: [coordinates[0], coordinates[1]],
       },
       description: description,
-      //tags: selectedTags,
     };
 
     try {
       const res = await MemoController.create_memo(userID, memoToCreate);
-
       // console.log(res)
       const newMemoId = res._id; // TODO
 
@@ -147,14 +132,6 @@ const CreateMemo = ({}) => {
     setLocationName("");
     setMemo("");
   };
-
-  /*const handleNewTag = () => {
-    if (newTag.trim() !== '') {
-      setTags([...tags, newTag]);
-      setSelectedTags([...selectedTags, newTag]); // Add the new category to selected categories too
-      setNewTag('');
-    }
-  };*/
 
   return (
     <main className="create-memo w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
@@ -192,7 +169,6 @@ const CreateMemo = ({}) => {
             value={locationName}
             onChange={(e) => setLocationName(e.target.value)}
           />
-          {/* <button type="button" onClick={createSaveLoc} className='border-2 border-blue-800 w-full text-blue-800 h-14 mb-8 hover:bg-blue-50'>Save Location</button> */}
         </div>
 
         {/* Displays Saved Locations */}
@@ -202,43 +178,6 @@ const CreateMemo = ({}) => {
           onDropdownReloaded={handleDropdownReloaded}
           onLocationSelected={handleLocationSelected}
         />
-
-        {/* Create Tags */}
-        {/* <div className="input-container">
-          <label htmlFor='tags' className="text-xl text-blue-800">Tags</label>
-          {tags && tags.map((tag) => (
-            <div key={tag} className="checkbox-container">
-              <input
-                type="checkbox"
-                id={tag}
-                name={tag}
-                value={tag}
-                checked={selectedTags.includes(tag)}
-                onChange={(e) => {
-                  const isChecked = e.target.checked;
-                  setSelectedTags((prevTags) => {
-                    if (isChecked) {
-                      return [...prevTags, tag];
-                    } else {
-                      return prevTags.filter((prevTag) => prevTag !== tag);
-                    }
-                  });
-                }}
-              />
-              <label htmlFor={tag}>{tag}</label>
-            </div>
-          ))}
-
-          <div>
-            <input
-              type="text"
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              placeholder="Enter a new tag"
-            />
-            <button type="button" onClick={handleNewTag} className='border-2 border-blue-800 w-full text-blue-800 h-14 mb-8 hover:bg-blue-50'>Add</button>
-          </div>
-        </div> */}
 
         {/* Title for Memo */}
         <div className="input-container">
@@ -283,13 +222,6 @@ const CreateMemo = ({}) => {
           />
         </div>
       </form>
-
-      {/* <div className="flex flex-row justify-around border-2 border-blue-800 rounded-xl pt-2 pb-2"> */}
-      {/* <div className='button-link'><Link className="text-blue-800" to={'/profile?id='+id+''}>Profile</Link></div>
-        <div className='button-link'><Link className="text-blue-800" to={'/dashboard?id='+id+''}>Dashboard</Link></div>
-        <div className='button-link'><Link className="text-blue-800" to={'/lens?id='+id+''}>Lens</Link></div> */}
-
-      {/* </div> */}
     </main>
   );
 };
