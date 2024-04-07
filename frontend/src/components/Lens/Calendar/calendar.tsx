@@ -1,4 +1,5 @@
 import React from 'react';
+import Calendar from 'react-calendar'
 
 interface Location {
     coordinates: [number, number];
@@ -9,14 +10,40 @@ interface MapProps {
     locations: Location[];
 }
 
-const Calendar: React.FC<MapProps> = ({locations}) => {
-    // Add your calendar component logic here
+const MemoCalendar: React.FC<MapProps> = ({locations}) => {
+    const [value, onChange] = React.useState(new Date());
+    const [selectedDateMemos, setSelectedDateMemos] = React.useState([]);
+
+    const memosByDate = locations.reduce((acc, location) => {
+        location.memo.forEach(memo => {
+          const date = new Date(memo.date).toDateString();
+          if (!acc[date]) {
+            acc[date] = [];
+          }
+          acc[date].push(memo);
+        });
+        return acc;
+      }, {});
+
+    const handleDateChange = (date) => {
+        onChange(date);
+        setSelectedDateMemos(memosByDate[date.toDateString()] || []);
+    };
 
     return (
-        <>
-            <h1>Calendar</h1>
-        </>
+      <div>
+        <Calendar
+          onChange={handleDateChange}
+          value={value}
+          tileContent={({ date, view }) => view === 'month' && memosByDate[date.toDateString()] ? <p>{memosByDate[date.toDateString()].length} memos</p> : null}
+        />
+        <ul>
+            {selectedDateMemos.map((memo, index) => (
+                <li key={index}>{memo.title}</li>
+            ))}
+        </ul>
+      </div>
     );
-};
+  };
 
-export default Calendar;
+export default MemoCalendar;

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Map from './Map/map';
 import Table from './Map/table';
 import List from './List/list';
-import Calendar from './Calendar/calendar';
+import MemoCalendar from './Calendar/calendar';
 import { Link } from 'react-router-dom';
 import { UserController } from '../../controllers/user.controller';
 import { MemoController } from '../../controllers/memo.controller'
@@ -134,7 +134,7 @@ const Lens: React.FC = () => {
           case 'calendar':
             return (
               <>
-                <Calendar locations={locations} />
+                <MemoCalendar locations={locations} />
               </>
             );
           default:
