@@ -3,7 +3,7 @@ import { UserController } from "../../controllers/user.controller";
 import Header from "../Header/header";
 import { UserType } from "../../models/user";
 
-const Profile = () => {
+export default function Profile() {
   const [userData, setUserData] = useState<UserType>({
     uid: "",
     email: "",
@@ -39,6 +39,4 @@ const Profile = () => {
       <p className="italic text-blue-800">Email: {userData.email}</p>
     </main>
   );
-};
-
-export default Profile;
+}
