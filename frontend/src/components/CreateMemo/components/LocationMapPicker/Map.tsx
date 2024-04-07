@@ -13,7 +13,7 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
   });
   useEffect(() => {
     if (selectedLocation) {
-      // Add a new position for the selected location
+      // set selected location as current lcoation
       setPosition(selectedLocation);
       setInitialPosition(selectedLocation);
       addMarkerAndNavigate(selectedLocation);
@@ -22,7 +22,7 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
   }, [selectedLocation]);
 
   const addMarkerAndNavigate = (location: any) => {
-    setPosition(location); // Set the positions array with only the new location
+    setPosition(location); // Set new location
     onMapClick(location); // Trigger the map click event
     setInitialPosition(location);
   };
@@ -37,13 +37,6 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
       },
     });
 
-    const deleteMarker = (index: any, e: any) => {
-      e.stopPropagation(); // Stop event propagation to prevent the map click event
-      setPosition(null);
-      setInitialPosition(null);
-      onMapClick(null);
-    };
-
     return (
       <Marker position={position} icon={customMarkerIcon} draggable={true} eventHandlers={{
         dragend: (e) => {
@@ -53,9 +46,6 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
           onMapClick(newPosition);
         }
       }}>
-        <Popup>
-          <button onClick={deleteMarker}>Delete</button> {/* Button to delete the marker */}
-        </Popup>
       </Marker>
     );
   };
