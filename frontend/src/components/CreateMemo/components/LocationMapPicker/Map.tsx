@@ -62,8 +62,7 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
         }}
       >
         <Popup>
-          <button onClick={(e) => deleteMarker(index, e)}>Delete</button>{" "}
-          {/* Button to delete the marker */}
+          <button onClick={(e) => deleteMarker(index, e)}>Delete</button>
         </Popup>
       </Marker>
     ));
