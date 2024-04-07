@@ -43,7 +43,7 @@ export default function SignUpPage() {
         last_name: last_name,
       });
 
-      navigate("/dashboard?uid=" + userCredentials.user.uid);
+      navigate("/dashboard?id=" + userCredentials.user.uid);
       setLoading(false);
     } catch (error) {
       await firebaseDeleteUser();
