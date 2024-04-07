@@ -1,10 +1,7 @@
-// @ts-nocheck
-'use client'
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MemoController } from '../../controllers/memo.controller';
-import { MemoType } from '../../models/memo';
 
-const Popup = ({userID, selectedMemo, selectedLocationPop, handleClose, handlePopupSubmit, Key }) => {
+const Popup = ({userID, selectedMemo, handleClose, handlePopupSubmit, Key }) => {
   const [reloadKey, setReloadKey] = useState(Key);
   const [editing, setEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(selectedMemo.name);
@@ -59,7 +56,6 @@ const Popup = ({userID, selectedMemo, selectedLocationPop, handleClose, handlePo
             onChange={(e) => setEditedTitle(e.target.value)}
           />
           <textarea
-            type="text"
             value={editedMemo}
             onChange={(e) => setEditedMemo(e.target.value)}
           />

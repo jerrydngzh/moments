@@ -1,24 +1,24 @@
-// @ts-nocheck
+//@ts-nocheck
 import React, { useState, useEffect } from "react";
 import Popup from "./Popup";
 import "./style.css";
-import { Link } from "react-router-dom";
 import { UserController } from "../../controllers/user.controller";
 import { MemoController } from "../../controllers/memo.controller";
 import Header from "../Header/header";
+import { MemoType } from "../../models/memo";
 
 const Dashboard = () => {
   const [locations, setLocations] = useState({});
   const [selectedMemo, setSelectedMemo] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState(null);
   const [id, setID] = useState("");
   const [selectedLocationPop, setSelectedLocationPop] = useState(null);
   const [expandedLocations, setExpandedLocations] = useState({});
   const [showPopup, setShowPopup] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState({
+    memo:[]
+  });
   const [memos, setMemos] = useState({});
   const [reloadDashboard, setReloadDashboard] = useState(true);
-  const [key, setReloadKey] = useState(true);
   const [popReload, setPopReload] = useState(true);
 
   const fetchData = async () => {
@@ -59,7 +59,6 @@ const Dashboard = () => {
   };
 
   const handlePopupSubmit = () => {
-    setReloadKey((prevKey) => !prevKey); // Toggle the key to force re-rendering of the popup
     setPopReload(false);
     setShowPopup(true);
   };
@@ -74,7 +73,6 @@ const Dashboard = () => {
   }, [reloadDashboard]);
 
   const handleLocationClick = (locationName) => {
-    setSelectedLocation(locationName);
     setExpandedLocations({
       ...expandedLocations,
       [locationName]: !expandedLocations[locationName],
@@ -194,7 +192,6 @@ const Dashboard = () => {
           key={selectedMemo._id}
           userID={id}
           selectedMemo={selectedMemo}
-          selectedLocationPop={selectedLocationPop}
           handleClose={() => setShowPopup(false)}
           handlePopupSubmit={handlePopupSubmit}
           Key={popReload}
