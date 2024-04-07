@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Calendar from 'react-calendar'
 
 interface Location {
@@ -18,6 +18,7 @@ interface MapProps {
 const MemoCalendar: React.FC<MapProps> = ({locations}) => {
     const [value, onChange] = React.useState(new Date());
     const [selectedDateMemos, setSelectedDateMemos] = React.useState([]);
+    const [isMemoOpen, setIsMemoOpen] = useState(false);
 
     const memosByDate = locations.reduce((acc, location) => {
         location.memo.forEach(memo => {
@@ -30,24 +31,36 @@ const MemoCalendar: React.FC<MapProps> = ({locations}) => {
         return acc;
       }, {});
 
-    const handleDateChange = (date) => {
-        onChange(date);
-        setSelectedDateMemos(memosByDate[date.toDateString()] || []);
-    };
+      const handleDateChange = (date) => {
+        if (date.toDateString() === value.toDateString()) {
+            setIsMemoOpen(!isMemoOpen);
+        } else {
+            onChange(date);
+            setSelectedDateMemos(memosByDate[date.toDateString()] || []);
+            setIsMemoOpen(true);
+        }
+      };
 
     return (
-      <div>
-        <Calendar
-          onChange={handleDateChange}
-          value={value}
-          tileContent={({ date, view }) => view === 'month' && memosByDate[date.toDateString()] ? <p>{memosByDate[date.toDateString()].length} memos</p> : null}
-        />
-        <ul className="mt-8">
-            {selectedDateMemos.map((memo, index) => (
+      <>
+        <div className="bg-blue-50 mt-4 mb-4 p-4 rounded-xl">
+            <Calendar
+            onChange={handleDateChange}
+            value={value}
+            tileContent={({ date, view }) => view === 'month' && memosByDate[date.toDateString()] ? <p>{memosByDate[date.toDateString()].length} memos</p> : null}
+            />
+        </div>
+        {isMemoOpen && (
+            <>
+                <h2>Selected Date: {value.toDateString()}</h2>
+            </>
+        )}
+        <ul>
+            {isMemoOpen && selectedDateMemos.map((memo, index) => (
                 <li key={index}>{memo.title}</li>
             ))}
         </ul>
-      </div>
+      </>
     );
   };
 
