@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FirebaseAuthProvider } from "./contexts/FirebaseAuth.context";
+import { ProtectedRoutes } from "./components/Authentication/ProtectedRoutes";
 
 import SignUpPage from "./components/SignUp/page";
 import SignInPage from "./components/SignIn/page";
@@ -12,18 +13,21 @@ import "./App.css";
 
 export default function App() {
   return (
-    <FirebaseAuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <FirebaseAuthProvider>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/lens" element={<Lens />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/createMemo" element={<CreateMemo />} />
+
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/lens" element={<Lens />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/createMemo" element={<CreateMemo />} />
+          </Route>
         </Routes>
-      </BrowserRouter>
-    </FirebaseAuthProvider>
+      </FirebaseAuthProvider>
+    </BrowserRouter>
   );
 }

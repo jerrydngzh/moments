@@ -5,13 +5,14 @@ import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 import { UserCredential } from "firebase/auth";
 
 export default function SignUpPage() {
-  const navigate = useNavigate();
-  const { firebaseSignUp } = useFirebaseAuth();
+  const { firebaseSignUp, firebaseDeleteUser } = useFirebaseAuth();
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -23,21 +24,17 @@ export default function SignUpPage() {
     }
 
     try {
+      setLoading(true);
       userCredentials = await firebaseSignUp(email, password);
-      const jwt = await userCredentials.user.getIdToken();
-      sessionStorage.setItem("token", jwt);
-
-      // TODO: disable button while waiting for user creation
     } catch (error) {
       // TODO: handle specific firebase errors
       //       1. invalid email, already in use, etc.
+      setLoading(false);
       alert(error.message);
       return;
     }
 
     try {
-      // NOTE: make use of returned user object later in dashboard?
-      // const user = ...
       await UserController.create_user({
         uid: userCredentials.user.uid,
         email: email,
@@ -46,12 +43,12 @@ export default function SignUpPage() {
         last_name: last_name,
       });
 
-      navigate("/dashboard");
+      navigate("/dashboard?id=" + userCredentials.user.uid);
+      setLoading(false);
     } catch (error) {
+      await firebaseDeleteUser();
+      setLoading(false);
       alert(error.message);
-      // TODO: rollback firebase user creation, sign out user, clear jwt
-
-      // TODO: enable button
     }
   };
 
@@ -69,9 +66,7 @@ export default function SignUpPage() {
   return (
     <main className="Create-Account w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
       <form onSubmit={handleSubmit} onReset={handleReset}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">
-          Sign Up
-        </h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Sign Up</h2>
         <label htmlFor="firstname" className="text-lg text-blue-800">
           First Name
           <input
@@ -132,17 +127,20 @@ export default function SignUpPage() {
           <input
             type="button"
             value="Back"
+            disabled={loading}
             onClick={() => navigate("/")}
             className="border-blue-800 h-10 hover:bg-blue-50"
           />
           <input
             type="reset"
             value="Reset"
+            disabled={loading}
             className="border-blue-800 h-10 hover:bg-blue-50 ml-2 mr-2"
           />
           <input
             type="submit"
             value="Submit"
+            disabled={loading}
             className="border-blue-800 h-10 hover:bg-blue-50"
           />
         </div>

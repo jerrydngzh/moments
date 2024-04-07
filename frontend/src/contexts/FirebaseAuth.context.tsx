@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import firebase_auth from "../components/Authentication/firebase.config";
 import {
   User as FirebaseUser,
   UserCredential,
@@ -6,18 +7,26 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  deleteUser,
 } from "firebase/auth";
-import firebase_auth from "../components/Authentication/firebase.config";
 
-const AuthContext = createContext({} as any);
-
-// a wrapper around the useContext hook to make it easier to use the AuthContext
+const AuthContext = createContext(
+  {} as {
+    currentUser: FirebaseUser | null;
+    isLoading: boolean;
+    firebaseSignUp: (email: string, password: string) => Promise<UserCredential>;
+    firebaseSignIn: (email: string, password: string) => Promise<UserCredential>;
+    firebaseSignOut: () => Promise<void>;
+    firebaseDeleteUser: () => Promise<void>;
+  }
+);
 export function useFirebaseAuth() {
   return useContext(AuthContext);
 }
 
 export function FirebaseAuthProvider(props: { children: any }) {
-  const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
   function signUp(email: string, password: string): Promise<UserCredential> {
     return createUserWithEmailAndPassword(firebase_auth, email, password);
@@ -27,26 +36,29 @@ export function FirebaseAuthProvider(props: { children: any }) {
     return signInWithEmailAndPassword(firebase_auth, email, password);
   }
 
-  function logOut() {
+  function logOut(): Promise<void> {
     return signOut(firebase_auth);
   }
 
+  function deleteUserAccount(): Promise<void> {
+    return deleteUser(user);
+  }
+
   useEffect(() => {
-    // https://firebase.google.com/docs/reference/js/auth.user
     const unsub = onAuthStateChanged(firebase_auth, (user) => {
-      setCurrentUser(user);
-      console.log(user);
+      setUser(user);
+      setLoading(false);
     });
     return unsub;
   }, []);
 
   const value = {
-    currentUser,
+    currentUser: user,
+    isLoading: loading,
     firebaseSignUp: signUp,
     firebaseSignIn: signIn,
     firebaseSignOut: logOut,
+    firebaseDeleteUser: deleteUserAccount,
   };
-  return (
-    <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
 }
