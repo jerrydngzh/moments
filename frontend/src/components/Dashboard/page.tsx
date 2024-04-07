@@ -1,27 +1,24 @@
-// @ts-nocheck
+//@ts-nocheck
 import React, { useState, useEffect } from "react";
 import Popup from "./Popup";
 import "./style.css";
-import { Link } from "react-router-dom";
 import { UserController } from "../../controllers/user.controller";
 import { MemoController } from "../../controllers/memo.controller";
 import Header from "../Header/header";
+import { MemoType } from "../../models/memo";
 
 const Dashboard = () => {
-  const [tags, setTags] = useState([]);
   const [locations, setLocations] = useState({});
   const [selectedMemo, setSelectedMemo] = useState(null);
-  const [selectedLocation, setSelectedLocation] = useState(null);
-  const [selectedTags, setSelectedTags] = useState([]);
   const [id, setID] = useState("");
   const [selectedLocationPop, setSelectedLocationPop] = useState(null);
   const [expandedLocations, setExpandedLocations] = useState({});
-  const [newTag, setNewTag] = useState("");
   const [showPopup, setShowPopup] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState({
+    memo:[]
+  });
   const [memos, setMemos] = useState({});
   const [reloadDashboard, setReloadDashboard] = useState(true);
-  const [key, setReloadKey] = useState(true);
   const [popReload, setPopReload] = useState(true);
 
   const fetchData = async () => {
@@ -32,7 +29,6 @@ const Dashboard = () => {
 
       const data = await UserController.get_user_data(idFromQuery);
       setUserData(data);
-      setTags(data.tags || []);
       fetchMemos(data.memos);
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -63,9 +59,6 @@ const Dashboard = () => {
   };
 
   const handlePopupSubmit = () => {
-    // Update any state or perform actions needed after submitting the popup
-    // For example, you can reload data or refresh the popup by updating its key
-    setReloadKey((prevKey) => !prevKey); // Toggle the key to force re-rendering of the popup
     setPopReload(false);
     setShowPopup(true);
   };
@@ -80,7 +73,6 @@ const Dashboard = () => {
   }, [reloadDashboard]);
 
   const handleLocationClick = (locationName) => {
-    setSelectedLocation(locationName);
     setExpandedLocations({
       ...expandedLocations,
       [locationName]: !expandedLocations[locationName],
@@ -93,95 +85,6 @@ const Dashboard = () => {
     setShowPopup(true);
   };
 
-  const handleTagChange = (tag) => {
-    const updatedTags = selectedTags.includes(tag)
-      ? selectedTags.filter((cat) => cat !== tag)
-      : [...selectedTags, tag];
-    setSelectedTags(updatedTags);
-    setReloadDashboard(true);
-  };
-
-  const handleNewTagChange = (event) => {
-    setNewTag(event.target.value);
-    setReloadDashboard(true);
-  };
-
-  /*const handleAddTag = async () => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const idFromQuery = searchParams.get('id') || '';
-    if (newTag.trim() !== '' && !tags.includes(newTag)) {
-      try {
-        const updatedTags = [...tags, trimmedNewTag];
-        var updatedUser = userData;
-        updatedUser.tags = updatedTags;
-        const searchParams = new URLSearchParams(window.location.search);
-        const idFromQuery = searchParams.get('id') || '';
-        const data = await UserController.update_user(idFromQuery,updatedUser);//await updateUserResponse.json();
-        if (data.success) {
-          setTags(updatedTags);
-          setNewTag('');
-          setReloadDashboard(true);
-        }
-      } catch (error) {
-        console.error('Error updating tags:', error);
-      }
-    }
-    setReloadDashboard(true);
-  };
-
-  const handleDeleteTag = async (tagToDelete) => {
-    const remainingTags = tags.filter((tag) => tag !== tagToDelete);
-    try {
-      const updatedLocations = { ...locations };
-      for (const location in updatedLocations) {
-        for (const memoId in memos) {
-          const memo = memos[memoId];
-          if (memo.location.name === location && memo.tags && memo.tags.includes(tagToDelete)) { // Check if memo.tags exist
-            const updatedTags = memo.tags.filter(tag => tag !== tagToDelete);
-            var updatedMemo = memo;
-            updatedMemo.tags = updatedTags;
-            
-            await MemoController.update_memo(idFromQuery, updatedMemo);
-          }
-        }
-      }
-        var updatedUser = userData;
-        updatedUser.tags = remainingTags;
-        await UserController.update_user(idFromQuery, updatedUser);
-        setTags(remainingTags);
-      } catch (error) {
-        console.error('Error deleting tag:', error);
-      }
-      setReloadDashboard(true);
-  };
-
-  const handleUpdateMemoTags = async (updatedTags, memoid) => {
-    setSelectedMemo({
-      ...selectedMemo,
-      selectedTags: updatedTags
-    });
-
-    try {
-      // FIXME
-      const memoToUpdate = memos[memoid];
-
-      // Modify the memo's tags with the updated tags
-      memoToUpdate.tags = updatedTags;
-      const searchParams = new URLSearchParams(window.location.search);
-      const idFromQuery = searchParams.get('id') || '';
-      console.log(memoToUpdate);
-      await MemoController.update_memo(idFromQuery, memoToUpdate);
-      const updatedUserTags = [...tags, ...updatedTags.filter((cat: any) => !tags.includes(cat))];
-      var updatedUser = userData;
-      updatedUser.tags = updatedUserTags;
-      UserController.update_user(idFromQuery, updatedUser);
-      setTags(updatedUserTags);
-    } catch (error) {
-      console.error('Error updating memo tags:', error);
-    }
-    setReloadDashboard(true);
-  };*/
-
   const filteredLocations: { [key: string]: { [key: string]: any } } =
     Object.keys(locations).reduce(
       (filtered: { [key: string]: { [key: string]: any } }, locationName) => {
@@ -191,9 +94,7 @@ const Dashboard = () => {
             const memo = memos[memoId];
             if (
               memo.location &&
-              memo.tags &&
-              memo.location.name === locationName &&
-              selectedTags.every((tag) => memo.tags?.includes(tag))
+              memo.location.name === locationName
             ) {
               filteredMemos.push(memo);
             }
@@ -247,34 +148,6 @@ const Dashboard = () => {
       <Header id={id}></Header>
 
       <h1 className="text-blue-800 mb-6">Memo Dashboard</h1>
-      <div className="tags-container">
-        {/*<h2 className="text-blue-800">Tags</h2>
-        <div className="tags-table">
-          <div className="tag-row add-tag-row">
-            <input
-              type="text"
-              value={newTag}
-              onChange={handleNewTagChange}
-              placeholder="Enter new tag"
-              className="tag-input"
-            />
-            <button onClick={handleAddTag} className='bg-blue-100 text-blue-800 border-2 border-blue-800 w-1/6'>Add</button>
-          </div>
-          {tags.map((tag, index) => (
-            <div key={index} className="tag-row">
-              <input
-                type="checkbox"
-                value={tag}
-                checked={selectedTags.includes(tag)}
-                onChange={() => handleTagChange(tag)}
-                className="tag-checkbox"
-              />
-              <span>{tag}</span>
-              <button onClick={() => handleDeleteTag(tag)} className="delete-tag-button">Delete</button>
-            </div>
-          ))}
-        </div>*/}
-      </div>
 
       <div className="mt-8">
         <h2 className="text-blue-800 text-lg">Locations</h2>
@@ -301,7 +174,7 @@ const Dashboard = () => {
                       {memo.name}
                       <button
                         onClick={(event) => handleDeleteMemo(memo, event)}
-                        className="delete-tag-button"
+                        className="delete-button"
                       >
                         Delete
                       </button>
@@ -319,9 +192,6 @@ const Dashboard = () => {
           key={selectedMemo._id}
           userID={id}
           selectedMemo={selectedMemo}
-          selectedLocationPop={selectedLocationPop}
-          tags={memos.tags}
-          handleUpdateTags={null}
           handleClose={() => setShowPopup(false)}
           handlePopupSubmit={handlePopupSubmit}
           Key={popReload}
