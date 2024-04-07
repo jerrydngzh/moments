@@ -6,22 +6,20 @@ export default function SignInPage() {
   const { firebaseSignIn } = useFirebaseAuth();
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
     try {
-      // TODO: set buttons to disabled while waiting for sign in
+      setLoading(true);
       const userCredentials = await firebaseSignIn(email, password);
-      const jwt = await userCredentials.user.getIdToken();
-      sessionStorage.setItem("token", jwt);
-
-      // TODO: enable buttons
-      navigate("/dashboard");
+      setLoading(false);
+      navigate("/dashboard?uid=" + userCredentials.user.uid);
     } catch (e) {
+      setLoading(false);
       alert(e.message);
-      // TODO: enable buttons
     }
   };
 
@@ -73,9 +71,15 @@ export default function SignInPage() {
           <input
             type="reset"
             value="Reset"
+            disabled={loading}
             className="mb-2 border-blue-800 h-10 hover:bg-blue-50"
           />
-          <input type="submit" value="Submit" className="border-blue-800 h-10 hover:bg-blue-50" />
+          <input
+            type="submit"
+            value="Submit"
+            disabled={loading}
+            className="border-blue-800 h-10 hover:bg-blue-50"
+          />
         </div>
       </form>
     </main>
