@@ -30,7 +30,7 @@ const Dashboard = () => {
       const idFromQuery = searchParams.get("id") || "";
       setID(idFromQuery);
 
-      const data = await UserController.get_user_profile(idFromQuery);
+      const data = await UserController.get_user_data(idFromQuery);
       setUserData(data);
       setTags(data.tags || []);
       fetchMemos(data.memos);

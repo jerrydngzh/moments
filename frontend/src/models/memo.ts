@@ -1,12 +1,12 @@
 export interface MemoType {
-    id?: String,
-    name: String,
-    description: String,
-    date: String,
-    location: {
-        name: String,
-        coordinates: [Number, Number]
-    },
-    media?: String[]
-    tags?: String[]
+  id?: string,
+  name: string,
+  description: string,
+  date: string,
+  location: {
+    name: string,
+    coordinates: [Number, Number]
+  },
+  media?: string[]
+  tags?: string[]
 }

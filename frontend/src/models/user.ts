@@ -1,8 +1,8 @@
 export interface UserType {
-  uid?: String;
-  email: String;
-  username: String;
-  first_name: String;
-  last_name: String;
-  memos?: String[];
+  uid?: string;
+  email: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  memos?: string[];
 }
