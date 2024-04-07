@@ -31,45 +31,23 @@ router.get("/:uid", async (req, res, next) => {
   }
 });
 
-// Create new profile
-router.post("/", async (req, res, next) => {
-  try {
-    const profile = new Profile({
-      uid: req.body.uid,
-      bio: req.body.bio,
-      status_message: req.body.status_message,
-      profile_picture: req.body.profile_picture,
-    });
-
-    const savedProfile = await profile.save();
-    res.status(200).json(savedProfile);
-  } catch (err) {
-    next(err);
-  }
-});
-
-// Update profile by id
+// Create or update a profile for use with uid
 router.put("/:uid", async (req, res, next) => {
   try {
-    let profile = await Profile.findOne({ uid: req.params.uid });
+    const filter = { uid: req.params.uid };
+    const update = {
+      bio: req.body.bio !== undefined ? req.body.bio : "",
+      status_message:
+        req.body.status_message !== undefined ? req.body.status_message : "",
+      profile_picture:
+        req.body.profile_picture !== undefined
+          ? req.body.profile_picture
+          : "",
+    };
+    const options = { new: true, upsert: true };
 
-    if (!profile) {
-      const err = new Error("No profile with matching id found");
-      err.status = 404;
-      throw err;
-    }
+    const updatedProfile = await Profile.findOneAndUpdate(filter, update, options);
 
-    profile.bio = req.body.bio !== undefined ? req.body.bio : profile.bio;
-    profile.status_message =
-      req.body.status_message !== undefined
-        ? req.body.status_message
-        : profile.status_message;
-    profile.profile_picture =
-      req.body.profile_picture !== undefined
-        ? req.body.profile_picture
-        : profile.profile_picture;
-
-    const updatedProfile = await profile.save();
     res.status(200).json(updatedProfile);
   } catch (err) {
     next(err);
