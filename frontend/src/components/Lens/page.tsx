@@ -126,7 +126,7 @@ const Lens: React.FC = () => {
           case 'map':
             return (
               <>
-                <Map locations={locations} /> 
+                <Map locations={locations} view={'map'}/> 
                 <Table locations={locations} />
               </>
             );

@@ -33,7 +33,7 @@ const List: React.FC<MapProps> = ({ locations }) => {
               </li>
               {selectedMemo === memo && (
                 <section className="bg-white p-2 mt-1 mb-2 rounded-lg">
-                  <Map locations={[location]} />
+                  <Map locations={[location]} view={'list'} />
                   <h4 className="font-bold">Date:</h4>
                   <p className="mb-2">{memo.date}</p>
                   <h4 className="font-bold">Location:</h4>

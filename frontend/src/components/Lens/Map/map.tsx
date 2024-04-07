@@ -1,6 +1,8 @@
 // @ts-nocheck
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+// it definitely works, but react-leaflet is being goofy with the errors -V
+
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 
 interface Location {
   coordinates: [number, number];
@@ -14,15 +16,26 @@ interface Location {
 
 interface MapProps {
   locations: Location[];
+  view: string;
 }
 
-const Map: React.FC<MapProps> = ({ locations }) => {
+const ChangeView = ({ center }) => {
+  const map = useMap();
+  map.setView(center, map.getZoom());
+  return null;
+}
+
+const Map: React.FC<MapProps> = ({ locations, view }) => {
+  const center = locations.length > 0 ? locations[0].coordinates : [49.27326489299744, -123.10365200042726];
+  const zoom = view === 'map' ? 10 : 13;
+
   return (
     <MapContainer
-      center={[49.27326489299744, -123.10365200042726]}
-      zoom={13}
+      center={center}
+      zoom={zoom}
       style={{ height: '500px', width: '100%', borderRadius: '10px'}}
     >
+      <ChangeView center={center} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -34,7 +47,6 @@ const Map: React.FC<MapProps> = ({ locations }) => {
               <div key={`${index}-${memoIndex}`}>
                 <p>{memo.title}</p>
                 <p>{memo.memo}</p>
-                <p>{memo.selectedCategories}</p>
               </div>
             ))}
           </Popup>
