@@ -17,7 +17,7 @@ export class UserController {
     return response.data;
   }
 
-  static async get_user_profile(user_id: String) {
+  static async get_user_profile(user_id: string) {
     const response = await axios({
       method: "get",
       url: `${backendAPI}/${user_id}`,
@@ -37,7 +37,7 @@ export class UserController {
     return response.data;
   }
 
-  static async update_user(user_id: String, user: UserType) {
+  static async update_user(user_id: string, user: UserType) {
     const response = await axios({
       method: "put",
       url: `${backendAPI}/${user_id}`,
@@ -48,7 +48,7 @@ export class UserController {
     return response.data;
   }
 
-  static async delete_user(user_id: String) {
+  static async delete_user(user_id: string) {
     const response = await axios({
       method: "delete",
       url: `${backendAPI}/${user_id}`,
