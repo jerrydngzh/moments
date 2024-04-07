@@ -1,9 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 
 export default function Header({ id }) {
   const { firebaseSignOut } = useFirebaseAuth();
   const location = useLocation().pathname;
+  const navigate = useNavigate();
 
   return (
     <header className="flex flex-row justify-between mb-4">
@@ -42,15 +43,15 @@ export default function Header({ id }) {
       >
         Profile
       </Link>
-
-      <Link
-        to={"/"}
-        className={
-          "button-link text-blue-800 bg-blue-100 border-blue-800 hover:bg-white border-2 w-1/4 p-2 text-center rounded-lg"
-        }
+      <button
+        onClick={async () => {
+          await firebaseSignOut();
+          navigate("/");
+        }}
+        className="button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg"
       >
-        <span onClick={firebaseSignOut}>Sign out</span>
-      </Link>
+        Sign out
+      </button>
     </header>
   );
 }

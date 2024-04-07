@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { UserController } from "../../controllers/user.controller";
 import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 
 export default function SignInPage() {
