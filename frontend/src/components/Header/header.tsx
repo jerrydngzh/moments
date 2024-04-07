@@ -1,6 +1,8 @@
 import { Link, useLocation } from "react-router-dom";
+import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 
 export default function Header({ id }) {
+  const { firebaseSignOut } = useFirebaseAuth();
   const location = useLocation().pathname;
 
   return (
@@ -42,12 +44,12 @@ export default function Header({ id }) {
       </Link>
 
       <Link
-        to={"/signin"}
+        to={"/"}
         className={
           "button-link text-blue-800 bg-blue-100 border-blue-800 hover:bg-white border-2 w-1/4 p-2 text-center rounded-lg"
         }
       >
-        Log out
+        <span onClick={firebaseSignOut}>Sign out</span>
       </Link>
     </header>
   );
