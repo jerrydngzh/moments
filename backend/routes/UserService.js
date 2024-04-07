@@ -15,9 +15,9 @@ router.get("/", async (req, res, next) => {
 });
 
 // Get user by id
-router.get("/:id", async (req, res, next) => {
+router.get("/:uid", async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findOne({ uid: req.params.uid });
 
     if (!user) {
       const err = new Error("No user with matching id found");
@@ -50,9 +50,9 @@ router.post("/", async (req, res, next) => {
 });
 
 // Edit user properties
-router.put("/:id", async (req, res, next) => {
+router.put("/:uid", async (req, res, next) => {
   try {
-    let user = await User.findById(req.params.id);
+    let user = await User.findOne({ uid: req.params.uid });
 
     if (!user) {
       const err = new Error("No user with matching id found");
@@ -79,9 +79,9 @@ router.put("/:id", async (req, res, next) => {
 });
 
 // Delete user by id
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:uid", async (req, res, next) => {
   try {
-    const result = await User.findByIdAndDelete(req.params.id);
+    const result = await User.findOneAndDelete({ uid: req.params.uid });
 
     if (!result) {
       const err = new Error("No user with matching id found");

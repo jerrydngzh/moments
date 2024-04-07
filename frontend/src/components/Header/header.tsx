@@ -33,7 +33,7 @@ export default function Header({ id }) {
       </Link>
 
       <Link
-        to={"/profile?=" + id}
+        to={"/profile?id=" + id}
         className={`${
           location === "/profile" ? "bg-white" : "hover:bg-white"
         } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}

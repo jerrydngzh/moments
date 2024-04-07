@@ -1,32 +1,30 @@
 import { useEffect, useState } from "react";
 import { UserController } from "../../controllers/user.controller";
 import Header from "../Header/header";
+import { UserType } from "../../models/user";
 
 const Profile = () => {
-  const [userData, setUserData] = useState<any>({});
+  const [userData, setUserData] = useState<UserType>({
+    uid: "",
+    email: "",
+    username: "",
+    first_name: "",
+    last_name: "",
+  });
   const [id, setID] = useState("");
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
     const idFromQuery = searchParams.get("id") || "";
-
-    // Update the state with the username
     setID(idFromQuery);
-    console.log(idFromQuery);
-    // Fetch user data from the JSON file
-    const fetchData = async () => {
-      try {
-        const data = await UserController.get_user_profile(idFromQuery);
-        console.log("Fetched Account:", data);
-        setUserData(data || {});
 
-        // Set the data in state
-      } catch (error) {
-        console.error("Error fetching accounts:", error);
-      }
-    };
-
-    fetchData();
+    UserController.get_user_profile(idFromQuery)
+      .then((data) => {
+        setUserData(data);
+      })
+      .catch((e) => {
+        console.error("Error fetching accounts: ", e);
+      });
   }, []);
 
   return (

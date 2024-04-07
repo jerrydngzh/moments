@@ -23,7 +23,6 @@ export class UserController {
       url: `${backendAPI}/${user_id}`,
     });
 
-    console.log(response.data);
     return response.data;
   }
 
