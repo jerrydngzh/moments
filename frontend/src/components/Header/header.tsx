@@ -45,8 +45,14 @@ export default function Header({ id }) {
       </Link>
       <button
         onClick={async () => {
-          await firebaseSignOut();
-          navigate("/");
+          firebaseSignOut()
+            .then(() => {
+              sessionStorage.removeItem("token");
+              navigate("/");
+            })
+            .catch((e) => {
+              alert(e.message);
+            });
         }}
         className="button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg"
       >

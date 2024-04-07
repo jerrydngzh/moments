@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import firebase_auth from "../components/Authentication/firebase.config";
 import {
   User as FirebaseUser,
   UserCredential,
@@ -6,8 +7,8 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
+  deleteUser,
 } from "firebase/auth";
-import firebase_auth from "../components/Authentication/firebase.config";
 
 const AuthContext = createContext(
   {} as {
@@ -16,6 +17,7 @@ const AuthContext = createContext(
     firebaseSignUp: (email: string, password: string) => Promise<UserCredential>;
     firebaseSignIn: (email: string, password: string) => Promise<UserCredential>;
     firebaseSignOut: () => Promise<void>;
+    firebaseDeleteUser: () => Promise<void>;
   }
 );
 export function useFirebaseAuth() {
@@ -38,8 +40,11 @@ export function FirebaseAuthProvider(props: { children: any }) {
     return signOut(firebase_auth);
   }
 
+  function deleteUserAccount(): Promise<void> {
+    return deleteUser(user);
+  }
+
   useEffect(() => {
-    // https://firebase.google.com/docs/reference/js/auth.user
     const unsub = onAuthStateChanged(firebase_auth, (user) => {
       setUser(user);
       setLoading(false);
@@ -53,6 +58,7 @@ export function FirebaseAuthProvider(props: { children: any }) {
     firebaseSignUp: signUp,
     firebaseSignIn: signIn,
     firebaseSignOut: logOut,
+    firebaseDeleteUser: deleteUserAccount,
   };
   return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
 }
