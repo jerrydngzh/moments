@@ -3,8 +3,13 @@ import Calendar from 'react-calendar'
 
 interface Location {
     coordinates: [number, number];
-    memo: { memo: string; selectedCategories: string[] }[];
-  }
+    memo: { 
+        memo: string; 
+        title: string; 
+        date: string; 
+        location: string; 
+    }[];
+}
   
 interface MapProps {
     locations: Location[];
@@ -37,7 +42,7 @@ const MemoCalendar: React.FC<MapProps> = ({locations}) => {
           value={value}
           tileContent={({ date, view }) => view === 'month' && memosByDate[date.toDateString()] ? <p>{memosByDate[date.toDateString()].length} memos</p> : null}
         />
-        <ul>
+        <ul className="mt-8">
             {selectedDateMemos.map((memo, index) => (
                 <li key={index}>{memo.title}</li>
             ))}

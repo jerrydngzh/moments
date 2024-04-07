@@ -4,7 +4,12 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 interface Location {
   coordinates: [number, number];
-  memo: { memo: string; selectedCategories: string[] }[];
+  memo: { 
+    memo: string; 
+    title: string; 
+    date: string; 
+    location: string; 
+  }[];
 }
 
 interface MapProps {

@@ -1,4 +1,4 @@
-// @ts-nocheck
+
 import React, { useState, useEffect } from 'react';
 import Map from './Map/map';
 import Table from './Map/table';
@@ -10,7 +10,12 @@ import { MemoController } from '../../controllers/memo.controller'
 
 interface Location {
   coordinates: [number, number];
-  memo: { memo: string; selectedCategories: string[] }[];
+  memo: { 
+    memo: string; 
+    title: string; 
+    date: string; 
+    location: string; 
+  }[];
 }
 
 const Lens: React.FC = () => {
@@ -97,19 +102,19 @@ const Lens: React.FC = () => {
         <div>
           <button 
             onClick={() => setView('map')} 
-            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-50 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'map' ? 'bg-blue-300' : ''}`}
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'map' ? 'bg-blue-300' : ''}`}
           >
             Map
           </button>
           <button 
             onClick={() => setView('list')} 
-            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-50 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'list' ? 'bg-blue-300' : ''}`}
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'list' ? 'bg-blue-300' : ''}`}
           >
             List
           </button>
           <button 
             onClick={() => setView('calendar')} 
-            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-50 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'calendar' ? 'bg-blue-300' : ''}`}
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'calendar' ? 'bg-blue-300' : ''}`}
           >
             Calendar
           </button>

@@ -1,10 +1,14 @@
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import Map from '../Map/map';
 
 interface Location {
   coordinates: [number, number];
-  memo: { memo: string; selectedCategories: string[] }[];
+  memo: { 
+    memo: string; 
+    title: string; 
+    date: string; 
+    location: string; 
+  }[];
 }
 
 interface MapProps {
@@ -13,7 +17,6 @@ interface MapProps {
 
 const List: React.FC<MapProps> = ({ locations }) => {
   const [selectedMemo, setSelectedMemo] = useState(null);
-  const [memos, setMemos] = useState({});
   
   const handleListItemClick = (memo) => {
     selectedMemo === memo ? setSelectedMemo(null) : setSelectedMemo(memo);

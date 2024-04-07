@@ -1,9 +1,14 @@
-// @ts-nocheck
+
 import React from 'react';
 
 interface Location {
     coordinates: [number, number];
-    memo: { memo: string; selectedCategories: string[] }[];
+    memo: { 
+      memo: string; 
+      title: string; 
+      date: string; 
+      location: string; 
+    }[];
 }
   
 interface MapProps {
