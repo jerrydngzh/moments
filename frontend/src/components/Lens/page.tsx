@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Map from './Map/map';
 import Table from './Map/table';
 import List from './List/list';
+import Calendar from './Calendar/calendar';
 import { Link } from 'react-router-dom';
 import { UserController } from '../../controllers/user.controller';
 import { MemoController } from '../../controllers/memo.controller'
@@ -75,14 +76,6 @@ const Lens: React.FC = () => {
       console.error('Error fetching memo data:', error);
     }
   };
-
-  const toggleView = () => {
-    if (view === 'map') {
-      setView('list');
-    } else {
-      setView('map');
-    }
-  }
   
 
   useEffect(() => {
@@ -101,21 +94,53 @@ const Lens: React.FC = () => {
       </header>
       <div id="lens-header" className="flex flex-row justify-between">
         <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
-        <button onClick={toggleView} className="button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 h-1/2 p-2 text-center rounded-lg">
-          {view === 'map' ? 'List View' : 'Map View'}
-        </button>
+        <div>
+          <button 
+            onClick={() => setView('map')} 
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-50 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'map' ? 'bg-blue-300' : ''}`}
+          >
+            Map
+          </button>
+          <button 
+            onClick={() => setView('list')} 
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-50 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'list' ? 'bg-blue-300' : ''}`}
+          >
+            List
+          </button>
+          <button 
+            onClick={() => setView('calendar')} 
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-50 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'calendar' ? 'bg-blue-300' : ''}`}
+          >
+            Calendar
+          </button>
+        </div>
       </div>
       <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-      {view === 'map' ? 
-        <>
-          <Map locations={locations} /> 
-          <Table locations={locations} />
-        </>
-        : 
-        <>
-          <List locations={locations} />
-        </>
-      }
+      {(() => {
+        switch (view) {
+          case 'map':
+            return (
+              <>
+                <Map locations={locations} /> 
+                <Table locations={locations} />
+              </>
+            );
+          case 'list':
+            return (
+              <>
+                <List locations={locations} />
+              </>
+            );
+          case 'calendar':
+            return (
+              <>
+                <Calendar locations={locations} />
+              </>
+            );
+          default:
+            return null;
+        }
+      })()}
     </div>
   );
 };
