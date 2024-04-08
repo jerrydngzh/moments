@@ -7,7 +7,6 @@ import { MemoType } from "../../../../models/memo";
 const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSelected }) => {
   const [savedLocations, setSavedLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [memos, setMemos] = useState<MemoType[]>([]);
 
   const fetchData = async () => {
     try {
@@ -15,8 +14,7 @@ const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSele
       const memoData = await MemoController.get_all_memos(id);
       if(memoData){
         console.log(memoData);
-        setMemos(memoData);
-        for(const memo in memos){
+        for(const memo in memoData){
           locations.push({
             name: memos[memo].location.name,
             coordinates: memos[memo].location.coordinates,
@@ -25,7 +23,7 @@ const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSele
       }
       setSavedLocations(locations);
     } catch (error) {
-      console.error("Error fetching user data:", error);
+      console.error("Error fetching data:", error);
     }
   };
 
