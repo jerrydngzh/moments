@@ -1,0 +1,9 @@
+.react-calendar__tile {
+    text-align: left;
+}
+
+.memo-tile {
+    display: block;
+    font-size: 12px;
+
+}

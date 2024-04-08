@@ -1,6 +1,9 @@
-// @ts-nocheck
+
 import React, { useState, useEffect } from "react";
-import Map from "./map";
+import Map from "./Map/map";
+import Table from './Map/table';
+import List from './List/list';
+import MemoCalendar from './Calendar/calendar';
 import { UserController } from "../../controllers/user.controller";
 import { MemoController } from "../../controllers/memo.controller";
 import Header from "../Header/header";
@@ -9,13 +12,19 @@ import { UserType } from "../../models/user";
 
 interface Location {
   coordinates: [number, number];
-  memo: { memo: string; selectedCategories: string[] }[];
+  memo: { 
+    description: string; 
+    title: string; 
+    date: string; 
+    location: string; 
+  }[];
 }
 
 const Lens: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
   const [userData, setUserData] = useState<UserType>();
   const [memos, setMemos] = useState({});
+  const [view, setView] = useState('map');
   const { currentUser } = useFirebaseAuth();
 
   const fetchUserData = async () => {
@@ -38,7 +47,6 @@ const Lens: React.FC = () => {
       for (const mId of memos) {
         const result = await MemoController.get_memo(currentUser.uid, mId);
 
-        // FIXME
         //      1. locationName not used
         //      2. created memo below doesnt match `Location` interface above
         //      3. inconsistent naming
@@ -47,8 +55,9 @@ const Lens: React.FC = () => {
 
         const memo = {
           title: result.name,
-          memo: result.description,
+          description: result.description,
           date: result.date,
+          location: locationName
         };
 
         // Check if location already exists in fetchedLocations array
@@ -81,45 +90,56 @@ const Lens: React.FC = () => {
 
   return (
     <div className="lens w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
-      <Header id={currentUser.uid}></Header>
-
-      <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
-      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
-      <Map locations={locations} />
-
-      <div>
-        {locations.map((location, locIndex) => (
-          <div>
-            {locations.map((location, locIndex) => (
-              <table key={locIndex} className="w-full table-auto">
-                <thead className="justify-between">
-                  <tr className="bg-blue-950">
-                    <th className="px-16 py-2">
-                      <span className="text-blue-100">Title</span>
-                    </th>
-                    <th className="px-16 py-2">
-                      <span className="text-blue-100">Memo</span>
-                    </th>
-                    <th className="px-16 py-2">
-                      <span className="text-blue-100">Date</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {location.memo.map((memo, memoIndex) => (
-                    <tr key={memoIndex} className="bg-blue-100">
-                      <td className="px-16 py-2 font-bold">{memo.title}</td>
-                      <td className="px-16 py-2">{memo.memo}</td>
-                      <td className="px-16 py-2">{memo.date}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ))}
-          </div>
-        ))}
+      <Header></Header>
+      <div id="lens-header" className="flex flex-row justify-between">
+        <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
+        <div>
+          <button 
+            onClick={() => setView('map')} 
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'map' ? 'bg-blue-300' : ''}`}
+          >
+            Map
+          </button>
+          <button 
+            onClick={() => setView('list')} 
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'list' ? 'bg-blue-300' : ''}`}
+          >
+            List
+          </button>
+          <button 
+            onClick={() => setView('calendar')} 
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg ${view === 'calendar' ? 'bg-blue-300' : ''}`}
+          >
+            Calendar
+          </button>
+        </div>
       </div>
+      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+      {(() => {
+        switch (view) {
+          case 'map':
+            return (
+              <>
+                <Map locations={locations} view={'map'}/> 
+                <Table locations={locations} />
+              </>
+            );
+          case 'list':
+            return (
+              <>
+                <List locations={locations} />
+              </>
+            );
+          case 'calendar':
+            return (
+              <>
+                <MemoCalendar locations={locations} />
+              </>
+            );
+          default:
+            return null;
+        }
+      })()}
     </div>
   );
 };
