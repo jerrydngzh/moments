@@ -15,9 +15,9 @@ router.get("/", async (req, res, next) => {
 });
 
 // Get user by id
-router.get("/:id", async (req, res, next) => {
+router.get("/:uid", async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findOne({ uid: req.params.uid });
 
     if (!user) {
       const err = new Error("No user with matching id found");
@@ -35,11 +35,11 @@ router.get("/:id", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   try {
     const user = new User({
+      uid: req.body.uid,
       username: req.body.username,
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      email: req.body.email,
-      password: req.body.password,
+      email: req.body.email
     });
 
     const savedUser = await user.save();
@@ -50,9 +50,9 @@ router.post("/", async (req, res, next) => {
 });
 
 // Edit user properties
-router.put("/:id", async (req, res, next) => {
+router.put("/:uid", async (req, res, next) => {
   try {
-    let user = await User.findById(req.params.id);
+    let user = await User.findOne({ uid: req.params.uid });
 
     if (!user) {
       const err = new Error("No user with matching id found");
@@ -68,8 +68,6 @@ router.put("/:id", async (req, res, next) => {
       req.body.first_name !== undefined ? req.body.first_name : user.first_name;
     user.last_name =
       req.body.last_name !== undefined ? req.body.last_name : user.last_name;
-    user.password =
-      req.body.password !== undefined ? req.body.password : user.password;
     user.memos =
       req.body.memos !== undefined ? req.body.memos : user.memos;
     const updatedUser = await user.save();
@@ -81,9 +79,9 @@ router.put("/:id", async (req, res, next) => {
 });
 
 // Delete user by id
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:uid", async (req, res, next) => {
   try {
-    const result = await User.findByIdAndDelete(req.params.id);
+    const result = await User.findOneAndDelete({ uid: req.params.uid });
 
     if (!result) {
       const err = new Error("No user with matching id found");

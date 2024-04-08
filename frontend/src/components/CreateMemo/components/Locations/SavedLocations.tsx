@@ -1,18 +1,20 @@
-// @ts-nocheck
-import React, { useState, useEffect } from 'react';
-import { UserController } from '../../../../controllers/user.controller';
-import { MemoController } from '../../../../controllers/memo.controller';
+//@ts-nocheck
+import { useState, useEffect } from "react";
+import { UserController } from "../../../../controllers/user.controller";
+import { MemoController } from "../../../../controllers/memo.controller";
+
+// FIXME -- the entire component function, remove `//@ts-nocheck` and fix issues
 const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSelected }) => {
   const [savedLocations, setSavedLocations] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState("");
   const [memos, setMemos] = useState({});
 
   const fetchData = async () => {
     try {
-      const data = await UserController.get_user_profile(id);
+      const data = await UserController.get_user_data(id);
       fetchMemos(data.memos);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error("Error fetching user data:", error);
     }
   };
 
@@ -20,17 +22,20 @@ const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSele
     try {
       const fetchedMemos: { [key: string]: MemoType } = {};
       const fetchedLocations: { [key: string]: [number, number] } = {};
-      var locations:any[]=[{name:"past locations"}];
+      var locations: any[] = [{ name: "past locations" }];
       for (const mid of memoID) {
         const data = await MemoController.get_memo(id, mid);
         fetchedMemos[mid] = data;
         fetchedLocations[data.location.name] = data.location.coordinates;
-        locations.push({name:data.location.name, coordinates:data.location.coordinates});
+        locations.push({
+          name: data.location.name,
+          coordinates: data.location.coordinates,
+        });
       }
-      setMemos(prevMemos => ({ ...prevMemos, ...fetchedMemos }));
+      setMemos((prevMemos) => ({ ...prevMemos, ...fetchedMemos }));
       setSavedLocations(locations);
     } catch (error) {
-      console.error('Error fetching memos:', error);
+      console.error("Error fetching memos:", error);
     }
   };
 
@@ -38,10 +43,9 @@ const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSele
     fetchData();
   }, [id, reloadDropdown, onDropdownReloaded]);
 
-  
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value;
-    const selectedLocation = savedLocations.find(location => location.name === selectedValue);
+    const selectedLocation = savedLocations.find((location) => location.name === selectedValue);
 
     if (selectedLocation) {
       const coordinates = selectedLocation.coordinates;

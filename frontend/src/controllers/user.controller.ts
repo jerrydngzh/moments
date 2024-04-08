@@ -2,6 +2,7 @@
 const backendAPI = `http://localhost:8080/api/users`; // NOTE local
 
 import axios from "axios";
+import { UserType } from "../models/user";
 
 export class UserController {
   // TODO: Change how errors are handled in frontend, currently just logs error
@@ -16,17 +17,16 @@ export class UserController {
     return response.data;
   }
 
-  static async get_user_profile(user_id: String) {
+  static async get_user_data(user_id: string) {
     const response = await axios({
       method: "get",
       url: `${backendAPI}/${user_id}`,
     });
 
-    console.log(response.data);
     return response.data;
   }
 
-  static async create_user(user: any) {
+  static async create_user(user: UserType) {
     const response = await axios({
       method: "post",
       url: `${backendAPI}/`,
@@ -37,7 +37,7 @@ export class UserController {
     return response.data;
   }
 
-  static async update_user(user_id: String, user: any) {
+  static async update_user(user_id: string, user: UserType) {
     const response = await axios({
       method: "put",
       url: `${backendAPI}/${user_id}`,
@@ -48,7 +48,7 @@ export class UserController {
     return response.data;
   }
 
-  static async delete_user(user_id: String) {
+  static async delete_user(user_id: string) {
     const response = await axios({
       method: "delete",
       url: `${backendAPI}/${user_id}`,

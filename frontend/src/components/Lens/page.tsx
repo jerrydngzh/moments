@@ -1,12 +1,14 @@
 
-import React, { useState, useEffect } from 'react';
-import Map from './Map/map';
+import React, { useState, useEffect } from "react";
+import Map from "./Map/map";
 import Table from './Map/table';
 import List from './List/list';
 import MemoCalendar from './Calendar/calendar';
-import { Link } from 'react-router-dom';
-import { UserController } from '../../controllers/user.controller';
-import { MemoController } from '../../controllers/memo.controller'
+import { UserController } from "../../controllers/user.controller";
+import { MemoController } from "../../controllers/memo.controller";
+import Header from "../Header/header";
+import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
+import { UserType } from "../../models/user";
 
 interface Location {
   coordinates: [number, number];
@@ -20,50 +22,49 @@ interface Location {
 
 const Lens: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
-  const [userID, setUserID] = useState('');
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState<UserType>();
   const [memos, setMemos] = useState({});
   const [view, setView] = useState('map');
-  
-  const fetchData = async () => {
+  const { currentUser } = useFirebaseAuth();
+
+  const fetchUserData = async () => {
     try {
-      // NOTE: search for userID in path as query variable
-      const searchParams = new URLSearchParams(window.location.search);
-      const idFromQuery = searchParams.get('id') || '';
-      setUserID(idFromQuery);
-      
-      const userData = await UserController.get_user_profile(idFromQuery)
-      setUserData(userData);
+      const user = await UserController.get_user_data(currentUser.uid);
+      setUserData(user);
 
       console.log("Memos: ", userData.memos);
       // memos is an array of memo IDs :: string
-      fetchMemos(userData.memos);
+      fetchMemos(user.memos);
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.error("Error fetching user data:", error);
     }
-
   };
 
-  const fetchMemos = async (memoID: any) => {
-    try { 
+  const fetchMemos = async (memos: string[]) => {
+    try {
       const fetchedLocations: Location[] = [];
-      const searchParams = new URLSearchParams(window.location.search);
-      const idFromQuery = searchParams.get('id') || '';
-      setUserID(idFromQuery);
-      console.log("user: ", idFromQuery); // right now userid shows up as empty, need to fix this
 
-      for (const mid of memoID) {
-        // const response = await fetch(`http://localhost:3000/api/memos/${userID}/${mid}`);
-        // const memoData = await response.json();
-        const result = await MemoController.get_memo(idFromQuery, mid);
+      for (const mId of memos) {
+        const result = await MemoController.get_memo(currentUser.uid, mId);
 
+        //      1. locationName not used
+        //      2. created memo below doesnt match `Location` interface above
+        //      3. inconsistent naming
         const locationName = result.location.name;
         const coordinates = result.location.coordinates;
-        const memo = { title: result.name, description: result.description, date: result.date, location: locationName};
-        
+
+        const memo = {
+          title: result.name,
+          description: result.description,
+          date: result.date,
+          location: locationName
+        };
+
         // Check if location already exists in fetchedLocations array
-        const existingLocationIndex = fetchedLocations.findIndex(loc => loc.coordinates[0] === coordinates[0] && loc.coordinates[1] === coordinates[1]);
-        
+        const existingLocationIndex = fetchedLocations.findIndex(
+          (loc) => loc.coordinates[0] === coordinates[0] && loc.coordinates[1] === coordinates[1]
+        );
+
         if (existingLocationIndex !== -1) {
           // Location already exists, add memo to its memo array
           fetchedLocations[existingLocationIndex].memo.push(memo);
@@ -72,31 +73,24 @@ const Lens: React.FC = () => {
           fetchedLocations.push({ coordinates: coordinates, memo: [memo] });
         }
       }
-      
+
       setLocations(fetchedLocations);
 
       console.log("locations: ", locations);
       console.log("memos: ", memos);
     } catch (error) {
-      console.error('Error fetching memo data:', error);
+      console.error("Error fetching memo data:", error);
     }
   };
-  
 
   useEffect(() => {
-
-    fetchData();
+    fetchUserData();
     console.log(locations);
-
   }, []);
 
   return (
     <div className="lens w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
-      <header className="flex flex-row justify-between mb-4">
-        <Link to={'/createMemo?id='+userID+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg'>Create Memo</Link>
-        <Link to={'/profile?id='+userID+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg'>Profile</Link>
-        <Link to={'/dashboard?id='+userID+''} className='button-link text-blue-800 bg-blue-100 hover:bg-white border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg'>Dashboard</Link>
-      </header>
+      <Header></Header>
       <div id="lens-header" className="flex flex-row justify-between">
         <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
         <div>

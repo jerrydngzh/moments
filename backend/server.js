@@ -11,6 +11,7 @@ const PORT = process.env.PORT || 8080;
 const indexRouter = require("./routes/index");
 const MemoServiceRouter = require("./routes/MemoService");
 const UserServiceRouter = require("./routes/UserService");
+const ProfileServiceRouter = require("./routes/ProfileService");
 const app = express();
 
 // ============== Setup Middleware ==============
@@ -24,6 +25,7 @@ app.use(cors());
 app.use("/", indexRouter);
 app.use("/api/memos", MemoServiceRouter);
 app.use("/api/users", UserServiceRouter);
+app.use("/api/profiles", ProfileServiceRouter);
 
 // ========= Error Handling Middleware =========
 app.use(function (err, req, res, next) {
