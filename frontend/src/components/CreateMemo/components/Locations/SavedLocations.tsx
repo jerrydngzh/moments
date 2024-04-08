@@ -1,7 +1,5 @@
-//@ts-nocheck
 import { useState, useEffect } from "react";
 import { MemoController } from "../../../../controllers/memo.controller";
-import { MemoType } from "../../../../models/memo";
 
 // FIXME -- the entire component function, remove `//@ts-nocheck` and fix issues
 const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSelected }) => {
@@ -13,12 +11,14 @@ const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSele
       var locations: any[] = [{ name: "past locations" }];
       const memoData = await MemoController.get_all_memos(id);
       if(memoData){
-        console.log(memoData);
         for(const memo in memoData){
-          locations.push({
-            name: memos[memo].location.name,
-            coordinates: memos[memo].location.coordinates,
-          });
+          const existingIndex = locations.findIndex((location) => location.name === memoData[memo].location.name);
+          if (existingIndex === -1) {
+            locations.push({
+              name: memoData[memo].location.name,
+              coordinates: memoData[memo].location.coordinates,
+            });
+          }
         }
       }
       setSavedLocations(locations);
