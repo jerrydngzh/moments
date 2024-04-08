@@ -12,7 +12,7 @@ const Dashboard = () => {
   const [selectedLocationPop, setSelectedLocationPop] = useState(null);
   const [expandedLocations, setExpandedLocations] = useState({});
   const [showPopup, setShowPopup] = useState(false);
-  const [memos, setMemos] = useState<MemoType[]>([]);
+  const [memos, setMemos] = useState([]);
   const [popReload, setPopReload] = useState(true);
   const { currentUser } = useFirebaseAuth();
 
@@ -31,12 +31,11 @@ const Dashboard = () => {
         ...fetchedLocations,
       }));
 
-    } catch (error) {
-      if (error.response && error.response.status >= 500 && error.response.status < 600) {
-        console.error("Server Error:", error);
-      } else if (error.response && error.response.status === 404) {
+    } catch (error) {  
+      if (error.response && error.response.status === 404) {
         return; 
       }
+      console.error("Server Error:", error);
     }
 
   };
