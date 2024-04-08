@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import Calendar from 'react-calendar'
+import Calendar from 'react-calendar';
+import "./styles.css"
 
 interface Location {
     coordinates: [number, number];
@@ -16,8 +17,8 @@ interface MapProps {
 }
 
 const MemoCalendar: React.FC<MapProps> = ({locations}) => {
-    const [value, onChange] = React.useState(new Date());
-    const [selectedDateMemos, setSelectedDateMemos] = React.useState([]);
+    const [value, onChange] = useState(new Date());
+    const [selectedDateMemos, setSelectedDateMemos] = useState([]);
     const [isMemoOpen, setIsMemoOpen] = useState(false);
 
     const memosByDate = locations.reduce((acc, location) => {
@@ -43,21 +44,21 @@ const MemoCalendar: React.FC<MapProps> = ({locations}) => {
 
     return (
       <>
-        <div className="bg-blue-50 mt-4 mb-4 p-4 rounded-xl">
+        <div className="bg-blue-50 mt-4 mb-8 p-8 rounded-xl">
             <Calendar
             onChange={handleDateChange}
             value={value}
-            tileContent={({ date, view }) => view === 'month' && memosByDate[date.toDateString()] ? <p>{memosByDate[date.toDateString()].length} memos</p> : null}
+            tileContent={({ date, view }) => view === 'month' && memosByDate[date.toDateString()] ? <p className="memo-tile">{memosByDate[date.toDateString()].length} memos</p> : null}
             />
         </div>
         {isMemoOpen && (
-            <>
+            <div className='mb-2'>
                 <h2>Selected Date: {value.toDateString()}</h2>
-            </>
+            </div>
         )}
         <ul>
             {isMemoOpen && selectedDateMemos.map((memo, index) => (
-                <li key={index}>{memo.title}</li>
+                <li key={index} className="bg-blue-50">{memo.title}</li>
             ))}
         </ul>
       </>
