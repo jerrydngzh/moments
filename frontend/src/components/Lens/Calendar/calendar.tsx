@@ -5,7 +5,7 @@ import "./styles.css"
 interface Location {
     coordinates: [number, number];
     memo: { 
-        memo: string; 
+        description: string; 
         title: string; 
         date: string; 
         location: string; 

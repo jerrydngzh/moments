@@ -7,7 +7,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 interface Location {
   coordinates: [number, number];
   memo: { 
-    memo: string; 
+    description: string; 
     title: string; 
     date: string; 
     location: string; 
@@ -46,7 +46,7 @@ const Map: React.FC<MapProps> = ({ locations, view }) => {
             {location.memo.map((memo, memoIndex) => (
               <div key={`${index}-${memoIndex}`}>
                 <p>{memo.title}</p>
-                <p>{memo.memo}</p>
+                <p>{memo.description}</p>
               </div>
             ))}
           </Popup>

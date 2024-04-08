@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import Map from '../Map/map';
+import React, { useState } from 'react';
+import Details from './details';
 
 interface Location {
   coordinates: [number, number];
   memo: { 
-    memo: string; 
+    description: string; 
     title: string; 
     date: string; 
     location: string; 
@@ -68,15 +68,7 @@ const List: React.FC<MapProps> = ({ locations }) => {
                 <h2 className="font-bold font-lg">{memo.title}</h2>
               </li>
               {selectedMemo === memo && (
-                <section className="bg-white p-2 mt-1 mb-2 rounded-lg">
-                  <Map locations={[location]} view={'list'} />
-                  <h4 className="font-bold">Date:</h4>
-                  <p className="mb-2">{memo.date}</p>
-                  <h4 className="font-bold">Location:</h4>
-                  <p className="mb-2">{memo.location}</p>
-                  <h4 className="font-bold">Description:</h4>
-                  <p className="mb-2">{memo.memo}</p>
-                </section>
+                <Details memo={memo} location={location} />
               )}
             </>
           ))}

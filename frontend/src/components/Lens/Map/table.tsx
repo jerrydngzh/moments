@@ -4,7 +4,7 @@ import React from 'react';
 interface Location {
     coordinates: [number, number];
     memo: { 
-      memo: string; 
+      description: string; 
       title: string; 
       date: string; 
       location: string; 
@@ -38,7 +38,7 @@ const Table: React.FC<MapProps> = ({ locations }) => {
             location.memo.map((memo, memoIndex) => (
                 <tr key={`${locIndex}-${memoIndex}`} className="bg-blue-100">
                   <td className="px-16 py-2 font-bold">{memo.title}</td>
-                  <td className="px-16 py-2">{memo.memo}</td>
+                  <td className="px-16 py-2">{memo.description}</td>
                   <td className="px-16 py-2">{memo.date}</td>
                 </tr>
               ))
