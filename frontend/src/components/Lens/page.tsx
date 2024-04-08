@@ -4,11 +4,9 @@ import Map from "./Map/map";
 import Table from './Map/table';
 import List from './List/list';
 import MemoCalendar from './Calendar/calendar';
-import { UserController } from "../../controllers/user.controller";
 import { MemoController } from "../../controllers/memo.controller";
 import Header from "../Header/header";
 import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
-import { UserType } from "../../models/user";
 
 interface Location {
   coordinates: [number, number];
@@ -22,30 +20,15 @@ interface Location {
 
 const Lens: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
-  const [userData, setUserData] = useState<UserType>();
-  const [memos, setMemos] = useState({});
   const [view, setView] = useState('map');
   const { currentUser } = useFirebaseAuth();
 
-  const fetchUserData = async () => {
-    try {
-      const user = await UserController.get_user_data(currentUser.uid);
-      setUserData(user);
-
-      console.log("Memos: ", userData.memos);
-      // memos is an array of memo IDs :: string
-      fetchMemos(user.memos);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
-  const fetchMemos = async (memos: string[]) => {
-    try {
+  const fetchData = async () =>{
+    try{
+      const memoData = await MemoController.get_all_memos(currentUser.uid);
       const fetchedLocations: Location[] = [];
-
-      for (const mId of memos) {
-        const result = await MemoController.get_memo(currentUser.uid, mId);
+      for (const mem of memoData) {
+        const result = await MemoController.get_memo(currentUser.uid, mem._id);
 
         //      1. locationName not used
         //      2. created memo below doesnt match `Location` interface above
@@ -76,15 +59,16 @@ const Lens: React.FC = () => {
 
       setLocations(fetchedLocations);
 
-      console.log("locations: ", locations);
-      console.log("memos: ", memos);
-    } catch (error) {
-      console.error("Error fetching memo data:", error);
+    }catch (error) {  
+      if (error.response && error.response.status === 404) {
+        return; 
+      }
+      console.error("Server Error:", error);
     }
-  };
+  }
 
   useEffect(() => {
-    fetchUserData();
+    fetchData();
     console.log(locations);
   }, []);
 
