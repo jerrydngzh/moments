@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Details from './details';
 
+const DEFAULT_SORT_STATE = 3; // default sort state index for the sortStates array
+
 interface Location {
   coordinates: [number, number];
   memo: { 
@@ -18,7 +20,7 @@ interface MapProps {
 const List: React.FC<MapProps> = ({ locations }) => {
   const [selectedMemo, setSelectedMemo] = useState(null);
   const [sortedMemos, setSortedMemos] = useState([]);
-  const [sortStateIndex, setSortStateIndex] = useState(3); // state variable to keep track of the current index
+  const [sortStateIndex, setSortStateIndex] = useState(DEFAULT_SORT_STATE); // state variable to keep track of the current index
 
   const sortStates = ['title-asc', 'title-desc', 'date-asc', 'date-desc']; // array of sort states
   const sortStateDescriptions = {
