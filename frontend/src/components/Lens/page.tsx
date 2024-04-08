@@ -1,33 +1,54 @@
-//@ts-nocheck
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import Map from "./map";
+import { UserController } from "../../controllers/user.controller";
 import { MemoController } from "../../controllers/memo.controller";
 import Header from "../Header/header";
 import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
+import { UserType } from "../../models/user";
 
 interface Location {
   coordinates: [number, number];
-  memo: { memo: string;}[];
+  memo: { memo: string; selectedCategories: string[] }[];
 }
 
 const Lens: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
+  const [userData, setUserData] = useState<UserType>();
   const [memos, setMemos] = useState({});
   const { currentUser } = useFirebaseAuth();
 
-  const fetchData = async () =>{
+  const fetchUserData = async () => {
     try {
-      const memoData = await MemoController.get_all_memos(currentUser.uid);
-      setMemos(memoData);
-      const fetchedLocations: Location[] = [];
-      memoData.forEach((memo) => {
-        const locationName = memo.location.name;
-        const coordinates = memo.location.coordinates;
+      const user = await UserController.get_user_data(currentUser.uid);
+      setUserData(user);
 
-        const content = {
-          title: memo.name,
-          memo: memo.description,
-          date: memo.date,
+      console.log("Memos: ", userData.memos);
+      // memos is an array of memo IDs :: string
+      fetchMemos(user.memos);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const fetchMemos = async (memos: string[]) => {
+    try {
+      const fetchedLocations: Location[] = [];
+
+      for (const mId of memos) {
+        const result = await MemoController.get_memo(currentUser.uid, mId);
+
+        // FIXME
+        //      1. locationName not used
+        //      2. created memo below doesnt match `Location` interface above
+        //      3. inconsistent naming
+        const locationName = result.location.name;
+        const coordinates = result.location.coordinates;
+
+        const memo = {
+          title: result.name,
+          memo: result.description,
+          date: result.date,
         };
 
         // Check if location already exists in fetchedLocations array
@@ -40,18 +61,22 @@ const Lens: React.FC = () => {
           fetchedLocations[existingLocationIndex].memo.push(memo);
         } else {
           // Location doesn't exist, create a new Location object
-          fetchedLocations.push({ coordinates: coordinates, memo: [content] });
+          fetchedLocations.push({ coordinates: coordinates, memo: [memo] });
         }
-      });
-      setLocations(fetchedLocations);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+      }
 
-  }
+      setLocations(fetchedLocations);
+
+      console.log("locations: ", locations);
+      console.log("memos: ", memos);
+    } catch (error) {
+      console.error("Error fetching memo data:", error);
+    }
+  };
 
   useEffect(() => {
-    fetchData();
+    fetchUserData();
+    console.log(locations);
   }, []);
 
   return (
