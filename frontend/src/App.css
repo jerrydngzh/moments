@@ -31,10 +31,11 @@ label {
 }
 
 /* overriding browser default focus styles */
-input:focus { 
+input:focus, textarea:focus { 
   outline: none;
   border: 2px solid #7dd3fc;
 }
+
 
 textarea{
   height: 300px;
