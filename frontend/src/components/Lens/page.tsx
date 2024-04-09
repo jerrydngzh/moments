@@ -67,12 +67,13 @@ const Lens: React.FC = () => {
   return (
     <div className="lens w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
       <Header />
+
       <div id="lens-header" className="flex flex-row justify-between">
         <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
         <div>
           <button
             onClick={() => setView("map")}
-            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg ${
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg w-24 ${
               view === "map" ? "bg-blue-300" : ""
             }`}
           >
@@ -80,7 +81,7 @@ const Lens: React.FC = () => {
           </button>
           <button
             onClick={() => setView("list")}
-            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg ${
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg w-24 ${
               view === "list" ? "bg-blue-300" : ""
             }`}
           >
@@ -88,7 +89,7 @@ const Lens: React.FC = () => {
           </button>
           <button
             onClick={() => setView("calendar")}
-            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg ${
+            className={`button-link text-blue-800 bg-blue-100 hover:bg-blue-300 border-blue-800 border-2 p-2 text-center rounded-lg w-24 ${
               view === "calendar" ? "bg-blue-300" : ""
             }`}
           >
@@ -96,6 +97,7 @@ const Lens: React.FC = () => {
           </button>
         </div>
       </div>
+
       <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
       {(() => {
         switch (view) {
