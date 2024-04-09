@@ -58,6 +58,9 @@ const MemoCalendar: React.FC<MapProps> = ({ locations }) => {
               <p className="memo-tile">{memosByDate[date.toDateString()].length} memos</p>
             ) : null
           }
+          tileClassName={({ date, view }) =>
+            view === "month" && date.toDateString() === new Date().toDateString() ? "current-date" : ""
+          }
         />
       <button onClick={() => {
         setValue(new Date());
