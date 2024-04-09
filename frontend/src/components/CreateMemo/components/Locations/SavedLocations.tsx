@@ -3,21 +3,28 @@ import { MemoController } from "../../../../controllers/memo.controller";
 import { useFirebaseAuth } from "../../../../contexts/FirebaseAuth.context";
 
 // FIXME -- the entire component function, remove `//@ts-nocheck` and fix issues
-const SavedLocations = (props:{
-  reloadDropdown:boolean, 
-  onDropdownReloaded:()=>void, 
-  onLocationSelected:(string)=>void} ) => {
-  const [savedLocations, setSavedLocations] = useState<[{name:string,coordinates:[number,number]}]>([{name:"",coordinates:[0,0]}]);
+const SavedLocations = (props: {
+  reloadDropdown: boolean;
+  onDropdownReloaded: () => void;
+  onLocationSelected: (string) => void;
+}) => {
+  const [savedLocations, setSavedLocations] = useState<
+    [{ name: string; coordinates: [number, number] }]
+  >([{ name: "", coordinates: [0, 0] }]);
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const { currentUser } = useFirebaseAuth();
 
   const fetchData = async () => {
     try {
-      var locations: [{name:string,coordinates:[number,number]}] = [{ name: "past locations",coordinates:[0,0] }];
+      var locations: [{ name: string; coordinates: [number, number] }] = [
+        { name: "past locations", coordinates: [0, 0] },
+      ];
       const memoData = await MemoController.get_all_memos(currentUser.uid);
-      if(memoData){
-        for(const memo in memoData){
-          const existingIndex = locations.findIndex((location) => location.name === memoData[memo].location.name);
+      if (memoData) {
+        for (const memo in memoData) {
+          const existingIndex = locations.findIndex(
+            (location) => location.name === memoData[memo].location.name
+          );
           if (existingIndex === -1) {
             locations.push({
               name: memoData[memo].location.name,
@@ -38,7 +45,9 @@ const SavedLocations = (props:{
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value;
-    const selectedLocation = savedLocations.find((location) => location.name === selectedValue);
+    const selectedLocation = savedLocations.find(
+      (location) => location.name === selectedValue
+    );
     if (selectedLocation) {
       const coordinates = selectedLocation.coordinates;
       setSelectedLocation(selectedLocation.name);
@@ -50,7 +59,11 @@ const SavedLocations = (props:{
   return (
     <div>
       <label htmlFor="savedLocations">Saved Locations:</label>
-      <select id="savedLocations" value={selectedLocation} onChange={handleSelectChange}>
+      <select
+        id="savedLocations"
+        value={selectedLocation}
+        onChange={handleSelectChange}
+      >
         {savedLocations.map((location, index) => (
           <option key={index} value={location.name}>
             {location.name}

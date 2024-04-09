@@ -1,8 +1,8 @@
 //const backendAPI = `https://moments-server-6qo6tf2l7q-uc.a.run.app/api/memos`; // NOTE atlas
 const backendAPI = `http://localhost:8080/api/memos`; // NOTE local
 
-import { MemoType } from '../models/memo';
-import axios from 'axios';
+import { MemoType } from "../models/memo";
+import axios from "axios";
 
 export class MemoController {
   static async get_all(): Promise<MemoType[]> {
@@ -10,25 +10,25 @@ export class MemoController {
     return result.data;
   }
 
-  static async get_all_memos(user_id: string): Promise<MemoType[]> {
-    console.log("get_all_memos user:", user_id)
-    const result = await axios.get(`${backendAPI}/${user_id}`);
+  static async get_all_memos(uid: string): Promise<MemoType[]> {
+    console.log("get_all_memos user:", uid);
+    const result = await axios.get(`${backendAPI}/${uid}`);
     return result.data;
   }
 
-  static async get_memo(user_id: string, memo_id: string) {
-    const result = await axios.get(`${backendAPI}/${user_id}/${memo_id}`);
+  static async get_memo(uid: string, mid: string) {
+    const result = await axios.get(`${backendAPI}/${uid}/${mid}`);
     return result.data;
   }
 
-  static async create_memo(user_id: string, memo: MemoType) {
-    // const result = await axios.post(`${backendAPI}/${user_id}`, memo);
+  static async create_memo(uid: string, memo: MemoType) {
+    // const result = await axios.post(`${backendAPI}/${uid}`, memo);
 
     console.log(memo);
 
     const response = await axios({
       method: "post",
-      url: `${backendAPI}/${user_id}`,
+      url: `${backendAPI}/${uid}`,
       data: memo,
     });
 
@@ -37,13 +37,13 @@ export class MemoController {
     return response.data;
   }
 
-  static async update_memo(user_id: string, memo: MemoType) {
-    const result = await axios.put(`${backendAPI}/${user_id}/${memo.id}`, memo);
+  static async update_memo(uid: string, memo: MemoType) {
+    const result = await axios.put(`${backendAPI}/${uid}/${memo._id}`, memo);
     return result.data;
   }
 
-  static async delete_memo(user_id: string, memo_id: string) {
-    const result = await axios.delete(`${backendAPI}/${user_id}/${memo_id}`);
+  static async delete_memo(uid: string, mid: string) {
+    const result = await axios.delete(`${backendAPI}/${uid}/${mid}`);
     return result.data;
   }
 }
