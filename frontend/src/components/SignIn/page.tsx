@@ -43,7 +43,9 @@ export default function SignInPage() {
     <main className="Create-Profile w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
       <BackButton />
       <form onSubmit={handleSubmit}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Log in</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">
+          Log in
+        </h2>
         <label htmlFor="email" className="text-lg text-blue-800">
           Email:
           <input

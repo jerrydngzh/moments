@@ -5,6 +5,11 @@ import { MemoType } from '../models/memo';
 import axios from 'axios';
 
 export class MemoController {
+  static async get_all(): Promise<MemoType[]> {
+    const result = await axios.get(`${backendAPI}/all`);
+    return result.data;
+  }
+
   static async get_all_memos(user_id: string): Promise<MemoType[]> {
     console.log("get_all_memos user:", user_id)
     const result = await axios.get(`${backendAPI}/${user_id}`);

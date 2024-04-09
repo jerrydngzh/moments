@@ -14,10 +14,17 @@ const AuthContext = createContext(
   {} as {
     currentUser: FirebaseUser | null;
     isLoading: boolean;
-    firebaseSignUp: (email: string, password: string) => Promise<UserCredential>;
-    firebaseSignIn: (email: string, password: string) => Promise<UserCredential>;
+    firebaseSignUp: (
+      email: string,
+      password: string
+    ) => Promise<UserCredential>;
+    firebaseSignIn: (
+      email: string,
+      password: string
+    ) => Promise<UserCredential>;
     firebaseSignOut: () => Promise<void>;
     firebaseDeleteUser: () => Promise<void>;
+    isAdmin: () => boolean;
   }
 );
 export function useFirebaseAuth() {
@@ -44,6 +51,10 @@ export function FirebaseAuthProvider(props: { children: any }) {
     return deleteUser(user);
   }
 
+  function isAdmin(): boolean {
+    return user.uid === import.meta.env.VITE_ADMIN_UID;
+  }
+
   useEffect(() => {
     const unsub = onAuthStateChanged(firebase_auth, (user) => {
       setUser(user);
@@ -55,10 +66,13 @@ export function FirebaseAuthProvider(props: { children: any }) {
   const value = {
     currentUser: user,
     isLoading: loading,
+    isAdmin: isAdmin,
     firebaseSignUp: signUp,
     firebaseSignIn: signIn,
     firebaseSignOut: logOut,
     firebaseDeleteUser: deleteUserAccount,
   };
-  return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
+  );
 }
