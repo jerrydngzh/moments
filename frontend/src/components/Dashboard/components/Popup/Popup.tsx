@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { MemoController } from '../../../../controllers/memo.controller';
 import { MemoType } from '../../../../models/memo';
 import { useFirebaseAuth } from "../../../../contexts/FirebaseAuth.context";
-
+import MemoForm from '../../../CreateMemo/components/MemoForm/memoForm';
+import "./Popup.css"
 const Popup = (props:{
   onClick: React.MouseEventHandler<HTMLDivElement>, 
   selectedMemo:MemoType, 
@@ -10,8 +11,6 @@ const Popup = (props:{
   Key:boolean }) => {
   const [reloadKey, setReloadKey] = useState(props.Key);
   const [editing, setEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(props.selectedMemo.name);
-  const [editedMemo, setEditedMemo] = useState(props.selectedMemo.description);
   const {currentUser} = useFirebaseAuth();
 
   useEffect(() => {
@@ -25,17 +24,14 @@ const Popup = (props:{
     setEditing(true);
 };
 
-
-  const handleSaveClick = () => {
-    // Call a function to submit the edited title and memo
-    handleEditSubmit(editedTitle, editedMemo);
-    setEditing(false);
-  };
-
-  const handleEditSubmit = async(newTitle, newMemo) => {
+  const handleEditSubmit = async(name:string, description:string, locationName:string, coordinates:[number,number] ) => {
     // For now, let's just log the new title and memo
-    props.selectedMemo.name = newTitle;
-    props.selectedMemo.description = newMemo;
+    props.selectedMemo.name = name;
+    props.selectedMemo.description = description;
+    props.selectedMemo.location = {
+      name: locationName,
+      coordinates: coordinates,
+    }
     const updatedMemo = {
       id: props.selectedMemo.id,
       description: props.selectedMemo.description,
@@ -49,6 +45,7 @@ const Popup = (props:{
     } catch (error) {
       console.error('Error updating memo:', error);
     }
+    setEditing(false);
   };
 
   return (
@@ -56,23 +53,9 @@ const Popup = (props:{
       <h2>Memo Details</h2>
       {editing ? (
         <>
-          <label htmlFor="name" className="text-xl text-blue-800">
-          Title
-          <input
-            type="text"
-            id="name"
-            value={editedTitle}
-            onChange={(e) => setEditedTitle(e.target.value)}
-          />
-          </label>
-          <label htmlFor="name" className="text-xl text-blue-800">
-          Memo
-          <textarea
-            value={editedMemo}
-            onChange={(e) => setEditedMemo(e.target.value)}
-          />
-          </label>
-          <button onClick={handleSaveClick}>Save</button>
+        <div className='MemoForm'>
+          <MemoForm onSubmit={handleEditSubmit} default_name={props.selectedMemo.name} default_description={props.selectedMemo.description}/>
+        </div>
         </>
       ) : (
       <>

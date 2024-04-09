@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
 import { MemoController } from "../../../../controllers/memo.controller";
+import { useFirebaseAuth } from "../../../../contexts/FirebaseAuth.context";
 
 // FIXME -- the entire component function, remove `//@ts-nocheck` and fix issues
-const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSelected }) => {
-  const [savedLocations, setSavedLocations] = useState([]);
-  const [selectedLocation, setSelectedLocation] = useState("");
+const SavedLocations = (props:{
+  reloadDropdown:boolean, 
+  onDropdownReloaded:()=>void, 
+  onLocationSelected:(string)=>void} ) => {
+  const [savedLocations, setSavedLocations] = useState<[{name:string,coordinates:[number,number]}]>([{name:"",coordinates:[0,0]}]);
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const { currentUser } = useFirebaseAuth();
 
   const fetchData = async () => {
     try {
-      var locations: any[] = [{ name: "past locations" }];
-      const memoData = await MemoController.get_all_memos(id);
+      var locations: [{name:string,coordinates:[number,number]}] = [{ name: "past locations",coordinates:[0,0] }];
+      const memoData = await MemoController.get_all_memos(currentUser.uid);
       if(memoData){
         for(const memo in memoData){
           const existingIndex = locations.findIndex((location) => location.name === memoData[memo].location.name);
@@ -29,7 +34,7 @@ const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSele
 
   useEffect(() => {
     fetchData();
-  }, [id, reloadDropdown, onDropdownReloaded]);
+  }, [currentUser.uid, props.reloadDropdown, props.onDropdownReloaded]);
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value;
@@ -38,7 +43,7 @@ const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSele
       const coordinates = selectedLocation.coordinates;
       setSelectedLocation(selectedLocation.name);
       // Pass the selected location coordinates to the parent component
-      onLocationSelected(coordinates);
+      props.onLocationSelected(coordinates);
     }
   };
 
