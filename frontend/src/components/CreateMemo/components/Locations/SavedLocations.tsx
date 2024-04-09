@@ -34,7 +34,7 @@ const SavedLocations = (props:{
 
   useEffect(() => {
     fetchData();
-  }, [currentUser.uid, props.reloadDropdown, props.onDropdownReloaded]);
+  }, [props.reloadDropdown, props.onDropdownReloaded]);
 
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value;

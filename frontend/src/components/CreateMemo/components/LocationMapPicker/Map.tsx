@@ -8,9 +8,7 @@ const MapForm = (props:{
     selectedLocation:string, 
     onMapClick:([number,number])=>void
   }) => {
-
-  const [initialPosition, setInitialPosition] = useState<[number,number]>([49.27326489299744, -123.10365200042726]);
-  const [position, setPosition] = useState<[number,number]>(initialPosition);
+  const [position, setPosition] = useState<[number,number]>([49.27326489299744, -123.10365200042726]);
 
   const customMarkerIcon = new L.Icon({
     iconUrl: markerIcon,
@@ -21,7 +19,6 @@ const MapForm = (props:{
     if (props.selectedLocation) {
       // set selected location as current lcoation
       setPosition(props.selectedLocation);
-      setInitialPosition(props.selectedLocation);
       addMarkerAndNavigate(props.selectedLocation);
     }
   }, [props.selectedLocation]);
@@ -29,7 +26,6 @@ const MapForm = (props:{
   const addMarkerAndNavigate = (location: string) => {
     setPosition(location); // Set new location
     props.onMapClick(location); // Trigger the map click event
-    setInitialPosition(location);
   };
 
   const Markers = () => {
@@ -38,7 +34,6 @@ const MapForm = (props:{
         const clickedLocation = [e.latlng.lat, e.latlng.lng];
         setPosition(clickedLocation); // Add new position to the array
         props.onMapClick(clickedLocation);
-        setInitialPosition(clickedLocation);
       },
     });
 
@@ -51,7 +46,6 @@ const MapForm = (props:{
           dragend: (e) => {
             const newPosition = [e.target.getLatLng().lat, e.target.getLatLng().lng];
             setPosition(newPosition);
-            setInitialPosition(newPosition);
             props.onMapClick(newPosition);
           },
         }}
