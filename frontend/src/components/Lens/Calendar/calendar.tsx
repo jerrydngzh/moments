@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "./styles.css";
 
@@ -17,7 +17,8 @@ interface MapProps {
 }
 
 const MemoCalendar: React.FC<MapProps> = ({ locations }) => {
-  const [value, onChange] = useState(new Date());
+  const [value, setValue] = useState(new Date());
+  const [key, setKey] = useState(Date.now());
   const [selectedDateMemos, setSelectedDateMemos] = useState([]);
   const [isMemoOpen, setIsMemoOpen] = useState(false);
 
@@ -32,13 +33,16 @@ const MemoCalendar: React.FC<MapProps> = ({ locations }) => {
     return acc;
   }, {});
 
+  useEffect(() => {
+    setSelectedDateMemos(memosByDate[value.toDateString()] || []);
+    setIsMemoOpen(true);
+  }, [value]);
+
   const handleDateChange = (date) => {
-    if (date.toDateString() === value.toDateString()) {
-      setIsMemoOpen(!isMemoOpen);
+    if (date.toDateString() !== value.toDateString()) {
+      setValue(date);
     } else {
-      onChange(date);
-      setSelectedDateMemos(memosByDate[date.toDateString()] || []);
-      setIsMemoOpen(true);
+      setIsMemoOpen(!isMemoOpen);
     }
   };
 
@@ -46,6 +50,7 @@ const MemoCalendar: React.FC<MapProps> = ({ locations }) => {
     <>
       <div className="bg-blue-50 mt-4 mb-8 p-8 rounded-xl">
         <Calendar
+          key={key}
           onChange={handleDateChange}
           value={value}
           tileContent={({ date, view }) =>
@@ -54,6 +59,12 @@ const MemoCalendar: React.FC<MapProps> = ({ locations }) => {
             ) : null
           }
         />
+      <button onClick={() => {
+        setValue(new Date());
+        setKey(Date.now());
+      }} className="mt-4 border-blue-800 bg-blue-200">
+        Back to Current Date
+      </button>
       </div>
       {isMemoOpen && (
         <div className="mb-2">
@@ -63,7 +74,7 @@ const MemoCalendar: React.FC<MapProps> = ({ locations }) => {
       <ul>
         {isMemoOpen &&
           selectedDateMemos.map((memo, index) => (
-            <li key={index} className="bg-blue-50">
+            <li key={index} style={{ cursor: 'default', backgroundColor: '#EFF6FF'}}>
               {memo.title}
             </li>
           ))}
