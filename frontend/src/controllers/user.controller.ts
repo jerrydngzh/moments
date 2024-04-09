@@ -13,7 +13,6 @@ export class UserController {
       url: `${backendAPI}/`,
     });
 
-    console.log(response.data);
     return response.data;
   }
 
