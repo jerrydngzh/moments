@@ -65,7 +65,7 @@ const MemoCalendar: React.FC<MapProps> = ({ locations }) => {
       <button onClick={() => {
         setValue(new Date());
         setKey(Date.now());
-      }} className="mt-4 border-blue-800 bg-blue-200">
+      }} className="mt-4 border-blue-900 bg-blue-50">
         Back to Current Date
       </button>
       </div>
