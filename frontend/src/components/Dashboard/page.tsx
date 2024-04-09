@@ -1,9 +1,7 @@
-//@ts-nocheck
 import React, { useState, useEffect } from "react";
 import Popup from "./Popup";
 import Header from "../Header/header";
 import { MemoType } from "../../models/memo";
-import { UserController } from "../../controllers/user.controller";
 import { MemoController } from "../../controllers/memo.controller";
 import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 import "./style.css";
@@ -14,45 +12,32 @@ const Dashboard = () => {
   const [selectedLocationPop, setSelectedLocationPop] = useState(null);
   const [expandedLocations, setExpandedLocations] = useState({});
   const [showPopup, setShowPopup] = useState(false);
-  const [memos, setMemos] = useState({});
-  const [reloadDashboard, setReloadDashboard] = useState(true);
+  const [memos, setMemos] = useState([]);
   const [popReload, setPopReload] = useState(true);
   const { currentUser } = useFirebaseAuth();
 
-  // FIXME -- see line 100; handleDeleteMemo()
-  const [userData, setUserData] = useState({
-    memo: [],
-  });
-
   const fetchData = async () => {
     try {
-      const data = await UserController.get_user_data(currentUser.uid);
-      setUserData(data);
-      fetchMemos(data.memos);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
-  const fetchMemos = async (memoIDs: string[]) => {
-    try {
-      const fetchedMemos: { [key: string]: MemoType } = {};
+      const memoData = await MemoController.get_all_memos(currentUser.uid);
+      setMemos(memoData);
       const fetchedLocations: { [key: string]: [number, number] } = {};
-
-      for (const mid of memoIDs) {
-        const data = await MemoController.get_memo(currentUser.uid, mid);
-        fetchedMemos[mid] = data;
-        fetchedLocations[data.location.name] = data.location.coordinates;
-      }
-
-      setMemos((prevMemos) => ({ ...prevMemos, ...fetchedMemos }));
+      memoData.forEach((memo) => {
+        memo.id = memo._id;
+        fetchedLocations[memo.location.name] = memo.location.coordinates;
+      });
+  
       setLocations((prevLocations) => ({
         ...prevLocations,
         ...fetchedLocations,
       }));
-    } catch (error) {
-      console.error("Error fetching memos:", error);
+
+    } catch (error) {  
+      if (error.response && error.response.status === 404) {
+        return; 
+      }
+      console.error("Server Error:", error);
     }
+
   };
 
   const handlePopupSubmit = () => {
@@ -106,18 +91,10 @@ const Dashboard = () => {
 
     try {
       await MemoController.delete_memo(currentUser.uid, memo._id);
+      // Update memos state by removing the deleted memo
+      console.log(memos);
+      setMemos(prevMemos => prevMemos.filter(m => m.id !== memo._id));
 
-      // Update userData.memos array by removing the deleted memo
-      const updatedMemos = userData.memos.filter((m: any) => m !== memo._id);
-      userData.memos = updatedMemos;
-      setUserData(userData);
-
-      // Update user data by sending a PUT request
-      const editResponse = await UserController.update_user(currentUser.uid, userData);
-      console.log("Edited user: ", editResponse);
-
-      setReloadDashboard(true);
-      fetchData();
     } catch (error) {
       console.error("Error deleting memo:", error);
     }
@@ -125,11 +102,8 @@ const Dashboard = () => {
 
   // FIXME: why is reload dashboard needed? surely theres a better way to do this
   useEffect(() => {
-    if (reloadDashboard) {
-      fetchData();
-      setReloadDashboard(false);
-    }
-  }, [reloadDashboard]);
+    fetchData();
+  }, []);
 
   return (
     <div className="w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">

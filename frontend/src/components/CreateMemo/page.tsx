@@ -6,7 +6,6 @@ import SavedLocations from "./components/Locations/SavedLocations";
 import Header from "../Header/header";
 
 import { MemoController } from "../../controllers/memo.controller";
-import { UserController } from "../../controllers/user.controller";
 import { MemoType } from "../../models/memo";
 
 import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
@@ -21,7 +20,6 @@ const CreateMemo = ({}) => {
   ]);
   const [reloadDropdown, setReloadDropdown] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [userData, setUserData] = useState<any>({});
   const { currentUser } = useFirebaseAuth();
 
   const fetchLocationData = async () => {
@@ -65,17 +63,7 @@ const CreateMemo = ({}) => {
     };
 
     try {
-      const createdMemo = await MemoController.create_memo(currentUser.uid, memoToCreate);
-      const newMemoId = createdMemo._id; // TODO
-
-      // Update the memos array in userData with the new memo ID
-      let newUserData: any = userData;
-      newUserData.memos = [...userData.memos, newMemoId];
-
-      setUserData(newUserData);
-
-      const user = await UserController.update_user(currentUser.uid, newUserData);
-      console.log(user);
+      await MemoController.create_memo(currentUser.uid, memoToCreate);
 
       navigate("/dashboard");
     } catch (error) {

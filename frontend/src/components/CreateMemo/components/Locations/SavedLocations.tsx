@@ -1,41 +1,29 @@
-//@ts-nocheck
 import { useState, useEffect } from "react";
-import { UserController } from "../../../../controllers/user.controller";
 import { MemoController } from "../../../../controllers/memo.controller";
 
 // FIXME -- the entire component function, remove `//@ts-nocheck` and fix issues
 const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSelected }) => {
   const [savedLocations, setSavedLocations] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
-  const [memos, setMemos] = useState({});
 
   const fetchData = async () => {
     try {
-      const data = await UserController.get_user_data(id);
-      fetchMemos(data.memos);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-    }
-  };
-
-  const fetchMemos = async (memoID) => {
-    try {
-      const fetchedMemos: { [key: string]: MemoType } = {};
-      const fetchedLocations: { [key: string]: [number, number] } = {};
       var locations: any[] = [{ name: "past locations" }];
-      for (const mid of memoID) {
-        const data = await MemoController.get_memo(id, mid);
-        fetchedMemos[mid] = data;
-        fetchedLocations[data.location.name] = data.location.coordinates;
-        locations.push({
-          name: data.location.name,
-          coordinates: data.location.coordinates,
-        });
+      const memoData = await MemoController.get_all_memos(id);
+      if(memoData){
+        for(const memo in memoData){
+          const existingIndex = locations.findIndex((location) => location.name === memoData[memo].location.name);
+          if (existingIndex === -1) {
+            locations.push({
+              name: memoData[memo].location.name,
+              coordinates: memoData[memo].location.coordinates,
+            });
+          }
+        }
       }
-      setMemos((prevMemos) => ({ ...prevMemos, ...fetchedMemos }));
       setSavedLocations(locations);
     } catch (error) {
-      console.error("Error fetching memos:", error);
+      console.error("Error fetching data:", error);
     }
   };
 
@@ -46,10 +34,9 @@ const SavedLocations = ({ id, reloadDropdown, onDropdownReloaded, onLocationSele
   const handleSelectChange = (event) => {
     const selectedValue = event.target.value;
     const selectedLocation = savedLocations.find((location) => location.name === selectedValue);
-
     if (selectedLocation) {
       const coordinates = selectedLocation.coordinates;
-      setSelectedLocation(coordinates);
+      setSelectedLocation(selectedLocation.name);
       // Pass the selected location coordinates to the parent component
       onLocationSelected(coordinates);
     }
