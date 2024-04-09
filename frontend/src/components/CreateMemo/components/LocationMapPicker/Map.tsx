@@ -64,7 +64,7 @@ const MapForm = (props:{
       key={position.toString()}
       center={position}
       zoom={13}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
       style={{ height: "400px", width: "100%" }}
     >
       <Markers />
