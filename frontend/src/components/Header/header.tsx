@@ -7,12 +7,12 @@ export default function Header() {
   const navigate = useNavigate();
 
   return (
-    <header className="flex flex-row justify-between mb-4">
+    <header className="flex flex-row justify-between mb-10">
       <Link
         to={"/dashboard"}
         className={` ${
           location === "/dashboard" ? "bg-white" : "hover:bg-white"
-        } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}
+        } button-link text-sky-800 bg-sky-100 w-1/4 p-2 border-sky-200 border-r-2 text-center rounded-lg`}
       >
         Dashboard
       </Link>
@@ -21,7 +21,7 @@ export default function Header() {
         to={"/lens"}
         className={`${
           location === "/lens" ? "bg-white" : "hover:bg-white"
-        } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}
+        } button-link text-sky-800 bg-sky-100 w-1/4 p-2 border-sky-200 border-r-2 text-center rounded-lg`}
       >
         Lens
       </Link>
@@ -30,7 +30,7 @@ export default function Header() {
         to={"/createMemo"}
         className={`${
           location === "/createMemo" ? "bg-white" : "hover:bg-white"
-        } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}
+        } button-link text-sky-800 bg-sky-100 w-1/4 p-2 border-sky-200 border-r-2 text-center rounded-lg`}
       >
         Create Memo
       </Link>
@@ -39,7 +39,7 @@ export default function Header() {
         to={"/profile"}
         className={`${
           location === "/profile" ? "bg-white" : "hover:bg-white"
-        } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}
+        } button-link text-sky-800 bg-sky-100 w-1/4 p-2 border-sky-200 border-r-2 text-center rounded-lg`}
       >
         Profile
       </Link>
@@ -54,7 +54,7 @@ export default function Header() {
               alert(e.message);
             });
         }}
-        className="button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg"
+        className="button-link text-sky-800 bg-sky-100 w-1/4 p-2 text-center rounded-lg"
       >
         Sign out
       </button>

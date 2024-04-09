@@ -65,7 +65,7 @@ const Lens: React.FC = () => {
   }, []);
 
   return (
-    <div className="lens w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
+    <div className="lens w-2/3 text-left m-auto mt-10 bg-sky-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-sky-300">
       <Header />
       <div id="lens-header" className="flex flex-row justify-between">
         <h1 className="text-blue-800 text-3xl mb-4">Lens</h1>
