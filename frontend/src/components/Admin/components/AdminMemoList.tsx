@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { MemoController } from "../../../controllers/memo.controller";
-// import { MemoType } from "../../../models/memo";
+import { MemoType } from "../../../models/memo";
 
 export default function AdminMemoList() {
-  const [allMemos, setAllMemos] = useState<any[]>([]);
+  const [allMemos, setAllMemos] = useState<MemoType[]>([]);
 
   useEffect(() => {
     MemoController.get_all()
@@ -43,13 +43,13 @@ export default function AdminMemoList() {
             {allMemos.map((memo) => (
               <tr key={memo._id}>
                 <td>{memo._id}</td>
-                <td>{memo.user_id}</td>
+                <td>{memo.uid}</td>
                 <td>{memo.name}</td>
                 <td>{memo.date}</td>
                 <td>
                   <button
                     className="text-blue-800 bg-blue-100 border-blue-800 border-2 rounded-lg"
-                    onClick={() => handleDeleteMemo(memo.user_id, memo._id)}
+                    onClick={() => handleDeleteMemo(memo.uid, memo._id)}
                   >
                     Delete
                   </button>

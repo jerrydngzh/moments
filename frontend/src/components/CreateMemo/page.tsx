@@ -32,7 +32,10 @@ const CreateMemo = ({}) => {
 
       if (!response.ok) {
         const data = await response.json();
-        console.error("Error fetching location name:", data.error || "Unknown error");
+        console.error(
+          "Error fetching location name:",
+          data.error || "Unknown error"
+        );
         return;
       }
 
@@ -41,7 +44,9 @@ const CreateMemo = ({}) => {
       if (data.display_name) {
         setLocationName(data.display_name);
       } else {
-        console.error("Error fetching location name: No display name in response");
+        console.error(
+          "Error fetching location name: No display name in response"
+        );
       }
     } catch (error) {
       console.error("Error fetching location name:", error);
@@ -53,6 +58,7 @@ const CreateMemo = ({}) => {
 
     // TODO: better naming convention for the memo object fields of location
     const memoToCreate: MemoType = {
+      uid: currentUser.uid,
       name: name,
       date: new Date().toString(),
       location: {
@@ -86,16 +92,23 @@ const CreateMemo = ({}) => {
       <Header />
 
       <form onSubmit={handleSubmit} onReset={handleReset}>
-        <h2 className="text-3xl font-bold mb-6 mt-6 text-blue-800">Creating New Memo</h2>
+        <h2 className="text-3xl font-bold mb-6 mt-6 text-blue-800">
+          Creating New Memo
+        </h2>
 
         <div className="map-container">
           <label htmlFor="location" className="text-xl text-blue-800">
             Location
           </label>
-          <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+          <link
+            rel="stylesheet"
+            href="https://unpkg.com/leaflet/dist/leaflet.css"
+          />
           <MapForm
             selectedLocation={selectedLocation}
-            onMapClick={(clickedLocation: [number, number]) => setCoordinates(clickedLocation)}
+            onMapClick={(clickedLocation: [number, number]) =>
+              setCoordinates(clickedLocation)
+            }
           />
         </div>
 
@@ -118,7 +131,7 @@ const CreateMemo = ({}) => {
         {/* Displays Saved Locations */}
         <SavedLocations
           reloadDropdown={reloadDropdown}
-          id={currentUser.uid}
+          uid={currentUser.uid}
           onDropdownReloaded={() => setReloadDropdown(false)}
           onLocationSelected={(location) => setSelectedLocation(location)}
         />

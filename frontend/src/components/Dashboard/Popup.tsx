@@ -1,7 +1,13 @@
-import { useState, useEffect } from 'react';
-import { MemoController } from '../../controllers/memo.controller';
+import { useState, useEffect } from "react";
+import { MemoController } from "../../controllers/memo.controller";
 
-const Popup = ({userID, selectedMemo, handleClose, handlePopupSubmit, Key }) => {
+const Popup = ({
+  userID,
+  selectedMemo,
+  handleClose,
+  handlePopupSubmit,
+  Key,
+}) => {
   const [reloadKey, setReloadKey] = useState(Key);
   const [editing, setEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(selectedMemo.name);
@@ -26,7 +32,7 @@ const Popup = ({userID, selectedMemo, handleClose, handlePopupSubmit, Key }) => 
     setEditing(false);
   };
 
-  const handleEditSubmit = async(newTitle, newMemo) => {
+  const handleEditSubmit = async (newTitle, newMemo) => {
     // For now, let's just log the new title and memo
     selectedMemo.name = newTitle;
     selectedMemo.description = newMemo;
@@ -35,13 +41,13 @@ const Popup = ({userID, selectedMemo, handleClose, handlePopupSubmit, Key }) => 
       description: selectedMemo.description,
       date: selectedMemo.date,
       name: selectedMemo.name,
-      location: selectedMemo.location
+      location: selectedMemo.location,
     };
 
-    try{
+    try {
       await MemoController.update_memo(userID, updatedMemo);
     } catch (error) {
-      console.error('Error updating memo:', error);
+      console.error("Error updating memo:", error);
     }
   };
 
@@ -62,12 +68,20 @@ const Popup = ({userID, selectedMemo, handleClose, handlePopupSubmit, Key }) => 
           <button onClick={handleSaveClick}>Save</button>
         </>
       ) : (
-      <>
-        <p><strong>Title:</strong> {selectedMemo.name}</p>
-        <p><strong>Memo:</strong> {selectedMemo.description}</p>
-        <p><strong>Location:</strong> {selectedMemo.location.name}</p>
-        <p><strong>Coordinates:</strong> {selectedMemo.location.coordinates}</p>
-        <button onClick={handleEditClick}>Edit</button>
+        <>
+          <p>
+            <strong>Title:</strong> {selectedMemo.name}
+          </p>
+          <p>
+            <strong>Memo:</strong> {selectedMemo.description}
+          </p>
+          <p>
+            <strong>Location:</strong> {selectedMemo.location.name}
+          </p>
+          <p>
+            <strong>Coordinates:</strong> {selectedMemo.location.coordinates}
+          </p>
+          <button onClick={handleEditClick}>Edit</button>
         </>
       )}
       <button onClick={handleClose}>Close</button>
