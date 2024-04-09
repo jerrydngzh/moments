@@ -23,28 +23,11 @@ export default function SignInPage() {
     }
   };
 
-  function BackButton() {
-    return (
-      <>
-        <button
-          onClick={() => navigate("/")}
-          className="bg-blue-100 text-blue-800 border-2 border-blue-800 w-1/3 mb-6"
-        >
-          Back
-        </button>
-      </>
-    );
-  }
-
-  {
-    /* FIXME: stying inputs */
-  }
   return (
-    <main className="Create-Profile w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
-      <BackButton />
+    <main className="Create-Profile w-1/3 text-left m-auto mt-10 bg-sky-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-sky-300">
       <form onSubmit={handleSubmit}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Log in</h2>
-        <label htmlFor="email" className="text-lg text-blue-800">
+        <h2 className="text-3xl font-bold mb-6 text-center text-sky-800">Log in</h2>
+        <label htmlFor="email" className="text-lg italic text-sky-800">
           Email:
           <input
             type="text"
@@ -55,7 +38,7 @@ export default function SignInPage() {
             onChange={(event) => setEmail(event.target.value)}
           />
         </label>
-        <label htmlFor="password" className="text-lg text-blue-800">
+        <label htmlFor="password" className="text-lg italic text-sky-800">
           Password:
           <input
             type="text"
@@ -67,18 +50,25 @@ export default function SignInPage() {
           />
         </label>
 
-        <div className="mt-8 text-blue-800">
+        <div className="mt-8 text-sky-800 flex">
+          <input
+            type="button"
+            value="Back"
+            disabled={loading}
+            onClick={() => navigate("/")}
+            className="h-10 bg-sky-100 hover:bg-sky-50"
+          />
           <input
             type="reset"
             value="Reset"
             disabled={loading}
-            className="mb-2 border-blue-800 h-10 hover:bg-blue-50"
+            className="h-10 bg-sky-100 hover:bg-sky-50 ml-2 mr-2"
           />
           <input
             type="submit"
             value="Submit"
             disabled={loading}
-            className="border-blue-800 h-10 hover:bg-blue-50"
+            className="h-10 bg-sky-100 hover:bg-sky-50"
           />
         </div>
       </form>
