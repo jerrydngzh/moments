@@ -3,8 +3,8 @@ import Header from "../Header/header";
 import { MemoController } from "../../controllers/memo.controller";
 import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 import "./style.css";
-import LocationList from "./components/LocationList/LocationList";
 import { MemoType } from "../../models/memo";
+import LocationItem from "./components/LocationItem/LocationItem";
 
 const Dashboard = () => {
   
@@ -35,6 +35,13 @@ const Dashboard = () => {
     return fetchedLocations;
   };
   
+  const [expandedLocations, setExpandedLocations] = useState({});
+  const handleLocationClick = (locationName) => {
+    setExpandedLocations({
+      ...expandedLocations,
+      [locationName]: !expandedLocations[locationName],
+    });
+  };
 
   const handleDeleteMemo = async (
     memo: any,
@@ -61,11 +68,18 @@ const Dashboard = () => {
       <Header />
 
       <h1 className="text-blue-800 mb-6">Memo Dashboard</h1>
-
-      <LocationList
-        locations={getLocations(memos)}
-        handleDeleteMemo={handleDeleteMemo}
-      />
+      <h2 className="text-blue-800 text-lg">Locations</h2>
+      {Object.keys(getLocations(memos)).map((locationName) => (
+        <LocationItem
+          key={locationName}
+          locationName={locationName}
+          expanded={expandedLocations[locationName]}
+          handleLocationClick={handleLocationClick}
+          memos={getLocations(memos)[locationName]}
+          handleDeleteMemo={handleDeleteMemo}
+         />
+      ))}
+      
         
     </div>
   );

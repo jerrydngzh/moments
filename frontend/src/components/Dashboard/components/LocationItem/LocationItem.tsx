@@ -1,4 +1,4 @@
-import MemoList from "../MemoList/MemoList";
+import MemoItem from "../MemoItem/MemoItem";
 
 const LocationItem = (props:{ 
     locationName:string,
@@ -10,7 +10,13 @@ const LocationItem = (props:{
   return (
     <div className="location-box" onClick={() => props.handleLocationClick(props.locationName)}>
       <h3>{props.locationName}</h3>
-      {props.expanded && <MemoList memos={props.memos} handleDeleteMemo={props.handleDeleteMemo} locationName={props.locationName}/>}
+      {props.expanded && (
+        <div className="memo-box">
+            {props.memos.map((memo, index) => (
+                <MemoItem key={index} memo={memo} handleDeleteMemo={props.handleDeleteMemo} locationName={props.locationName}/>
+            ))}
+        </div>
+    )}
     </div>
   );
 };
