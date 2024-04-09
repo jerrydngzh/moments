@@ -7,16 +7,12 @@ const profileSchema = new mongoose.Schema({
   },
   bio: {
     type: String,
-    default: ''
+    default: "",
   },
   status_message: {
     type: String,
-    default: ''
+    default: "",
   },
-  profile_picture: {
-    type: String, // Assuming profile picture will be stored as a URL
-    default: '' // You can set a default URL for a default profile picture if needed
-  }
 });
 
 module.exports = mongoose.model("Profile", profileSchema);
