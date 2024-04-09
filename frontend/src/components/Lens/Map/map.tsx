@@ -1,16 +1,13 @@
-// @ts-nocheck
-// it definitely works, but react-leaflet is being goofy with the errors -V
-
-import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import React from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
 interface Location {
   coordinates: [number, number];
-  memo: { 
-    description: string; 
-    title: string; 
-    date: string; 
-    location: string; 
+  memo: {
+    description: string;
+    title: string;
+    date: string;
+    location: string;
   }[];
 }
 
@@ -23,17 +20,18 @@ const ChangeView = ({ center }) => {
   const map = useMap();
   map.setView(center, map.getZoom());
   return null;
-}
+};
 
 const Map: React.FC<MapProps> = ({ locations, view }) => {
-  const center = locations.length > 0 ? locations[0].coordinates : [49.27326489299744, -123.10365200042726];
-  const zoom = view === 'map' ? 10 : 13;
+  const center: [number, number] =
+    locations.length > 0 ? locations[0].coordinates : [49.27326489299744, -123.10365200042726];
+  const zoom = view === "map" ? 10 : 13;
 
   return (
     <MapContainer
       center={center}
       zoom={zoom}
-      style={{ height: '500px', width: '100%', borderRadius: '10px'}}
+      style={{ height: "500px", width: "100%", borderRadius: "10px" }}
     >
       <ChangeView center={center} />
       <TileLayer
