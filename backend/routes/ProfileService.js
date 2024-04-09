@@ -39,14 +39,14 @@ router.put("/:uid", async (req, res, next) => {
       bio: req.body.bio !== undefined ? req.body.bio : "",
       status_message:
         req.body.status_message !== undefined ? req.body.status_message : "",
-      profile_picture:
-        req.body.profile_picture !== undefined
-          ? req.body.profile_picture
-          : "",
     };
     const options = { new: true, upsert: true };
 
-    const updatedProfile = await Profile.findOneAndUpdate(filter, update, options);
+    const updatedProfile = await Profile.findOneAndUpdate(
+      filter,
+      update,
+      options
+    );
 
     res.status(200).json(updatedProfile);
   } catch (err) {
