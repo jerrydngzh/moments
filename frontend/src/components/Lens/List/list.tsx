@@ -24,10 +24,10 @@ const List: React.FC<MapProps> = ({ locations }) => {
 
   const sortStates = ["title-asc", "title-desc", "date-asc", "date-desc"]; // array of sort states
   const sortStateDescriptions = {
-    "title-asc": "Title (Ascending)",
-    "title-desc": "Title (Descending)",
-    "date-asc": "Date (Ascending)",
-    "date-desc": "Date (Descending)",
+    "title-asc": "Title (A-Z)",
+    "title-desc": "Title (Z-A)",
+    "date-asc": "Date (Old-New)",
+    "date-desc": "Date (New-Old)",
   };
 
   const handleListItemClick = (memo) => {
@@ -59,10 +59,13 @@ const List: React.FC<MapProps> = ({ locations }) => {
 
   return (
     <>
-      <div className="text-blue-800 bg-blue-100 hover:bg-white w-1/2 mb-2 p-2 text-center rounded-lg">
-        <button onClick={handleSortButtonClick}>
-          Sort Memos: {sortStateDescriptions[sortStates[sortStateIndex]]}
+      <div className="text-sky-800 mb-4">
+        <button onClick={handleSortButtonClick} className="bg-sky-100 hover:bg-sky-50 mb-2 text-center rounded-lg">
+          Sort Memos
         </button>
+        <span className="ml-4 italic">
+          Order: {sortStateDescriptions[sortStates[sortStateIndex]]}
+        </span>
       </div>
       {memosToDisplay.map((location, locIndex) => (
         <ul key={locIndex}>
@@ -71,7 +74,7 @@ const List: React.FC<MapProps> = ({ locations }) => {
               <li
                 key={memoIndex}
                 onClick={() => handleListItemClick(memo)}
-                className="rounded-lg p-2 cursor-pointer"
+                className="rounded-lg p-2 cursor-pointer bg-sky-50 hover:bg-white text-sky-950"
               >
                 <h2 className="font-bold font-lg">{memo.title}</h2>
               </li>

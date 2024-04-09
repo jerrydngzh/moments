@@ -82,14 +82,14 @@ const CreateMemo = ({}) => {
   }, [coordinates]);
 
   return (
-    <main className="create-memo w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
+    <main className="create-memo w-2/3 text-left m-auto mt-10 bg-sky-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-sky-300">
       <Header />
 
       <form onSubmit={handleSubmit} onReset={handleReset}>
-        <h2 className="text-3xl font-bold mb-6 mt-6 text-blue-800">Creating New Memo</h2>
+        <h2 className="text-3xl font-bold mb-6 mt-6 text-sky-800">New Memo</h2>
 
         <div className="map-container">
-          <label htmlFor="location" className="text-xl text-blue-800">
+          <label htmlFor="location" className="text-xl text-sky-800">
             Location
           </label>
           <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -101,7 +101,7 @@ const CreateMemo = ({}) => {
 
         {/* Map-Location Name Label */}
         <div className="input-container">
-          <label htmlFor="locationName" className="text-xl text-blue-800">
+          <label htmlFor="locationName" className="text-xl text-sky-800">
             Location Name
             <input
               type="text"
@@ -125,7 +125,7 @@ const CreateMemo = ({}) => {
 
         {/* Title for Memo */}
         <div className="input-container">
-          <label htmlFor="name" className="text-xl text-blue-800">
+          <label htmlFor="name" className="text-xl text-sky-800">
             Title
             <input
               type="text"
@@ -141,7 +141,7 @@ const CreateMemo = ({}) => {
 
         {/* Description for the Memo */}
         <div className="input-container">
-          <label htmlFor="memo" className="text-xl text-blue-800">
+          <label htmlFor="memo" className="text-xl text-sky-800">
             Memo
             <textarea
               id="memo"
@@ -155,14 +155,14 @@ const CreateMemo = ({}) => {
         </div>
 
         {/* Button Nav Bar */}
-        <div className="button-container ">
+        <div className="mt-8 text-xl text-sky-800 flex">
           <input
-            className="border-2 border-blue-800 w-full text-xl text-blue-800 h-14 mb-2 mt-8 bg-blue-100 hover:bg-white rounded-xl"
+            className="border-r-2 border-sky-200 h-14 bg-sky-100 hover:bg-sky-50 rounded-xl"
             type="reset"
             value="Reset"
           />
           <input
-            className="border-2 border-blue-800 w-full text-xl text-blue-800 h-14 mb-8 bg-blue-100 hover:bg-white rounded-xl"
+            className="border-l-2 border-sky-200 h-14 bg-sky-100 hover:bg-sky-50 rounded-xl"
             type="submit"
             value="Submit"
           />

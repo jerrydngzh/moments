@@ -48,7 +48,7 @@ const MemoCalendar: React.FC<MapProps> = ({ locations }) => {
 
   return (
     <>
-      <div className="bg-blue-50 mt-4 mb-8 p-8 rounded-xl">
+      <div className="bg-sky-50 mt-4 mb-8 p-8 rounded-xl">
         <Calendar
           key={key}
           onChange={handleDateChange}
@@ -65,19 +65,19 @@ const MemoCalendar: React.FC<MapProps> = ({ locations }) => {
       <button onClick={() => {
         setValue(new Date());
         setKey(Date.now());
-      }} className="mt-4 border-blue-900 bg-blue-50">
+      }} className="mt-4 bg-sky-200">
         Back to Current Date
       </button>
       </div>
       {isMemoOpen && (
-        <div className="mb-2">
+        <div className="mb-2 text-sky-800 italic">
           <h2>Selected Date: {value.toDateString()}</h2>
         </div>
       )}
       <ul>
         {isMemoOpen &&
           selectedDateMemos.map((memo, index) => (
-            <li key={index} style={{ cursor: 'default', backgroundColor: '#EFF6FF'}}>
+            <li key={index} style={{ cursor: 'default', fontWeight: 'bold', backgroundColor: '#f0f9ff'}}>
               {memo.title}
             </li>
           ))}

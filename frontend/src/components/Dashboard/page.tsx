@@ -66,11 +66,11 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
+    <div className="w-2/3 text-left m-auto mt-10 bg-sky-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-sky-300">
       <Header />
 
-      <h1 className="text-blue-800 mb-6">Memo Dashboard</h1>
-      <h2 className="text-blue-800 text-lg">Locations</h2>
+      <h1 className="text-sky-800 mb-6">Memo Dashboard</h1>
+      <h2 className="text-sky-800 text-lg">Locations</h2>
       {Object.keys(getLocations(memos)).map((locationName) => (
         <LocationItem
           key={locationName}
