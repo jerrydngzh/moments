@@ -1,11 +1,12 @@
+import { MemoType } from "../../../../models/memo";
 import MemoItem from "../MemoItem/MemoItem";
 
 const LocationItem = (props:{ 
     locationName:string,
     expanded:boolean,
     handleLocationClick:(locationName:string) => void,
-    memos:[],
-    handleDeleteMemo:(memo:any,event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => void}
+    memos:MemoType[],
+    handleDeleteMemo:(memo:MemoType,event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => void}
     ) => {
   return (
     <div className="location-box" onClick={() => props.handleLocationClick(props.locationName)}>

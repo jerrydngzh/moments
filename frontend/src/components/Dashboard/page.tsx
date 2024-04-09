@@ -8,7 +8,7 @@ import LocationItem from "./components/LocationItem/LocationItem";
 
 const Dashboard = () => {
   
-  const [memos, setMemos] = useState([]);
+  const [memos, setMemos] = useState<MemoType[]>([]);
   const { currentUser } = useFirebaseAuth();
 
   const fetchData = async () => {
@@ -23,9 +23,11 @@ const Dashboard = () => {
     }
 
   };
-  const getLocations = (memoList:MemoType[]) => {
+  const getLocations = (memoList:any[]) => {
     const fetchedLocations = {};
     memoList.forEach((memo) => {
+      memo.id = memo._id;
+      console.log(memo);
       if (fetchedLocations[memo.location.name]) {
         fetchedLocations[memo.location.name].push(memo);
       } else {
@@ -44,14 +46,14 @@ const Dashboard = () => {
   };
 
   const handleDeleteMemo = async (
-    memo: any,
+    memo: MemoType,
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    const newMemos = memos.filter((m) => m._id !== memo._id);
+    const newMemos = memos.filter((m) => m.id !== memo.id);
     setMemos(newMemos);
     event.stopPropagation();
     try {
-      await MemoController.delete_memo(currentUser.uid, memo._id);
+      await MemoController.delete_memo(currentUser.uid, memo.id);
       // Update memos state by removing the deleted memo
       
     } catch (error) {

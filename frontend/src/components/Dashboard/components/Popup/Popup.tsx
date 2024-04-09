@@ -1,17 +1,24 @@
 import { useState, useEffect } from 'react';
 import { MemoController } from '../../../../controllers/memo.controller';
+import { MemoType } from '../../../../models/memo';
+import { useFirebaseAuth } from "../../../../contexts/FirebaseAuth.context";
 
-const Popup = ({userID, selectedMemo, handleClose, Key }) => {
-  const [reloadKey, setReloadKey] = useState(Key);
+const Popup = (props:{
+  onClick: React.MouseEventHandler<HTMLDivElement>, 
+  selectedMemo:MemoType, 
+  handleClose:(event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => void, 
+  Key:boolean }) => {
+  const [reloadKey, setReloadKey] = useState(props.Key);
   const [editing, setEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(selectedMemo.name);
-  const [editedMemo, setEditedMemo] = useState(selectedMemo.description);
+  const [editedTitle, setEditedTitle] = useState(props.selectedMemo.name);
+  const [editedMemo, setEditedMemo] = useState(props.selectedMemo.description);
+  const {currentUser} = useFirebaseAuth();
 
   useEffect(() => {
     if (reloadKey) {
       setReloadKey(false);
     }
-  }, [reloadKey, selectedMemo]);
+  }, [reloadKey, props.selectedMemo]);
 
   const handleEditClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
@@ -27,25 +34,25 @@ const Popup = ({userID, selectedMemo, handleClose, Key }) => {
 
   const handleEditSubmit = async(newTitle, newMemo) => {
     // For now, let's just log the new title and memo
-    selectedMemo.name = newTitle;
-    selectedMemo.description = newMemo;
+    props.selectedMemo.name = newTitle;
+    props.selectedMemo.description = newMemo;
     const updatedMemo = {
-      id: selectedMemo._id,
-      description: selectedMemo.description,
+      id: props.selectedMemo.id,
+      description: props.selectedMemo.description,
       date: new Date().toLocaleString(),
-      name: selectedMemo.name,
-      location: selectedMemo.location
+      name: props.selectedMemo.name,
+      location: props.selectedMemo.location
     };
 
     try{
-      await MemoController.update_memo(userID, updatedMemo);
+      await MemoController.update_memo(currentUser.uid, updatedMemo);
     } catch (error) {
       console.error('Error updating memo:', error);
     }
   };
 
   return (
-    <div className="popup">
+    <div className="popup" onClick={props.onClick}>
       <h2>Memo Details</h2>
       {editing ? (
         <>
@@ -69,14 +76,14 @@ const Popup = ({userID, selectedMemo, handleClose, Key }) => {
         </>
       ) : (
       <>
-        <p><strong>Title:</strong> {selectedMemo.name}</p>
-        <p><strong>Location:</strong> {selectedMemo.location.name}</p>
-        <p><strong>Date:</strong> {selectedMemo.date}</p>
-        <p><strong>Memo:</strong> {selectedMemo.description}</p>
+        <p><strong>Title:</strong> {props.selectedMemo.name}</p>
+        <p><strong>Location:</strong> {props.selectedMemo.location.name}</p>
+        <p><strong>Date:</strong> {props.selectedMemo.date}</p>
+        <p><strong>Memo:</strong> {props.selectedMemo.description}</p>
         <button onClick={(event) => handleEditClick(event)}>Edit</button>
         </>
       )}
-      <button onClick={handleClose}>Close</button>
+      <button onClick={props.handleClose}>Close</button>
     </div>
   );
 };

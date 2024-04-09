@@ -1,22 +1,24 @@
 import { useState } from "react";
 import Popup from "../Popup/Popup";
-import { useFirebaseAuth } from "../../../../contexts/FirebaseAuth.context";
 import "./MemoItem.css"
+import { MemoType } from "../../../../models/memo";
 
 const MemoItem = (props:{ 
-    memo:any, 
-    handleDeleteMemo:(memo:any,event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => void, 
+    memo:MemoType, 
+    handleDeleteMemo:(memo:MemoType,event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => void, 
     locationName:string 
      }) => {
         const [showPopup, setShowPopup] = useState(false);
-        const {currentUser} = useFirebaseAuth();
         const handleMemoClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             event.stopPropagation();
             setShowPopup(true);
         };        
-        const closePopup = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        const closePopup = (event:React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             event.stopPropagation();
             setShowPopup(false);
+        }
+        const clickPopup = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            event.stopPropagation();
         }
   return (
     <div className="memo-item">
@@ -27,11 +29,11 @@ const MemoItem = (props:{
       
       {showPopup && (
         <Popup
-          key={props.memo._id}
-          userID={currentUser.uid}
-          selectedMemo={props.memo}
-          handleClose={(event) => closePopup(event)}
-          Key={true}
+            onClick={(event) => clickPopup(event)}
+            key={props.memo.id}
+            selectedMemo={props.memo}
+            handleClose={(event) => closePopup(event)}
+            Key={true}
         />
         )}
     </div>
