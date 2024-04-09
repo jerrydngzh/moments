@@ -2,7 +2,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 
 export default function Header() {
-  const { firebaseSignOut } = useFirebaseAuth();
+  const { firebaseSignOut, isAdmin } = useFirebaseAuth();
   const location = useLocation().pathname;
   const navigate = useNavigate();
 
@@ -43,6 +43,23 @@ export default function Header() {
       >
         Profile
       </Link>
+
+      {isAdmin() ? (
+        <>
+          {" "}
+          <Link
+            to={"/admin"}
+            className={` ${
+              location === "/admin" ? "bg-white" : "hover:bg-white"
+            } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-lg`}
+          >
+            Admin Tools
+          </Link>
+        </>
+      ) : (
+        <></>
+      )}
+
       <button
         onClick={async () => {
           firebaseSignOut()

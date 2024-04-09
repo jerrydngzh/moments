@@ -36,7 +36,7 @@ const Table: React.FC<MapProps> = ({ locations }) => {
             location.memo.map((memo, memoIndex) => (
               <tr key={`${locIndex}-${memoIndex}`} className="bg-sky-100">
                 <td className="px-16 py-2 font-bold">{memo.title}</td>
-                <td className="px-16 py-2">{memo.description}</td>
+                <td className="px-16 py-2">{memo.location}</td>
                 <td className="px-16 py-2">{memo.date}</td>
               </tr>
             ))
