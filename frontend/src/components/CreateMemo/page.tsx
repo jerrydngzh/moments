@@ -12,9 +12,15 @@ const CreateMemo = ({}) => {
   const navigate = useNavigate();
   const { currentUser } = useFirebaseAuth();
 
-  const handleSubmit = async ( name:string, description:string, locationName:string, coordinates:[number,number] ) => {
+  const handleSubmit = async (
+    name: string,
+    description: string,
+    locationName: string,
+    coordinates: [number, number]
+  ) => {
     console.log(coordinates);
     const memoToCreate: MemoType = {
+      uid: currentUser.uid,
       name: name,
       date: new Date().toLocaleString(),
       location: {

@@ -5,8 +5,6 @@ import axios from "axios";
 import { UserType } from "../models/user";
 
 export class UserController {
-  // TODO: Change how errors are handled in frontend, currently just logs error
-
   static async get_all() {
     const response = await axios({
       method: "get",
@@ -16,10 +14,10 @@ export class UserController {
     return response.data;
   }
 
-  static async get_user_data(user_id: string) {
+  static async get_user_data(uid: string) {
     const response = await axios({
       method: "get",
-      url: `${backendAPI}/${user_id}`,
+      url: `${backendAPI}/${uid}`,
     });
 
     return response.data;
@@ -36,10 +34,10 @@ export class UserController {
     return response.data;
   }
 
-  static async update_user(user_id: string, user: UserType) {
+  static async update_user(uid: string, user: UserType) {
     const response = await axios({
       method: "put",
-      url: `${backendAPI}/${user_id}`,
+      url: `${backendAPI}/${uid}`,
       data: user,
     });
 
@@ -47,10 +45,10 @@ export class UserController {
     return response.data;
   }
 
-  static async delete_user(user_id: string) {
+  static async delete_user(uid: string) {
     const response = await axios({
       method: "delete",
-      url: `${backendAPI}/${user_id}`,
+      url: `${backendAPI}/${uid}`,
     });
 
     console.log(response);

@@ -7,7 +7,6 @@ import { MemoType } from "../../models/memo";
 import LocationItem from "./components/LocationItem/LocationItem";
 
 const Dashboard = () => {
-  
   const [memos, setMemos] = useState<MemoType[]>([]);
   const { currentUser } = useFirebaseAuth();
 
@@ -15,15 +14,14 @@ const Dashboard = () => {
     try {
       const memoData = await MemoController.get_all_memos(currentUser.uid);
       setMemos(memoData);
-    } catch (error) {  
+    } catch (error) {
       if (error.response && error.response.status === 404) {
-        return; 
+        return;
       }
       console.error("Server Error:", error);
     }
-
   };
-  const getLocations = (memoList:any[]) => {
+  const getLocations = (memoList: any[]) => {
     const fetchedLocations = {};
     memoList.forEach((memo) => {
       memo.id = memo._id;
@@ -36,7 +34,7 @@ const Dashboard = () => {
     });
     return fetchedLocations;
   };
-  
+
   const [expandedLocations, setExpandedLocations] = useState({});
   const handleLocationClick = (locationName) => {
     setExpandedLocations({
@@ -49,13 +47,12 @@ const Dashboard = () => {
     memo: MemoType,
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    const newMemos = memos.filter((m) => m.id !== memo.id);
+    const newMemos = memos.filter((m) => m._id !== memo._id);
     setMemos(newMemos);
     event.stopPropagation();
     try {
-      await MemoController.delete_memo(currentUser.uid, memo.id);
+      await MemoController.delete_memo(currentUser.uid, memo._id);
       // Update memos state by removing the deleted memo
-      
     } catch (error) {
       console.error("Error deleting memo:", error);
     }
@@ -79,10 +76,8 @@ const Dashboard = () => {
           handleLocationClick={handleLocationClick}
           memos={getLocations(memos)[locationName]}
           handleDeleteMemo={handleDeleteMemo}
-         />
+        />
       ))}
-      
-        
     </div>
   );
 };

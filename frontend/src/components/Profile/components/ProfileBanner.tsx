@@ -5,10 +5,10 @@ import { UserType } from "../../../models/user";
 export default function ProfileBanner({ id }) {
   const [userData, setUserData] = useState<UserType>({
     uid: "",
-    email: "",
     username: "",
     first_name: "",
     last_name: "",
+    email: "",
   });
 
   useEffect(() => {

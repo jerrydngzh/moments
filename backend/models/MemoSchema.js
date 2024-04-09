@@ -12,6 +12,12 @@ const locationSchema = new mongoose.Schema({
 });
 
 const memoSchema = new mongoose.Schema({
+  // _id uniquely idenfities a memo object
+  // uid is the identifier for the user who created it
+  uid: {
+    type: String,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -27,20 +33,6 @@ const memoSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
-  },
-  user_id: {
-    type: String,
-    required: true,
-  },
-
-  // NOTE: Iteration 2
-  media: {
-    type: [String],
-    default: [],
-  },
-  tags: {
-    type: [String],
-    default: [],
   },
 });
 const Memo = mongoose.model("Memo", memoSchema);

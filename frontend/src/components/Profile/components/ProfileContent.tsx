@@ -7,7 +7,6 @@ export default function ProfileContent({ id }) {
     uid: "",
     bio: "",
     status_message: "",
-    profile_picture: "",
   });
   const [editMode, setEditMode] = useState(false);
 

@@ -15,19 +15,19 @@ export class ProfileController {
     return response.data;
   }
 
-  static async get(user_id: string) {
+  static async get(uid: string) {
     const response = await axios({
       method: "get",
-      url: `${backendAPI}/${user_id}`,
+      url: `${backendAPI}/${uid}`,
     });
 
     return response.data;
   }
 
-  static async update(user_id: string, user: ProfileType) {
+  static async update(uid: string, user: ProfileType) {
     const response = await axios({
       method: "put",
-      url: `${backendAPI}/${user_id}`,
+      url: `${backendAPI}/${uid}`,
       data: user,
     });
 
