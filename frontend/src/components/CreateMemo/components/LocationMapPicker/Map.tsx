@@ -3,27 +3,29 @@ import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import L from "leaflet";
 import markerIcon from "/images/marker-icon.png";
-const MapForm = ({ selectedLocation, onMapClick }: any) => {
-  const [initialPosition, setInitialPosition] = useState([49.27326489299744, -123.10365200042726]);
-  const [position, setPosition] = useState(initialPosition);
+
+const MapForm = (props:{ 
+    selectedLocation:string, 
+    onMapClick:([number,number])=>void
+  }) => {
+  const [position, setPosition] = useState<[number,number]>([49.27326489299744, -123.10365200042726]);
 
   const customMarkerIcon = new L.Icon({
     iconUrl: markerIcon,
     iconSize: [32, 32], // Adjust the size of your marker icon as needed
   });
+  
   useEffect(() => {
-    if (selectedLocation) {
+    if (props.selectedLocation) {
       // set selected location as current lcoation
-      setPosition(selectedLocation);
-      setInitialPosition(selectedLocation);
-      addMarkerAndNavigate(selectedLocation);
+      setPosition(props.selectedLocation);
+      addMarkerAndNavigate(props.selectedLocation);
     }
-  }, [selectedLocation]);
+  }, [props.selectedLocation]);
 
-  const addMarkerAndNavigate = (location: any) => {
+  const addMarkerAndNavigate = (location: string) => {
     setPosition(location); // Set new location
-    onMapClick(location); // Trigger the map click event
-    setInitialPosition(location);
+    props.onMapClick(location); // Trigger the map click event
   };
 
   const Markers = () => {
@@ -31,8 +33,7 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
       click(e) {
         const clickedLocation = [e.latlng.lat, e.latlng.lng];
         setPosition(clickedLocation); // Add new position to the array
-        onMapClick(clickedLocation);
-        setInitialPosition(clickedLocation);
+        props.onMapClick(clickedLocation);
       },
     });
 
@@ -45,8 +46,7 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
           dragend: (e) => {
             const newPosition = [e.target.getLatLng().lat, e.target.getLatLng().lng];
             setPosition(newPosition);
-            setInitialPosition(newPosition);
-            onMapClick(newPosition);
+            props.onMapClick(newPosition);
           },
         }}
       ></Marker>
@@ -58,7 +58,7 @@ const MapForm = ({ selectedLocation, onMapClick }: any) => {
       key={position.toString()}
       center={position}
       zoom={13}
-      scrollWheelZoom={false}
+      scrollWheelZoom={true}
       style={{ height: "400px", width: "100%" }}
     >
       <Markers />
