@@ -1,0 +1,27 @@
+.memo-item {
+    margin-bottom: 10px; 
+    background-color: white;
+    padding: 10px; 
+    border-radius: 5px; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+    margin-bottom: 10px; 
+}
+
+.memo-content {
+    display: flex;
+    align-items: center;
+
+}
+
+.memo-name {
+    flex-grow: 1; 
+}
+
+.delete-button {
+    background-color: red; 
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-left: 10px; 
+}
