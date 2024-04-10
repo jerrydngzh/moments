@@ -11,26 +11,21 @@ export class MemoController {
   }
 
   static async get_all_memos(uid: string): Promise<MemoType[]> {
-    console.log("get_all_memos user:", uid);
     const result = await axios.get(`${backendAPI}/${uid}`);
     return result.data;
   }
 
-  static async get_memo(uid: string, mid: string) {
+  static async get_memo(uid: string, mid: string): Promise<MemoType> {
     const result = await axios.get(`${backendAPI}/${uid}/${mid}`);
     return result.data;
   }
 
   static async create_memo(uid: string, memo: MemoType) {
-    console.log(memo);
-
     const response = await axios({
       method: "post",
       url: `${backendAPI}/${uid}`,
       data: memo,
     });
-
-    console.log(response.data);
 
     return response.data;
   }

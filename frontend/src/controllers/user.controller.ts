@@ -30,7 +30,6 @@ export class UserController {
       data: user,
     });
 
-    console.log(response.data);
     return response.data;
   }
 
@@ -41,7 +40,6 @@ export class UserController {
       data: user,
     });
 
-    console.log(response.data);
     return response.data;
   }
 
@@ -51,7 +49,6 @@ export class UserController {
       url: `${backendAPI}/${uid}`,
     });
 
-    console.log(response);
     return response;
   }
 }

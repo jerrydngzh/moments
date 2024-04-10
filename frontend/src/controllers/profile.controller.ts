@@ -11,7 +11,6 @@ export class ProfileController {
       url: `${backendAPI}/`,
     });
 
-    console.log(response.data);
     return response.data;
   }
 
@@ -31,7 +30,6 @@ export class ProfileController {
       data: user,
     });
 
-    console.log(response.data);
     return response.data;
   }
 }

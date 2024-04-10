@@ -22,8 +22,7 @@ export default function ProfileContent({ id }) {
 
   const handleUpdateProfile = () => {
     ProfileController.update(id, profileData)
-      .then((data) => {
-        console.log("Profile updated successfully: ", data);
+      .then(() => {
         setEditMode(false);
       })
       .catch((e) => {
@@ -72,9 +71,7 @@ export default function ProfileContent({ id }) {
         </>
       ) : (
         <>
-          <p className="italic text-blue-800">
-            Current Status: {profileData.status_message}
-          </p>
+          <p className="italic text-blue-800">Current Status: {profileData.status_message}</p>
           <p className="italic text-blue-800">User Bio: {profileData.bio}</p>
           <button
             onClick={() => setEditMode(true)}
