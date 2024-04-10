@@ -40,6 +40,7 @@ const MapForm = (props:{
       <Marker
         position={position}
         draggable={true}
+        icon={customMarkerIcon}
         eventHandlers={{
           dragend: (e) => {
             const newPosition = [e.target.getLatLng().lat, e.target.getLatLng().lng];

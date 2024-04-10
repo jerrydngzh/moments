@@ -42,13 +42,10 @@ export default function ProfileContent({ id }) {
     <>
       {editMode ? (
         <>
-          <input
-            type="text"
-            name="bio"
-            value={profileData.bio}
-            onChange={handleChange}
-            className="mb-2"
-          />
+
+          <div className="font-bold text-sky-800">
+            Current Status:
+          </div>
           <input
             type="text"
             name="status_message"
@@ -56,15 +53,25 @@ export default function ProfileContent({ id }) {
             onChange={handleChange}
             className="mb-2"
           />
+          <div className="font-bold text-sky-800">
+            User Bio:
+          </div>
+          <input
+            type="text"
+            name="bio"
+            value={profileData.bio}
+            onChange={handleChange}
+            className="mb-2"
+          />
           <button
             onClick={() => setEditMode(false)}
-            className="button-link text-blue-800 bg-blue-100 border-blue-800 border-2 p-2 text-center rounded-lg"
+            className="button-link text-sky-800 bg-sky-100 p-2 mr-2 text-center rounded-lg"
           >
             Cancel
           </button>
           <button
             onClick={handleUpdateProfile}
-            className="button-link text-blue-800 bg-blue-100 border-blue-800 border-2 p-2 text-center rounded-lg"
+            className="button-link text-sky-800 bg-sky-100 p-2 text-center rounded-lg"
           >
             Update Profile
           </button>
