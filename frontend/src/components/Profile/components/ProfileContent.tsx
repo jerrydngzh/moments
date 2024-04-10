@@ -72,13 +72,15 @@ export default function ProfileContent({ id }) {
         </>
       ) : (
         <>
-          <p className="italic text-blue-800">
-            Current Status: {profileData.status_message}
+          <p className="italic text-sky-800">
+            <span className="font-bold">Current Status: </span>{profileData.status_message}
           </p>
-          <p className="italic text-blue-800">User Bio: {profileData.bio}</p>
+          <p className="italic text-sky-800">
+            <span className="font-bold">User Bio: </span>{profileData.bio}
+          </p>
           <button
             onClick={() => setEditMode(true)}
-            className="button-link text-blue-800 bg-blue-100 border-blue-800 border-2 p-2 text-center rounded-lg"
+            className="button-link text-sky-800 bg-sky-100 hover:bg-sky-50 p-2 mt-2 text-center rounded-lg"
           >
             Edit Profile
           </button>

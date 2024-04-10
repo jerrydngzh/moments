@@ -12,7 +12,6 @@ const MapForm = (props:{
 
   const customMarkerIcon = new L.Icon({
     iconUrl: markerIcon,
-    iconSize: [32, 32], // Adjust the size of your marker icon as needed
   });
   
   useEffect(() => {

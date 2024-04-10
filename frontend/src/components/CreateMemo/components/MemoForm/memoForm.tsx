@@ -104,8 +104,8 @@ const MemoForm = (props:{
 
         {/* Title for Memo */}
         <div className="input-container mt-4">
-            <label htmlFor="name" className="text-xl text-sky-800">
-            Title
+            <label htmlFor="name" className="text-xl">
+            <span className="text-sky-800">Title</span>
             <input
                 type="text"
                 id="name"
@@ -120,12 +120,12 @@ const MemoForm = (props:{
 
         {/* Description for the Memo */}
         <div className="input-container">
-            <label htmlFor="memo" className="text-xl text-sky-800">
-            Memo
+            <label htmlFor="memo" className="text-xl">
+            <span className="text-sky-800">Memo</span>
             <textarea
                 id="memo"
                 name="memo"
-                className="memo bg-white"
+                className="memo"
                 required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
