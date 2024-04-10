@@ -28,15 +28,19 @@ export default function ProfileBanner({ id }) {
       {/* TODO: Extract user data section to component */}
       <img
         src={`https://ui-avatars.com/api/?name=${userData.first_name}+${userData.last_name}&size=128`}
+        className="rounded-2xl mb-4"
       ></img>
       <p className="italic text-sky-800">
-        <span className="font-bold">Name: </span>{userData.first_name} {userData.last_name}
+        <span className="font-bold">Name: </span>
+        {userData.first_name} {userData.last_name}
       </p>
       <p className="italic text-sky-800">
-        <span className="font-bold">Username: </span>{userData.username}
+        <span className="font-bold">Username: </span>
+        {userData.username}
       </p>
       <p className="italic text-sky-800">
-        <span className="font-bold">Email: </span>{userData.email}
+        <span className="font-bold">Email: </span>
+        {userData.email}
       </p>
     </>
   );

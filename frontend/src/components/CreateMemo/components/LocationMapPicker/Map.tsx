@@ -2,18 +2,17 @@
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import L from "leaflet";
-import markerIcon from "/images/marker-icon.png";
+import markerIcon from "../../../../assets/images/marker-icon.png";
 
-const MapForm = (props:{ 
-    selectedLocation:string, 
-    onMapClick:([number,number])=>void
-  }) => {
-  const [position, setPosition] = useState<[number,number]>([49.27326489299744, -123.10365200042726]);
+const MapForm = (props: { selectedLocation: string; onMapClick: ([number, number]) => void }) => {
+  const [position, setPosition] = useState<[number, number]>([
+    49.27326489299744, -123.10365200042726,
+  ]);
 
   const customMarkerIcon = new L.Icon({
     iconUrl: markerIcon,
   });
-  
+
   useEffect(() => {
     if (props.selectedLocation) {
       // set selected location as current lcoation

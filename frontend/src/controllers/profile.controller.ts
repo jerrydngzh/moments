@@ -1,8 +1,7 @@
 import axios from "axios";
 import { ProfileType } from "../models/profile";
 
-// const backendAPI = https://moments-backend-6qo6tf2l7q-uw.a.run.app/api/profiles // NOTE Cloud Run
-const backendAPI = `http://localhost:8080/api/profiles`; // NOTE local
+const backendAPI = import.meta.env.VITE_BACKEND_API;
 
 export class ProfileController {
   static async get_all(): Promise<ProfileType[]> {

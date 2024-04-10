@@ -41,16 +41,16 @@ export default function SignInPage() {
         <label htmlFor="password" className="text-lg italic text-sky-800">
           Password:
           <input
-            type="text"
+            type="password"
             id="password"
             name="password"
-            className="password"
+            className="password p-2"
             required
             onChange={(event) => setPassword(event.target.value)}
           />
         </label>
 
-        <div className="mt-8 text-sky-800 flex">
+        <div className="mt-6 text-sky-800 flex">
           <input
             type="button"
             value="Back"
