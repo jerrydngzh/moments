@@ -61,7 +61,6 @@ const Lens: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-    console.log(locations);
   }, []);
 
   return (

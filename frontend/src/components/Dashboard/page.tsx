@@ -25,7 +25,6 @@ const Dashboard = () => {
     const fetchedLocations = {};
     memoList.forEach((memo) => {
       memo.id = memo._id;
-      console.log(memo);
       if (fetchedLocations[memo.location.name]) {
         fetchedLocations[memo.location.name].push(memo);
       } else {
