@@ -1,4 +1,4 @@
-const backendAPI = import.meta.env.VITE_BACKEND_API;
+const backendAPI = `${import.meta.env.VITE_BACKEND_API}/api/users`;
 
 import axios from "axios";
 import { UserType } from "../models/user";

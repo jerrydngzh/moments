@@ -1,7 +1,8 @@
+const backendAPI = `${import.meta.env.VITE_BACKEND_API}/api/profiles`;
+
 import axios from "axios";
 import { ProfileType } from "../models/profile";
 
-const backendAPI = import.meta.env.VITE_BACKEND_API;
 
 export class ProfileController {
   static async get_all(): Promise<ProfileType[]> {

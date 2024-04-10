@@ -5,7 +5,7 @@ import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 import { UserCredential } from "firebase/auth";
 
 export default function SignUpPage() {
-  const { firebaseSignUp, firebaseDeleteUser } = useFirebaseAuth();
+  const { firebaseSignUp } = useFirebaseAuth();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,7 +46,7 @@ export default function SignUpPage() {
       navigate("/dashboard");
       setLoading(false);
     } catch (error) {
-      await firebaseDeleteUser();
+      // await firebaseDeleteUser();
       setLoading(false);
       alert(error.message);
     }
