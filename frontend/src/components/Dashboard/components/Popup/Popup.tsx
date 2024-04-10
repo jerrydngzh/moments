@@ -17,8 +17,8 @@ const Popup = (props: {
     const [editing, setEditing] = useState(false);
     const { currentUser } = useFirebaseAuth();
 
-    function fetchFilesByMemoid(memoid):string[] {
-        const files:string[] = [];
+    /*function fetchFilesByMemoid(memoid):File[] {
+        const files:File[] = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key.startsWith(memoid + "/")) {
@@ -27,7 +27,7 @@ const Popup = (props: {
             }
         }
         return files;
-    }
+    }*/
   
     
       
@@ -72,7 +72,7 @@ const Popup = (props: {
     }
   
   
-    const handleEditSubmit = async(name:string, description:string, locationName:string, coordinates:[number,number] , files:string[]) => {
+    const handleEditSubmit = async(name:string, description:string, locationName:string, coordinates:[number,number] , files:File[]) => {
     // For now, let's just log the new title and memo
     props.selectedMemo.name = name;
     props.selectedMemo.description = description;
@@ -108,6 +108,7 @@ const Popup = (props: {
               onSubmit={handleEditSubmit}
               default_name={props.selectedMemo.name}
               default_description={props.selectedMemo.description}
+              createMemo={false}
             />
           </div>
         </>
@@ -127,7 +128,7 @@ const Popup = (props: {
             <p>
               <strong>Location:</strong> {props.selectedMemo.location.name}
             </p>
-            <MediaDisplay files={fetchFilesByMemoid(props.selectedMemo._id)}></MediaDisplay>
+            <MediaDisplay files={[]} setelectedMemo={props.selectedMemo} createMemo={false}></MediaDisplay>
           <p>
               <strong>Date:</strong> {props.selectedMemo.date}
             </p>

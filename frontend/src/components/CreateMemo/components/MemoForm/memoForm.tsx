@@ -13,6 +13,7 @@ const MemoForm = (props: {
   ) => void;
   default_name: string;
   default_description: string;
+  createMemo:boolean
 }) => {
   const [name, setName] = useState<string>(props.default_name);
   const [description, setDescription] = useState<string>(props.default_description);
@@ -31,17 +32,12 @@ const MemoForm = (props: {
       alert("Please select a maximum of five files.");
       return;
     }
-    // for (const file of files) {
-    //   if (file.size > 15 * 1024 * 1024) {
-    //     alert(`File ${file.name} exceeds the 15MB size limit.`);
-    //     continue; // Skip this file
-    //   }
-    // }
-
-    files = files.filter((file) => {
-      alert(`File ${file.name} exceeds the 15MB size limit.`);
-      file.size <= 15 * 1024 * 1024;
-    });
+     for (const file of files) {
+       if (file.size > 15 * 1024 * 1024) {
+         alert(`File ${file.name} exceeds the 15MB size limit.`);
+         continue; // Skip this file
+       }
+     }
 
     if (files) {
       setFiles(files);
@@ -166,7 +162,7 @@ const MemoForm = (props: {
           ))}
         </div>
 
-        <MediaDisplay files={files} />
+        <MediaDisplay files={files} setelectedMemo={undefined} createMemo={props.createMemo} />
 
         {/* Description for the Memo */}
         <div className="input-container">
