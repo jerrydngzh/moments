@@ -1,6 +1,12 @@
 import React from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 
+import marker from "../../../assets/images/marker-icon.png";
+import { Icon } from "leaflet";
+const myIcon = new Icon({
+  iconUrl: marker,
+});
+
 interface Location {
   coordinates: [number, number];
   memo: {
@@ -40,7 +46,7 @@ const Map: React.FC<MapProps> = ({ locations, view }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {locations.map((location, index) => (
-        <Marker key={index} position={location.coordinates}>
+        <Marker key={index} position={location.coordinates} icon={myIcon}>
           <Popup>
             {location.memo.map((memo, memoIndex) => (
               <div key={`${index}-${memoIndex}`}>
