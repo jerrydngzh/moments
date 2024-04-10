@@ -5,7 +5,7 @@ import { ProfileType } from "../models/profile";
 const backendAPI = `http://localhost:8080/api/profiles`; // NOTE local
 
 export class ProfileController {
-  static async get_all() {
+  static async get_all(): Promise<ProfileType[]> {
     const response = await axios({
       method: "get",
       url: `${backendAPI}/`,
@@ -14,7 +14,7 @@ export class ProfileController {
     return response.data;
   }
 
-  static async get(uid: string) {
+  static async get(uid: string): Promise<ProfileType> {
     const response = await axios({
       method: "get",
       url: `${backendAPI}/${uid}`,
@@ -23,7 +23,7 @@ export class ProfileController {
     return response.data;
   }
 
-  static async update(uid: string, user: ProfileType) {
+  static async update(uid: string, user: ProfileType): Promise<ProfileType> {
     const response = await axios({
       method: "put",
       url: `${backendAPI}/${uid}`,

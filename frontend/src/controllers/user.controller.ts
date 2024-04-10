@@ -5,7 +5,7 @@ import axios from "axios";
 import { UserType } from "../models/user";
 
 export class UserController {
-  static async get_all() {
+  static async get_all(): Promise<UserType[]> {
     const response = await axios({
       method: "get",
       url: `${backendAPI}/`,
@@ -14,7 +14,7 @@ export class UserController {
     return response.data;
   }
 
-  static async get_user_data(uid: string) {
+  static async get_user_data(uid: string): Promise<UserType> {
     const response = await axios({
       method: "get",
       url: `${backendAPI}/${uid}`,
@@ -23,7 +23,7 @@ export class UserController {
     return response.data;
   }
 
-  static async create_user(user: UserType) {
+  static async create_user(user: UserType): Promise<UserType> {
     const response = await axios({
       method: "post",
       url: `${backendAPI}/`,
@@ -33,7 +33,7 @@ export class UserController {
     return response.data;
   }
 
-  static async update_user(uid: string, user: UserType) {
+  static async update_user(uid: string, user: UserType): Promise<UserType> {
     const response = await axios({
       method: "put",
       url: `${backendAPI}/${uid}`,
@@ -43,12 +43,12 @@ export class UserController {
     return response.data;
   }
 
-  static async delete_user(uid: string) {
+  static async delete_user(uid: string): Promise<UserType> {
     const response = await axios({
       method: "delete",
       url: `${backendAPI}/${uid}`,
     });
 
-    return response;
+    return response.data;
   }
 }
