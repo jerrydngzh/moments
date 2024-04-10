@@ -7,7 +7,6 @@ const Profile = require("../models/ProfileSchema");
 router.get("/", async (req, res, next) => {
   try {
     const profiles = await Profile.find();
-
     res.status(200).json(profiles);
   } catch (e) {
     next(e);
@@ -16,11 +15,13 @@ router.get("/", async (req, res, next) => {
 
 // Get profile by id
 router.get("/:uid", async (req, res, next) => {
+  const uid = req.params.uid;
   try {
-    const profile = await Profile.findOne({ uid: req.params.uid });
+    const profile = await Profile.findOne({ uid: uid });
 
     if (!profile) {
-      const err = new Error("No profile with matching id found");
+      const err = new Error(`No profile with uid ${uid} found`);
+
       err.status = 404;
       throw err;
     }
@@ -60,7 +61,7 @@ router.delete("/:uid", async (req, res, next) => {
     const result = await Profile.findOneAndDelete({ uid: req.params.uid });
 
     if (!result) {
-      const err = new Error("No profile with matching id found");
+      const err = new Error(`No profile with uid ${uid} found`);
       err.status = 404;
       throw err;
     }

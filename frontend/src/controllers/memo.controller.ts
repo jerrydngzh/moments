@@ -6,7 +6,7 @@ import axios from "axios";
 
 export class MemoController {
   static async get_all(): Promise<MemoType[]> {
-    const result = await axios.get(`${backendAPI}/all`);
+    const result = await axios.get(`${backendAPI}/`);
     return result.data;
   }
 
@@ -22,8 +22,6 @@ export class MemoController {
   }
 
   static async create_memo(uid: string, memo: MemoType) {
-    // const result = await axios.post(`${backendAPI}/${uid}`, memo);
-
     console.log(memo);
 
     const response = await axios({
