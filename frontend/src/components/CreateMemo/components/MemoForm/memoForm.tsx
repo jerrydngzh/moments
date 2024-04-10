@@ -25,20 +25,24 @@ const MemoForm = (props: {
   const [files, setFiles] = useState<File[]>([]);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = [...event.target.files];
+    let files = [...event.target.files];
 
     if (files.length > 5) {
       alert("Please select a maximum of five files.");
       return;
     }
-    for (const file of files) {
-      if (file.size > 15 * 1024 * 1024) {
-        alert(`File ${file.name} exceeds the 15MB size limit.`);
-        continue; // Skip this file
-      }
-      // const base64 = await fileToBase64(file);
-      // base64Array.push(base64);
-    }
+    // for (const file of files) {
+    //   if (file.size > 15 * 1024 * 1024) {
+    //     alert(`File ${file.name} exceeds the 15MB size limit.`);
+    //     continue; // Skip this file
+    //   }
+    // }
+
+    files = files.filter((file) => {
+      alert(`File ${file.name} exceeds the 15MB size limit.`);
+      file.size <= 15 * 1024 * 1024;
+    });
+
     if (files) {
       setFiles(files);
     }
