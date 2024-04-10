@@ -158,7 +158,7 @@ const MemoForm = (props:{
             </label>
         </div>
         <div className="input-container">
-          <label htmlFor="files" className="text-xl text-blue-800">
+          <label htmlFor="files" className="text-xl text-sky-800">
             Upload Files
           </label>
           <input type="file" id="files" name="files" multiple onChange={handleFileChange} />
