@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 const Memo = require("../models/MemoSchema");
 const { uploadFiles } = require("../services/media.service");
+const formidable = require('formidable');
 
 // NOTE: admin only
 router.get("/", async (req, res, next) => {
@@ -46,12 +47,25 @@ router.get("/:uid/:mid", async (req, res, next) => {
 });
 
 router.post("/:uid", async (req, res, next) => {
+  const form = formidable();
+  let memoData = null;
+  let fileData = null;
   const uid = req.params.uid;
   const fileNames = null;
 
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ message: 'Error parsing form data' });
+    }
+
+    memoData = JSON.parse(fields.jsonData);
+    fileData = files.mediaFile;
+  });
+
   // Upload files to cloud storage
   try {
-    fileNames = await uploadFiles(req.files);
+    fileNames = await uploadFiles(fileData);
   } catch (error) {
     next(error)
     return;
@@ -60,16 +74,16 @@ router.post("/:uid", async (req, res, next) => {
   try {
     const memo = new Memo({
       uid: uid,
-      name: req.body.name,
-      date: req.body.date,
+      name: memoData.name,
+      date: memoData.date,
       location: {
-        name: req.body.location.name,
+        name: memoData.location.name,
         coordinates: [
-          req.body.location.coordinates[0],
-          req.body.location.coordinates[1],
+          memoData.location.coordinates[0],
+          memoData.location.coordinates[1],
         ],
       },
-      description: req.body.description,
+      description: memoData.description,
       media: fileNames
     });
 
