@@ -6,6 +6,7 @@ const DEFAULT_SORT_STATE = 3; // default sort state index for the sortStates arr
 interface Location {
   coordinates: [number, number];
   memo: {
+    _id:string,
     description: string;
     title: string;
     date: string;
