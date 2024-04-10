@@ -32,6 +32,7 @@ const Map: React.FC<MapProps> = ({ locations, view }) => {
       center={center}
       zoom={zoom}
       style={{ height: "500px", width: "100%", borderRadius: "10px" }}
+      scrollWheelZoom={false}
     >
       <ChangeView center={center} />
       <TileLayer

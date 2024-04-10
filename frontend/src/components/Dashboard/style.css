@@ -80,27 +80,12 @@
     padding-left: 20px;
   }
   
-  /* Batch management controls styles */
-  button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #ffffff;
-  }
-  
   /* Navigation link styles */
   .buttonLink {
     display: inline-block;
     margin-right: 10px;
     text-decoration: none;
     color: #ffffff;
-    background-color: #007bff;
     padding: 10px 20px;
     border-radius: 5px;
   }
@@ -156,17 +141,3 @@
   .popup li {
     margin-bottom: 10px;
   }
-  
-  .popup button {
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .popup button:hover {
-    background-color: #0056b3;
-  }
-  

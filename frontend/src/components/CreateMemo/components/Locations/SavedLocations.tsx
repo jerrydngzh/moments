@@ -16,9 +16,7 @@ const SavedLocations = (props: {
 
   const fetchData = async () => {
     try {
-      var locations: [{ name: string; coordinates: [number, number] }] = [
-        { name: "past locations", coordinates: [0, 0] },
-      ];
+      var locations: [{name:string,coordinates:[number,number]}] = [{ name: "Choose a saved location: ",coordinates:[0,0] }];
       const memoData = await MemoController.get_all_memos(currentUser.uid);
       if (memoData) {
         for (const memo in memoData) {
@@ -58,11 +56,11 @@ const SavedLocations = (props: {
 
   return (
     <div>
-      <label htmlFor="savedLocations">Saved Locations:</label>
+      <label htmlFor="savedLocations" className="text-sky-800">Saved Locations:</label>
       <select
         id="savedLocations"
         value={selectedLocation}
-        onChange={handleSelectChange}
+        onChange={handleSelectChange} className="bg-white p-2"
       >
         {savedLocations.map((location, index) => (
           <option key={index} value={location.name}>

@@ -13,7 +13,7 @@ const LocationItem = (props: {
 }) => {
   return (
     <div
-      className="location-box"
+      className="location-box bg-sky-100"
       onClick={() => props.handleLocationClick(props.locationName)}
     >
       <h3>{props.locationName}</h3>

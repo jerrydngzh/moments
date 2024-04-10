@@ -70,8 +70,8 @@ const MemoForm = (props:{
     <div className="memo-form-container" >
 
     <form onSubmit={handleSubmit} onReset={handleReset}>
-        <div className="map-container">
-          <label htmlFor="location" className="text-xl text-blue-800">
+        <div className="map-container text-xl text-sky-800">
+          <label htmlFor="location">
             Location
           </label>
           <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -79,9 +79,11 @@ const MemoForm = (props:{
         <MapForm selectedLocation={selectedLocation} onMapClick={handleMapClick} />
         </div>
         {/* Map-Location Name Label */}
-        <div className="input-container">
-            <label htmlFor="locationName" className="text-xl text-blue-800">
-            Location Name
+        <div className="input-container mt-4">
+            <label htmlFor="locationName">
+            <span className="text-xl text-sky-800">
+              Location Name
+            </span>
             <input
                 type="text"
                 id="locationName"
@@ -101,9 +103,9 @@ const MemoForm = (props:{
         />
 
         {/* Title for Memo */}
-        <div className="input-container">
-            <label htmlFor="name" className="text-xl text-blue-800">
-            Title
+        <div className="input-container mt-4">
+            <label htmlFor="name" className="text-xl">
+            <span className="text-sky-800">Title</span>
             <input
                 type="text"
                 id="name"
@@ -118,8 +120,8 @@ const MemoForm = (props:{
 
         {/* Description for the Memo */}
         <div className="input-container">
-            <label htmlFor="memo" className="text-xl text-blue-800">
-            Memo
+            <label htmlFor="memo" className="text-xl">
+            <span className="text-sky-800">Memo</span>
             <textarea
                 id="memo"
                 name="memo"
@@ -133,12 +135,12 @@ const MemoForm = (props:{
 
         <div className="button-container">
             <input
-            className="border-2 border-blue-800 w-full text-xl text-blue-800 h-14 mb-2 mt-8 bg-blue-100 hover:bg-white rounded-xl"
+            className="border-r-2 border-sky-200 text-xl text-sky-800 w-1/2 h-14 mb-2 mt-8 bg-sky-100 hover:bg-sky-50 rounded-xl"
             type="reset"
             value="Reset"
             />
             <input
-            className="border-2 border-blue-800 w-full text-xl text-blue-800 h-14 mb-8 bg-blue-100 hover:bg-white rounded-xl"
+            className="border-l-2 border-sky-200 text-xl text-sky-800 w-1/2 h-14 mb-8 bg-sky-100 hover:bg-sky-50 rounded-xl"
             type="submit"
             value="Submit"
             />

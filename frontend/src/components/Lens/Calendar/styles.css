@@ -11,3 +11,7 @@
 .current-date {
     background-color: #bae6fd !important;
 }
+
+.current-date:hover {
+    background-color: white !important;
+}

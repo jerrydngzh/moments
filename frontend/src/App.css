@@ -11,7 +11,7 @@ Create-Profile{
   background-color: #f9f9f9;
 }
 
- label {
+label {
   display: block;
   margin-bottom: 5px;
 }
@@ -23,12 +23,19 @@ Create-Profile{
   padding: 8px;
   margin-bottom: 10px;
   border-radius: 5px;
-  border: 1px solid #ccc;
   border-radius: 5px;
+
   display: inline-block;
   cursor: pointer;
 
 }
+
+/* overriding browser default focus styles */
+input:focus, textarea:focus { 
+  outline: none;
+  border: 2px solid #7dd3fc;
+}
+
 
 textarea{
   height: 300px;

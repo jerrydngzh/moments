@@ -39,10 +39,10 @@ const CreateMemo = ({}) => {
   };
 
   return (
-    <main className="create-memo w-2/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
+    <main className="create-memo w-2/3 text-left m-auto mt-10 bg-sky-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-sky-300">
       <Header />
-      <h2 className="text-3xl font-bold mb-6 mt-6 text-blue-800">Creating New Memo</h2>
-      <MemoForm onSubmit={handleSubmit} default_name={""} default_description={""} />
+      <h2 className="text-3xl font-bold mb-6 mt-6 text-sky-800">New Memo</h2>
+      <MemoForm onSubmit={handleSubmit} default_name={""} default_description={""}/>
     </main>
   );
 };

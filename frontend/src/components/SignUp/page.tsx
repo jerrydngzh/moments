@@ -60,14 +60,11 @@ export default function SignUpPage() {
     setLastName("");
   };
 
-  {
-    /* FIXME: stying inputs */
-  }
   return (
-    <main className="Create-Account w-1/3 text-left m-auto mt-10 bg-blue-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-blue-800">
+    <main className="Create-Account w-1/3 text-left m-auto mt-10 bg-sky-200 p-10 pr-20 pl-20 rounded-3xl border-2 border-sky-300">
       <form onSubmit={handleSubmit} onReset={handleReset}>
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-800">Sign Up</h2>
-        <label htmlFor="firstname" className="text-lg text-blue-800">
+        <h2 className="text-3xl font-bold mb-6 text-center text-sky-800">Sign Up</h2>
+        <label htmlFor="firstname" className="text-lg italic text-sky-800">
           First Name
           <input
             type="text"
@@ -78,7 +75,7 @@ export default function SignUpPage() {
             onChange={(e) => setFirstName(e.target.value)}
           />
         </label>
-        <label htmlFor="lastname" className="text-lg text-blue-800">
+        <label htmlFor="lastname" className="text-lg italic text-sky-800">
           Last Name
           <input
             type="text"
@@ -89,7 +86,7 @@ export default function SignUpPage() {
             onChange={(e) => setLastName(e.target.value)}
           />
         </label>
-        <label htmlFor="username" className="text-lg text-blue-800">
+        <label htmlFor="username" className="text-lg italic text-sky-800">
           Username
           <input
             type="text"
@@ -100,7 +97,7 @@ export default function SignUpPage() {
             onChange={(e) => setUsername(e.target.value)}
           />
         </label>
-        <label htmlFor="email" className="text-lg text-blue-800">
+        <label htmlFor="email" className="text-lg italic text-sky-800">
           Email
           <input
             type="text"
@@ -111,7 +108,7 @@ export default function SignUpPage() {
             onChange={(e) => setEmail(e.target.value)}
           />
         </label>
-        <label htmlFor="password" className="text-lg text-blue-800">
+        <label htmlFor="password" className="text-lg italic text-sky-800">
           Password
           <input
             type="text"
@@ -123,25 +120,25 @@ export default function SignUpPage() {
           />
         </label>
 
-        <div className="mt-8 text-blue-800 flex">
+        <div className="mt-8 text-sky-800 flex">
           <input
             type="button"
             value="Back"
             disabled={loading}
             onClick={() => navigate("/")}
-            className="border-blue-800 h-10 hover:bg-blue-50"
+            className="h-10 bg-sky-100 hover:bg-sky-50"
           />
           <input
             type="reset"
             value="Reset"
             disabled={loading}
-            className="border-blue-800 h-10 hover:bg-blue-50 ml-2 mr-2"
+            className="h-10 bg-sky-100 hover:bg-sky-50 ml-2 mr-2"
           />
           <input
             type="submit"
             value="Submit"
             disabled={loading}
-            className="border-blue-800 h-10 hover:bg-blue-50"
+            className="h-10 bg-sky-100 hover:bg-sky-50"
           />
         </div>
       </form>

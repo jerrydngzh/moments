@@ -73,8 +73,8 @@ const Popup = (props: {
   };
 
   return (
-    <div className="popup" onClick={props.onClick}>
-      <h2>Memo Details</h2>
+    <div className="popup bg-sky-200" onClick={props.onClick}>
+      <h2 className="text-sky-800 font-bold text-xl">Memo Details</h2>
       {editing ? (
         <>
           <div className="MemoForm">
@@ -87,29 +87,35 @@ const Popup = (props: {
         </>
       ) : (
         <>
-          <div className="MapDisplay w-3/4 h-auto m-auto">
+          <div className="MapDisplay h-auto m-auto">
             <Map locations={[location()]} view={""}></Map>
           </div>
-          <p>
-            <strong>Title:</strong> {props.selectedMemo.name}
-          </p>
-          <link
-            rel="stylesheet"
-            href="https://unpkg.com/leaflet/dist/leaflet.css"
-          />
-          <p>
-            <strong>Location:</strong> {props.selectedMemo.location.name}
-          </p>
-          <p>
-            <strong>Date:</strong> {props.selectedMemo.date}
-          </p>
-          <p>
-            <strong>Memo:</strong> {props.selectedMemo.description}
-          </p>
-          <button onClick={(event) => handleEditClick(event)}>Edit</button>
+          <section className="text-sky-900 bg-sky-50 p-2 mt-4 rounded-lg">
+            <p>
+              <strong>Title:</strong> {props.selectedMemo.name}
+            </p>
+            <link
+              rel="stylesheet"
+              href="https://unpkg.com/leaflet/dist/leaflet.css"
+            />
+            <p>
+              <strong>Location:</strong> {props.selectedMemo.location.name}
+            </p>
+            <p>
+              <strong>Date:</strong> {props.selectedMemo.date}
+            </p>
+            <p>
+              <strong>Memo:</strong> {props.selectedMemo.description}
+            </p>
+          </section>
+          <button onClick={(event) => handleEditClick(event)} className="text-sky-50 w-1/6 bg-sky-500 hover:bg-sky-600 rounded-xl mt-4">
+            Edit
+          </button>
         </>
       )}
-      <button onClick={props.handleClose}>Close</button>
+      <button onClick={props.handleClose} className="text-sky-50 w-1/6 bg-sky-500 hover:bg-sky-600 rounded-xl">
+        Close
+      </button>
     </div>
   );
 };
