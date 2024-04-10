@@ -18,7 +18,6 @@ const CreateMemo = ({}) => {
     locationName: string,
     coordinates: [number, number]
   ) => {
-    console.log(coordinates);
     const memoToCreate: MemoType = {
       uid: currentUser.uid,
       name: name,

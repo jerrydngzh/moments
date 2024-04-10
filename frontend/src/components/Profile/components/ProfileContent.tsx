@@ -22,8 +22,7 @@ export default function ProfileContent({ id }) {
 
   const handleUpdateProfile = () => {
     ProfileController.update(id, profileData)
-      .then((data) => {
-        console.log("Profile updated successfully: ", data);
+      .then(() => {
         setEditMode(false);
       })
       .catch((e) => {

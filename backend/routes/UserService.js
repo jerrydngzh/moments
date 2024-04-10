@@ -7,7 +7,6 @@ const User = require("../models/UserSchema");
 router.get("/", async (req, res, next) => {
   try {
     const users = await User.find();
-
     res.status(200).json(users);
   } catch (e) {
     next(e);
@@ -20,7 +19,7 @@ router.get("/:uid", async (req, res, next) => {
     const user = await User.findOne({ uid: req.params.uid });
 
     if (!user) {
-      const err = new Error("No user with matching id found");
+      const err = new Error(`No user with uid ${uid} found`);
       err.status = 404;
       throw err;
     }
@@ -55,7 +54,7 @@ router.put("/:uid", async (req, res, next) => {
     let user = await User.findOne({ uid: req.params.uid });
 
     if (!user) {
-      const err = new Error("No user with matching id found");
+      const err = new Error(`No user with uid ${uid} found`);
       err.status = 404;
       throw err;
     }
@@ -83,7 +82,7 @@ router.delete("/:uid", async (req, res, next) => {
     const result = await User.findOneAndDelete({ uid: req.params.uid });
 
     if (!result) {
-      const err = new Error("No user with matching id found");
+      const err = new Error(`No user with uid ${uid} found`);
       err.status = 404;
       throw err;
     }

@@ -1,12 +1,11 @@
 var express = require("express");
 var router = express.Router();
 const Memo = require("../models/MemoSchema");
-const User = require("../models/UserSchema");
 
 // NOTE: admin only
-router.get("/all", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
-    const memos = await Memo.find({});
+    const memos = await Memo.find();
     res.status(200).send(memos);
   } catch (err) {
     next(err);
@@ -19,13 +18,6 @@ router.get("/:uid", async (req, res, next) => {
 
   try {
     const memos = await Memo.find({ uid: uid });
-
-    if (memos.length === 0) {
-      const err = new Error("No memos found");
-      err.status = 404;
-      throw err;
-    }
-
     res.status(200).send(memos);
   } catch (err) {
     next(err);
@@ -41,7 +33,7 @@ router.get("/:uid/:mid", async (req, res, next) => {
     const memo = await Memo.findById({ _id: mid, uid: uid });
 
     if (!memo) {
-      const err = new Error("No memos found");
+      const err = new Error(`Memo with _id ${mid} not found`);
       err.status = 404;
       throw err;
     }
@@ -72,7 +64,7 @@ router.post("/:uid", async (req, res, next) => {
 
     const result = await memo.save();
 
-    res.status(201).send(memo);
+    res.status(201).send(result);
   } catch (err) {
     next(err);
   }
@@ -104,7 +96,7 @@ router.put("/:uid/:mid", async (req, res, next) => {
     );
 
     if (!memo) {
-      const err = new Error("Memo not found");
+      const err = new Error(`Memo with _id ${mid} not found`);
       err.status = 404;
       throw err;
     }
@@ -125,7 +117,7 @@ router.delete("/:uid/:mid", async (req, res, next) => {
     });
 
     if (!memo) {
-      const err = new Error("Memo not found");
+      const err = new Error(`Memo with _id ${mid} not found`);
       err.status = 404;
       throw err;
     }
