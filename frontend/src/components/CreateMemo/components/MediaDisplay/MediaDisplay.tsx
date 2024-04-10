@@ -1,7 +1,6 @@
-
-const MediaDisplay = ({ files }) => {
+const MediaDisplay = (props:{ files:string[] }) => {
     // Function to render media based on its type
-    const renderMedia = (mediaData, index) => {
+    const renderMedia = (mediaData:string, index:number) => {
         if (mediaData.startsWith('data:image')) {
             return <img key={index} src={mediaData} alt={`Media ${index + 1}`} />;
         } else if (mediaData.startsWith('data:video')) {
@@ -32,7 +31,7 @@ const MediaDisplay = ({ files }) => {
         <div>
             <h2>Media List</h2>
             <div>
-                {files.map((mediaData, index) => (
+                {props.files.map((mediaData, index) => (
                     <div key={index}>
                         {/* Render media based on its type */}
                         {renderMedia(mediaData, index)}
