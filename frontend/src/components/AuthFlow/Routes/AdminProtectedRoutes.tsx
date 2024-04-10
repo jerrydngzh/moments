@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
+import { useFirebaseAuth } from "../../../contexts/FirebaseAuth.context";
 
 export function AdminProtectedRoute() {
   const { currentUser, isLoading, isAdmin } = useFirebaseAuth();

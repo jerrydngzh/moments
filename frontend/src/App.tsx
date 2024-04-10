@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FirebaseAuthProvider } from "./contexts/FirebaseAuth.context";
-import { ProtectedRoutes } from "./components/Authentication/ProtectedRoutes";
-import { AdminProtectedRoute } from "./components/Authentication/AdminProtectedRoutes";
+import { ProtectedRoutes } from "./components/AuthFlow/Routes/ProtectedRoutes";
+import { AdminProtectedRoute } from "./components/AuthFlow/Routes/AdminProtectedRoutes";
 
-import SignUpPage from "./components/SignUp/page";
-import SignInPage from "./components/SignIn/page";
+import SignUpPage from "./components/AuthFlow/components/SignUp.page";
+import SignInPage from "./components/AuthFlow/components/SignIn.page";
+import EmailVerification from "./components/AuthFlow/components/EmailVerify.page";
 import Profile from "./components/Profile/page";
 import Lens from "./components/Lens/page";
 import Dashboard from "./components/Dashboard/page";
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/verify" element={<EmailVerification />} />
 
           <Route element={<AdminProtectedRoute />}>
             <Route path="/admin" element={<AdminPage />}></Route>

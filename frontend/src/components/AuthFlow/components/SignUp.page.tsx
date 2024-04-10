@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { UserController } from "../../controllers/user.controller";
-import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
+import { UserController } from "../../../controllers/user.controller";
+import { useFirebaseAuth } from "../../../contexts/FirebaseAuth.context";
 import { UserCredential } from "firebase/auth";
 
 export default function SignUpPage() {
-  const { firebaseSignUp, firebaseDeleteUser } = useFirebaseAuth();
+  const { firebaseSignUp } = useFirebaseAuth();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,6 +34,9 @@ export default function SignUpPage() {
       return;
     }
 
+    // NOTE: this can fail, leaving inconsistent state of a userprofile not being created
+    //       but a user being created in firebase auth
+    //       ignore & FIX LATER
     try {
       await UserController.create_user({
         uid: userCredentials.user.uid,
@@ -43,10 +46,9 @@ export default function SignUpPage() {
         last_name: last_name,
       });
 
-      navigate("/dashboard");
+      navigate("/verify");
       setLoading(false);
     } catch (error) {
-      await firebaseDeleteUser();
       setLoading(false);
       alert(error.message);
     }
