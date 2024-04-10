@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 const Memo = require("../models/MemoSchema");
+const { uploadFiles } = require("../services/media.service");
 
 // NOTE: admin only
 router.get("/", async (req, res, next) => {
@@ -46,6 +47,15 @@ router.get("/:uid/:mid", async (req, res, next) => {
 
 router.post("/:uid", async (req, res, next) => {
   const uid = req.params.uid;
+  const fileNames = null;
+
+  // Upload files to cloud storage
+  try {
+    fileNames = await uploadFiles(req.files);
+  } catch (error) {
+    next(error)
+    return;
+  }
 
   try {
     const memo = new Memo({
@@ -60,10 +70,10 @@ router.post("/:uid", async (req, res, next) => {
         ],
       },
       description: req.body.description,
+      media: fileNames
     });
 
     const result = await memo.save();
-
     res.status(201).send(result);
   } catch (err) {
     next(err);
@@ -86,6 +96,7 @@ router.put("/:uid/:mid", async (req, res, next) => {
       ],
     },
     description: req.body.description,
+    media: req.body.media
   };
 
   try {
@@ -126,6 +137,8 @@ router.delete("/:uid/:mid", async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+
+  // TODO: delete media files from cloud storage
 });
 
 module.exports = router;

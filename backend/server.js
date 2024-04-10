@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const Multer = require('multer')
 dotenv.config();
 
 const PORT = process.env.PORT || 8080;
@@ -12,20 +13,31 @@ const indexRouter = require("./routes/index");
 const MemoServiceRouter = require("./routes/MemoService");
 const UserServiceRouter = require("./routes/UserService");
 const ProfileServiceRouter = require("./routes/ProfileService");
+const MediaServiceRouter = require("./routes/MediaService");
 const app = express();
 
 // ============== Setup Middleware ==============
+const multer = Multer({
+  storage: Multer.memoryStorage(),
+  limits: {
+    fileSize: 25 * 1024 * 1024,
+  },
+})
+
+app.use(multer.any())
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 
+
 // ============== Setup Routes ==============
 app.use("/", indexRouter);
 app.use("/api/memos", MemoServiceRouter);
 app.use("/api/users", UserServiceRouter);
 app.use("/api/profiles", ProfileServiceRouter);
+app.use("/api/media", MediaServiceRouter);
 
 // ========= Error Handling Middleware =========
 app.use(function (err, req, res, next) {
@@ -47,13 +59,13 @@ mongoose.set("strictQuery", false);
 
 // NOTE: for local MongoDB
 mongoose.connect(`mongodb://localhost:27017/test`) // my mongodbcompass has a test db - vince
-    .then(() => {
-      console.log('Connected to MongoDB...');
-      app.listen(PORT, () => {
-        console.log(`Server is running on port ${PORT}`);
-      })
+  .then(() => {
+    console.log('Connected to MongoDB...');
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     })
-    .catch(err => console.error('Could not connect to MongoDB...', err));
+  })
+  .catch(err => console.error('Could not connect to MongoDB...', err));
 
 // NOTE: for MongoDB Atlas
 // mongoose

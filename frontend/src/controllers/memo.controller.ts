@@ -20,7 +20,7 @@ export class MemoController {
     return result.data;
   }
 
-  static async create_memo(uid: string, memo: MemoType): Promise<MemoType> {
+  static async create_memo(uid: string, memo: MemoType, files: File[]): Promise<MemoType> {
     const response = await axios({
       method: "post",
       url: `${backendAPI}/${uid}`,
@@ -29,6 +29,7 @@ export class MemoController {
 
     return response.data;
   }
+  
 
   static async update_memo(uid: string, memo: MemoType): Promise<MemoType> {
     const result = await axios.put(`${backendAPI}/${uid}/${memo._id}`, memo);
