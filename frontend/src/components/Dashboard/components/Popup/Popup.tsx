@@ -5,6 +5,7 @@ import { useFirebaseAuth } from "../../../../contexts/FirebaseAuth.context";
 import MemoForm from "../../../CreateMemo/components/MemoForm/memoForm";
 import Map from "../../../Lens/Map/map";
 import "./Popup.css";
+import MediaDisplay from '../../../CreateMemo/components/MediaDisplay/MediaDisplay';
 
 const Popup = (props: {
   onClick: React.MouseEventHandler<HTMLDivElement>;
@@ -12,42 +13,66 @@ const Popup = (props: {
   handleClose: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   Key: boolean;
 }) => {
-  const [reloadKey, setReloadKey] = useState(props.Key);
-  const [editing, setEditing] = useState(false);
-  const { currentUser } = useFirebaseAuth();
+    const [reloadKey, setReloadKey] = useState(props.Key);
+    const [editing, setEditing] = useState(false);
+    const { currentUser } = useFirebaseAuth();
 
-  const location = () => {
-    const coordinates = props.selectedMemo.location.coordinates;
-    const memo_location_obj = {
-      title: props.selectedMemo.name,
-      description: props.selectedMemo.description,
-      date: props.selectedMemo.date,
-      location: props.selectedMemo.location.name,
-    };
-    return {
-      coordinates: coordinates,
-      memo: [memo_location_obj],
-    };
-  };
-  useEffect(() => {
-    if (reloadKey) {
-      setReloadKey(false);
+    function fetchFilesByMemoid(memoid):string[] {
+        const files:string[] = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith(memoid + "/")) {
+                const base64Data = localStorage.getItem(key);
+                files.push(base64Data); // File indices start from 1
+            }
+        }
+        return files;
     }
-  }, [reloadKey, props.selectedMemo]);
+  
+    
+      
+    const location = () => {
+      const coordinates = props.selectedMemo.location.coordinates;
+      const memo_location_obj = {
+        title: props.selectedMemo.name,
+        description: props.selectedMemo.description,
+        date: props.selectedMemo.date,
+        location: props.selectedMemo.location.name,
+      };
+      return {
+        coordinates: coordinates,
+        memo: [memo_location_obj],
+      };
+    };
+    useEffect(() => {
+      if (reloadKey) {
+        setReloadKey(false);
+      }
+    }, [reloadKey, props.selectedMemo]);
 
-  const handleEditClick = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    event.stopPropagation();
-    setEditing(true);
-  };
+    const handleEditClick = (
+      event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
+      event.stopPropagation();
+      setEditing(true);
+    };
 
-  const handleEditSubmit = async (
-    name: string,
-    description: string,
-    locationName: string,
-    coordinates: [number, number]
-  ) => {
+    // Function to save Base64 string to local storage
+    function saveToLocalStorage(directory, filename, value) {
+      localStorage.setItem(`${directory}/${filename}`, value);
+    }
+
+    // Example usage
+    async function saveFilesToLocalStorage(memoid, files) {
+      
+      for (let i = 0; i < files.length; i++) {
+          const filename = `file${i+1}.txt`; // Change the file extension according to the file type
+          saveToLocalStorage(memoid, filename, files[i]);
+      }
+    }
+  
+  
+    const handleEditSubmit = async(name:string, description:string, locationName:string, coordinates:[number,number] , files:string[]) => {
     // For now, let's just log the new title and memo
     props.selectedMemo.name = name;
     props.selectedMemo.description = description;
@@ -65,7 +90,8 @@ const Popup = (props: {
     };
 
     try {
-      await MemoController.update_memo(currentUser.uid, updatedMemo);
+      const data = await MemoController.update_memo(currentUser.uid, updatedMemo);
+      saveFilesToLocalStorage(data._id, files);
     } catch (error) {
       console.error("Error updating memo:", error);
     }
@@ -101,7 +127,8 @@ const Popup = (props: {
             <p>
               <strong>Location:</strong> {props.selectedMemo.location.name}
             </p>
-            <p>
+            <MediaDisplay files={fetchFilesByMemoid(props.selectedMemo._id)}></MediaDisplay>
+          <p>
               <strong>Date:</strong> {props.selectedMemo.date}
             </p>
             <p>

@@ -12,11 +12,26 @@ const CreateMemo = ({}) => {
   const navigate = useNavigate();
   const { currentUser } = useFirebaseAuth();
 
+  // Function to save Base64 string to local storage
+  function saveToLocalStorage(directory, filename, value) {
+    localStorage.setItem(`${directory}/${filename}`, value);
+  }
+
+  // Example usage
+  async function saveFilesToLocalStorage(memoid, files) {
+    for (let i = 0; i < files.length; i++) {
+        const filename = `file${i+1}.txt`; // Change the file extension according to the file type
+        saveToLocalStorage(memoid, filename, files[i]);
+    }
+  }
+
+  
+  
   const handleSubmit = async (
     name: string,
     description: string,
     locationName: string,
-    coordinates: [number, number]
+    coordinates: [number, number], files:string[]
   ) => {
     const memoToCreate: MemoType = {
       uid: currentUser.uid,
@@ -30,8 +45,8 @@ const CreateMemo = ({}) => {
     };
 
     try {
-      await MemoController.create_memo(currentUser.uid, memoToCreate);
-
+      const data = await MemoController.create_memo(currentUser.uid, memoToCreate);
+      saveFilesToLocalStorage(data._id, files);
       navigate("/dashboard");
     } catch (error) {
       console.error("Error creating memo:", error);

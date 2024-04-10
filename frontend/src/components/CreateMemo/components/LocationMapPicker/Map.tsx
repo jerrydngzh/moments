@@ -39,7 +39,6 @@ const MapForm = (props:{
     return (
       <Marker
         position={position}
-        icon={customMarkerIcon}
         draggable={true}
         eventHandlers={{
           dragend: (e) => {

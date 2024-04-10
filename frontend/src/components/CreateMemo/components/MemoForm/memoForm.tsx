@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import MapForm from "../LocationMapPicker/Map";
 import SavedLocations from "../Locations/SavedLocations";
+import MediaDisplay from "../MediaDisplay/MediaDisplay";
 
 const MemoForm = (props:{ 
-  onSubmit:( name:string, description:string, locationName:string, coordinates:[number,number] ) => void, 
+  onSubmit:( name:string, description:string, locationName:string, coordinates:[number,number], files:string[] ) => void, 
   default_name:string, 
   default_description:string 
   }) => {
@@ -13,7 +14,44 @@ const MemoForm = (props:{
   const [coordinates, setCoordinates] = useState<[number,number]>([49.27326489299744, -123.10365200042726]);
   const [reloadDropdown, setReloadDropdown] = useState<boolean>(false);
   const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [files, setFiles] = useState<string[]>([]);
 
+  function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+  }
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files;
+    const base64Array = [];
+    if (selectedFiles.length > 5) {
+      alert("Please select a maximum of five files.");
+      return;
+  }
+    for (const file of selectedFiles) {
+      if (file.size > 15 * 1024 * 1024) {
+          alert(`File ${file.name} exceeds the 15MB size limit.`);
+          continue; // Skip this file
+      }
+        const base64 = await fileToBase64(file);
+        base64Array.push(base64);
+    }
+    if (selectedFiles) {
+        setFiles([...files, ...base64Array]); // Spread base64Array elements into files
+    }
+};
+
+  
+
+  const handleFileRemove = (index: number) => {
+    const updatedFiles = [...files];
+    updatedFiles.splice(index, 1);
+    setFiles(updatedFiles);
+  };
 
   const fetchLocationData = async () => {
     const [lat, lon] = coordinates;
@@ -49,10 +87,12 @@ const MemoForm = (props:{
   const handleMapClick = (clickedLocation:[number,number]) => {
     setCoordinates(clickedLocation);
   };
-
+  
   const handleSubmit = (event) => {
     event.preventDefault();
-    props.onSubmit(name, description, locationName, coordinates );
+    props.onSubmit(name, description, locationName, coordinates, files );
+
+
   };
 
   const handleReset = () => {
@@ -117,7 +157,23 @@ const MemoForm = (props:{
             />
             </label>
         </div>
+        <div className="input-container">
+          <label htmlFor="files" className="text-xl text-sky-800">
+            Upload Files
+          </label>
+          <input type="file" id="files" name="files" multiple onChange={handleFileChange} />
+        </div>
+        <div className="input-container">
+          {files.map((index) => (
+            <div key={index}>
+              <>
+                <button onClick={() => handleFileRemove(parseInt(index))}>Remove</button>
+              </>
+            </div>
+          ))}
+        </div>
 
+        <MediaDisplay files={files} />
         {/* Description for the Memo */}
         <div className="input-container">
             <label htmlFor="memo" className="text-xl">
