@@ -1,4 +1,4 @@
-//const backendAPI = `https://moments-server-6qo6tf2l7q-uc.a.run.app/api/users`; // NOTE atlas
+// const backendAPI = https://moments-backend-6qo6tf2l7q-uw.a.run.app/api/users // NOTE Cloud Run
 const backendAPI = `http://localhost:8080/api/users`; // NOTE local
 
 import axios from "axios";
