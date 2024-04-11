@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { MemoController } from "../../../controllers/memo.controller";
 import { MemoType } from "../../../models/memo";
+import DeleteIcon from "./DeleteIcon";
 
 export default function AdminMemoList() {
   const [allMemos, setAllMemos] = useState<MemoType[]>([]);
@@ -30,12 +31,11 @@ export default function AdminMemoList() {
       {allMemos.length === 0 ? (
         <p className="text-blue-800">No memos found.</p>
       ) : (
-        <table className="mt-3 mb-6 w-full">
+        <table className="mt-3 mb-6 w-full text-sm">
           <thead>
             <tr>
               <th>Memo ID</th>
               <th>Created By</th>
-              <th>Memo Title</th>
               <th>Created On</th>
             </tr>
           </thead>
@@ -44,14 +44,13 @@ export default function AdminMemoList() {
               <tr key={memo._id}>
                 <td>{memo._id}</td>
                 <td>{memo.uid}</td>
-                <td>{memo.name}</td>
                 <td>{memo.date}</td>
                 <td>
                   <button
-                    className="text-blue-800 bg-blue-100 border-blue-800 border-2 rounded-lg"
+                    className="text-blue-800 bg-blue-100 border-blue-800 border-2 rounded-lg hover:bg-red-400"
                     onClick={() => handleDeleteMemo(memo.uid, memo._id)}
                   >
-                    Delete
+                    <DeleteIcon></DeleteIcon>
                   </button>
                 </td>
               </tr>

@@ -1,5 +1,4 @@
-// const backendAPI = https://moments-backend-6qo6tf2l7q-uw.a.run.app/api/users // NOTE Cloud Run
-const backendAPI = `http://localhost:8080/api/users`; // NOTE local
+const backendAPI = `${import.meta.env.VITE_BACKEND_API}/api/users`;
 
 import axios from "axios";
 import { UserType } from "../models/user";

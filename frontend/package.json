@@ -12,10 +12,7 @@
   "dependencies": {
     "@types/http-proxy": "^1.17.14",
     "axios": "^1.6.8",
-    "express": "^4.18.3",
     "firebase": "^10.10.0",
-    "fs-extra": "^11.2.0",
-    "jotai": "^2.7.1",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-calendar": "^4.8.0",

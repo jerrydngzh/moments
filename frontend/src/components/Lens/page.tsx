@@ -10,6 +10,7 @@ import { useFirebaseAuth } from "../../contexts/FirebaseAuth.context";
 interface Location {
   coordinates: [number, number];
   memo: {
+    _id:string,
     description: string;
     title: string;
     date: string;
@@ -30,6 +31,7 @@ const Lens: React.FC = () => {
         const coordinates = memo.location.coordinates;
 
         const memo_location_obj = {
+          _id: memo._id,
           title: memo.name,
           description: memo.description,
           date: memo.date,

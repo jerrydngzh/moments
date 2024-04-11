@@ -51,7 +51,7 @@ export default function Header() {
             to={"/admin"}
             className={` ${
               location === "/admin" ? "bg-white" : "hover:bg-white"
-            } button-link text-blue-800 bg-blue-100 border-blue-800 border-2 w-1/4 p-2 text-center rounded-2xl`}
+            } button-link text-sky-800 bg-sky-100 border-sky-200 border-r-2 w-1/4 p-2 text-center rounded-2xl`}
           >
             Admin Tools
           </Link>

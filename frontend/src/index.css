@@ -7,8 +7,8 @@
   line-height: 1.5;
   font-weight: 400;
 
-  background-color: rgba(135,206,235,0.8); /* sky blue color with 30% opacity */
-  background-image: url("../images/globe.gif");
+  background-color: rgba(135,206,235,0.8);
+  background-image: url("./assets/images/globe.gif");
   background-position: center 2em;
   background-repeat: no-repeat;
   background-size: 60% auto;
