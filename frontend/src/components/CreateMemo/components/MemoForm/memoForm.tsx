@@ -13,7 +13,7 @@ const MemoForm = (props: {
   ) => void;
   default_name: string;
   default_description: string;
-  createMemo:boolean
+  createMemo: boolean;
 }) => {
   const [name, setName] = useState<string>(props.default_name);
   const [description, setDescription] = useState<string>(props.default_description);
@@ -26,24 +26,27 @@ const MemoForm = (props: {
   const [files, setFiles] = useState<File[]>([]);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    let files = [...event.target.files];
+    const submitedFiles = [...event.target.files];
+    let parsedFiles: File[] = [];
 
-    if (files.length > 5) {
+    if (submitedFiles.length > 5) {
       alert("Please select a maximum of five files.");
       return;
     }
-     for (const file of files) {
-       if (file.size > 15 * 1024 * 1024) {
-         alert(`File ${file.name} exceeds the 15MB size limit.`);
-         continue; // Skip this file
-       }
-     }
+    for (const file of submitedFiles) {
+      if (file.size > 15 * 1024 * 1024) {
+        alert(`File ${file.name} exceeds the 15MB size limit.`);
+        continue; // Skip this file
+      }
+      parsedFiles.push(file);
+    }
 
-    if (files) {
-      setFiles(files);
+    if (parsedFiles) {
+      setFiles([...files, ...parsedFiles]);
     }
   };
 
+  // TODO
   const handleFileRemove = (file: string) => {
     const updatedFiles = [...files];
     const index = updatedFiles.findIndex((f) => f.name === file);
@@ -154,6 +157,7 @@ const MemoForm = (props: {
           </label>
           <input type="file" id="files" name="files" multiple onChange={handleFileChange} />
         </div>
+
         <div className="input-container">
           {files.map((file) => (
             <div key={file.name}>

@@ -1,3 +1,4 @@
+const ShortUniqueId = require('short-unique-id');
 const { randomUUID } = new ShortUniqueId({ length: 10 });
 const { Storage } = require('@google-cloud/storage')
 const dotenv = require("dotenv");
@@ -9,7 +10,7 @@ const storage = new Storage({
 })
 const bucket = storage.bucket(process.env.BUCKET_NAME)
 
-export const uploadFiles = async (files) => {
+const uploadFiles = async (files) => {
     let fileNames = []
     try {
         if (!files) {
@@ -20,7 +21,7 @@ export const uploadFiles = async (files) => {
         const uploadPromises = []
         let count = 0
 
-        req.files.forEach(file => {
+        files.forEach(file => {
             const fileName = `${randomUUID()}-${file.originalname}`
             fileNames.push(fileName)
             const blob = bucket.file(fileName);
@@ -43,3 +44,5 @@ export const uploadFiles = async (files) => {
         throw new Error("Cloud Storage Access Failed")
     }
 };
+
+module.exports = { uploadFiles }

@@ -2,7 +2,13 @@ var express = require("express");
 var router = express.Router();
 const Memo = require("../models/MemoSchema");
 const { uploadFiles } = require("../services/media.service");
-const formidable = require('formidable');
+const Multer = require("multer");
+const multer = Multer({
+  storage: Multer.memoryStorage(),
+  limits: {
+    fileSize: 25 * 1024 * 1024,
+  },
+})
 
 // NOTE: admin only
 router.get("/", async (req, res, next) => {
@@ -46,22 +52,11 @@ router.get("/:uid/:mid", async (req, res, next) => {
   }
 });
 
-router.post("/:uid", async (req, res, next) => {
-  const form = formidable();
-  let memoData = null;
-  let fileData = null;
+router.post("/:uid", multer.any(), async (req, res, next) => {
+  let memoData = JSON.parse(req.body.memo);
+  let fileData = req.files;
   const uid = req.params.uid;
-  const fileNames = null;
-
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Error parsing form data' });
-    }
-
-    memoData = JSON.parse(fields.jsonData);
-    fileData = files.mediaFile;
-  });
+  let fileNames = [];
 
   // Upload files to cloud storage
   try {
@@ -70,6 +65,8 @@ router.post("/:uid", async (req, res, next) => {
     next(error)
     return;
   }
+
+  console.log(fileNames);
 
   try {
     const memo = new Memo({

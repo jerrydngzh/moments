@@ -21,18 +21,18 @@ export class MemoController {
 
   static async create_memo(uid: string, memo: MemoType, files: File[]): Promise<MemoType> {
     const formData = new FormData();
-
     files.forEach((file) => {
       formData.append(file.name, file);
     });
     formData.append("memo", JSON.stringify(memo));
-    
+
     const response = await axios({
       method: "post",
       url: `${backendAPI}/${uid}`,
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     });
+    console.log(response);
     return response.data;
   }
   
