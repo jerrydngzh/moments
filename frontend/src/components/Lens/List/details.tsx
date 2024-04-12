@@ -32,7 +32,6 @@ const Details: React.FC<DetailsProps> = ({ memo, location }) => {
   return (
     <section className="bg-white p-2 mt-1 mb-2 rounded-lg">
       <Map locations={[location]} view={'list'} />
-      <MediaDisplay files={[]} media={memo.media} createMemo={false} />
       <h4 className="font-bold">Date:</h4>
       <p className="mb-2">{memo.date}</p>
       <h4 className="font-bold">Location:</h4>
