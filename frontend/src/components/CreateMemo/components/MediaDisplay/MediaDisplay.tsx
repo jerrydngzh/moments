@@ -1,7 +1,6 @@
-import { MemoType } from "../../../../models/memo";
 const storageBucket = `https://storage.googleapis.com/${import.meta.env.VITE_STORAGE_BUCKET}`;
 
-const MediaDisplay = (props: { files: File[]; selectedMemo: MemoType; createMemo: boolean }) => {
+const MediaDisplay = (props: { files: File[]; media: string[]; createMemo: boolean }) => {
   // Function to render media based on its type
   const renderMedia = (mediaData: File, index: number) => {
     if (mediaData.type.startsWith("image")) {
@@ -73,7 +72,7 @@ const MediaDisplay = (props: { files: File[]; selectedMemo: MemoType; createMemo
             <div key={index}>{renderMedia(mediaData, index)}</div>
           ))}
         {!props.createMemo &&
-          props.selectedMemo.media!.map((mediaName, index) => (
+          props.media!.map((mediaName, index) => (
             <div key={index}>{renderURL(mediaName, index)}</div>
           ))}
       </div>

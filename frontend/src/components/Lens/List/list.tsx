@@ -11,6 +11,7 @@ interface Location {
     title: string;
     date: string;
     location: string;
+    media:string[]
   }[];
 }
 

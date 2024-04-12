@@ -47,7 +47,7 @@ const Popup = (props: {
     description: string,
     locationName: string,
     coordinates: [number, number],
-    files: File[]
+    //files: File[]
   ) => {
     props.selectedMemo.name = name;
     props.selectedMemo.description = description;
@@ -67,7 +67,7 @@ const Popup = (props: {
     };
 
     try {
-      const data = await MemoController.update_memo(currentUser.uid, updatedMemo);
+      await MemoController.update_memo(currentUser.uid, updatedMemo);
       // saveFilesToLocalStorage(data._id, files);
     } catch (error) {
       console.error("Error updating memo:", error);
@@ -101,14 +101,8 @@ const Popup = (props: {
             <p>
               <strong>Location:</strong> {props.selectedMemo.location.name}
             </p>
-
-            <MediaDisplay
-              files={[]}
-              selectedMemo={props.selectedMemo}
-              createMemo={false}
-            ></MediaDisplay>
-
-            <p>
+            <MediaDisplay files={[]} media={props.selectedMemo.media} createMemo={false}></MediaDisplay>
+          <p>
               <strong>Date:</strong> {props.selectedMemo.date}
             </p>
             <p>

@@ -168,10 +168,7 @@ const MemoForm = (props: {
           ))}
         </div>
 
-        {/* TODO: editing media */}
-        {props.createMemo && (
-          <MediaDisplay files={files} selectedMemo={undefined} createMemo={props.createMemo} />
-        )}
+        <MediaDisplay files={files} media={[]} createMemo={props.createMemo} />
 
         {/* Description for the Memo */}
         <div className="input-container">
