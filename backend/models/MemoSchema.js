@@ -34,6 +34,9 @@ const memoSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  media: {
+    type: [String]
+  }
 });
 const Memo = mongoose.model("Memo", memoSchema);
 module.exports = Memo;

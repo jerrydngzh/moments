@@ -32,7 +32,6 @@ export class MemoController {
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     });
-    console.log(response);
     return response.data;
   }
   

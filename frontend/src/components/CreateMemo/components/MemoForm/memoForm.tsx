@@ -46,7 +46,6 @@ const MemoForm = (props: {
     }
   };
 
-  // TODO
   const handleFileRemove = (file: string) => {
     const updatedFiles = [...files];
     const index = updatedFiles.findIndex((f) => f.name === file);
@@ -150,14 +149,17 @@ const MemoForm = (props: {
           </label>
         </div>
 
-        {/* File Upload */}
-        <div className="input-container">
-          <label htmlFor="files" className="text-xl text-sky-800">
-            Upload Files
-          </label>
-          <input type="file" id="files" name="files" multiple onChange={handleFileChange} />
-        </div>
+        {/* TODO: editing media // File Upload */}
+        {props.createMemo && (
+          <div className="input-container">
+            <label htmlFor="files" className="text-xl text-sky-800">
+              Upload Files
+            </label>
+            <input type="file" id="files" name="files" multiple onChange={handleFileChange} />
+          </div>
+        )}
 
+        {/* FIXME: align with image / add name to remove button */}
         <div className="input-container">
           {files.map((file) => (
             <div key={file.name}>
@@ -166,7 +168,10 @@ const MemoForm = (props: {
           ))}
         </div>
 
-        <MediaDisplay files={files} setelectedMemo={undefined} createMemo={props.createMemo} />
+        {/* TODO: editing media */}
+        {props.createMemo && (
+          <MediaDisplay files={files} selectedMemo={undefined} createMemo={props.createMemo} />
+        )}
 
         {/* Description for the Memo */}
         <div className="input-container">

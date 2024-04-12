@@ -1,6 +1,7 @@
 import { MemoType } from "../../../../models/memo";
+const storageBucket = `https://storage.googleapis.com/${import.meta.env.VITE_STORAGE_BUCKET}`;
 
-const MediaDisplay = (props: { files: File[]; setelectedMemo: MemoType; createMemo: boolean }) => {
+const MediaDisplay = (props: { files: File[]; selectedMemo: MemoType; createMemo: boolean }) => {
   // Function to render media based on its type
   const renderMedia = (mediaData: File, index: number) => {
     if (mediaData.type.startsWith("image")) {
@@ -30,8 +31,7 @@ const MediaDisplay = (props: { files: File[]; setelectedMemo: MemoType; createMe
     return filename.split(".").pop().toLowerCase();
   };
   const renderURL = (mediaName: string, index: number) => {
-    const url = `https://storage.googleapis.com/${bucketName}/${mediaName}`;
-    //const url = 'https://storage.googleapis.com/cmpt474-media-service-cdn/csm.mp4';
+    const url = `${storageBucket}/${mediaName}`;
     const fileExtension = getFileExtension(mediaName);
 
     switch (fileExtension) {
@@ -70,17 +70,11 @@ const MediaDisplay = (props: { files: File[]; setelectedMemo: MemoType; createMe
       <div>
         {props.createMemo &&
           props.files.map((mediaData, index) => (
-            <div key={index}>
-              {/* Render media based on its type */}
-              {renderMedia(mediaData, index)}
-            </div>
+            <div key={index}>{renderMedia(mediaData, index)}</div>
           ))}
         {!props.createMemo &&
-          props.setelectedMemo.media.map((mediaName, index) => (
-            <div key={index}>
-              {/* Render media based on its type */}
-              {renderURL(mediaName, index)}
-            </div>
+          props.selectedMemo.media!.map((mediaName, index) => (
+            <div key={index}>{renderURL(mediaName, index)}</div>
           ))}
       </div>
     </div>

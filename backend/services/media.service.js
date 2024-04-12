@@ -1,5 +1,5 @@
 const ShortUniqueId = require('short-unique-id');
-const { randomUUID } = new ShortUniqueId({ length: 10 });
+const { randomUUID } = new ShortUniqueId({ length: 8 });
 const { Storage } = require('@google-cloud/storage')
 const dotenv = require("dotenv");
 dotenv.config();
@@ -10,7 +10,7 @@ const storage = new Storage({
 })
 const bucket = storage.bucket(process.env.BUCKET_NAME)
 
-const uploadFiles = async (files) => {
+const uploadFiles = async (files, uid) => {
     let fileNames = []
     try {
         if (!files) {
@@ -22,7 +22,7 @@ const uploadFiles = async (files) => {
         let count = 0
 
         files.forEach(file => {
-            const fileName = `${randomUUID()}-${file.originalname}`
+            const fileName = `${uid}/${randomUUID()}-${file.originalname}`
             fileNames.push(fileName)
             const blob = bucket.file(fileName);
             const blobStream = blob.createWriteStream();

@@ -12,15 +12,11 @@ const MemoItem = (props: {
   locationName: string;
 }) => {
   const [showPopup, setShowPopup] = useState(false);
-  const handleMemoClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleMemoClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     setShowPopup(true);
   };
-  const closePopup = (
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const closePopup = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation();
     setShowPopup(false);
   };

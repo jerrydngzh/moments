@@ -60,13 +60,11 @@ router.post("/:uid", multer.any(), async (req, res, next) => {
 
   // Upload files to cloud storage
   try {
-    fileNames = await uploadFiles(fileData);
+    fileNames = await uploadFiles(fileData, uid);
   } catch (error) {
     next(error)
     return;
   }
-
-  console.log(fileNames);
 
   try {
     const memo = new Memo({
