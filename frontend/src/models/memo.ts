@@ -8,4 +8,5 @@ export interface MemoType {
     coordinates: [number, number];
   };
   description: string;
+  media?: string[];
 }

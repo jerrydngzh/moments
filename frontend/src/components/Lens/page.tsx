@@ -15,6 +15,7 @@ interface Location {
     title: string;
     date: string;
     location: string;
+    media:string[]
   }[];
 }
 
@@ -36,6 +37,7 @@ const Lens: React.FC = () => {
           description: memo.description,
           date: memo.date,
           location: memo.location.name,
+          media:memo.media
         };
 
         // Check if location already exists in fetchedLocations array
